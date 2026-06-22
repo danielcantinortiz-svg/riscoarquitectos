@@ -20,7 +20,7 @@
 
 ## Contacto
 
-- 📍 Av. de César Augusto, 72 · 50003 Zaragoza
+- 📍 Calle Fray Luis Amigó, 2 · 50007 Zaragoza
 - ☎️ +34 651 19 05 88
 - ✉️ proyectos@riscoarquitectos.es
 - 💼 [LinkedIn](https://www.linkedin.com/company/risco-arquitectos) · [Instagram](https://www.instagram.com/riscoarquitectos/) · [Facebook](https://www.facebook.com/RiscoArquitectos)

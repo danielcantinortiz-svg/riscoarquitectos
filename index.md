@@ -27,3 +27,10 @@
 
 ---
 <sub>Estudio de arquitectura · Zaragoza · Aragón · España</sub>
+
+---
+
+## 🎧 Curso de inglés A2 → B2
+
+Aplicación de aprendizaje de inglés en 90 días, una hora al día, con audio y tests evaluativos:
+**[English Immersion A2 → B2](curso-ingles/)**

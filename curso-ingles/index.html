@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>English Immersion A2 → B2 · 90 días</title>
+<meta name="description" content="Curso avanzado de inglés A2→B2. Una hora diaria, adquisición natural, audio y tests evaluativos. Un nivel por mes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="logo">EN</span> English Immersion <b>A2 → B2</b></div>
+  <nav>
+    <button data-go="home" class="tab">Panel</button>
+    <button data-go="plan" class="tab">Método</button>
+    <button data-go="repaso" class="tab">Repaso</button>
+    <button data-go="examenes" class="tab">Exámenes</button>
+    <button id="cfgBtn" class="tab ghost">Audio</button>
+  </nav>
+</header>
+
+<div id="cfg" class="cfg hidden">
+  <label>Voz <select id="voiceSel"></select></label>
+  <label>Velocidad <input id="rate" type="range" min="0.5" max="1.2" step="0.05" value="0.95"><span id="rateV">0.95</span></label>
+  <label><input id="autoplay" type="checkbox" checked> Reproducir automáticamente</label>
+  <button id="testVoice" class="btn small">Probar voz</button>
+</div>
+
+<main id="app"></main>
+
+<footer class="foot">
+  <span>Progreso guardado en este navegador.</span>
+  <button id="exportBtn" class="link">Exportar progreso</button>
+  <button id="importBtn" class="link">Importar</button>
+  <button id="resetBtn" class="link danger">Reiniciar</button>
+</footer>
+
+<script src="data/curso.js"></script>
+<script src="data/a2.js"></script>
+<script src="data/b1.js"></script>
+<script src="data/b2.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

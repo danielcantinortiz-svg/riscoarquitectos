@@ -272,3 +272,14 @@ body.foco main{max-width:760px}
 .day.done.anxd::after{background:var(--ok)}
 .anx{border-left:2px solid var(--warn); background:var(--alt); padding:12px 16px; border-radius:0 8px 8px 0; margin-bottom:6px}
 .anx b{font-size:16px}
+
+/* simulacro Cambridge */
+.reading{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:18px 22px; margin:10px 0; max-height:none}
+.reading p{max-width:62ch; margin:0 0 1em}
+.reading p:last-child{margin-bottom:0}
+.ghole{font-family:var(--mono); color:var(--accent); font-weight:700}
+.gmatch{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.mtext{margin:0} .mtext .en{margin-top:6px; font-size:15px}
+.opslist{display:flex; flex-direction:column; gap:6px; margin:10px 0}
+.opitem{background:var(--alt); border:1px solid var(--line); border-radius:8px; padding:9px 13px; font-size:14.5px}
+.opitem b{font-family:var(--mono); color:var(--accent); margin-right:8px}

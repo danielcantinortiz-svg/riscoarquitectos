@@ -35,6 +35,9 @@ tres herramientas que un adulto sí puede usar: shadowing, repetición espaciada
 - **960 ítems de test** de opción múltiple, más dictados y traducción inversa generados dinámicamente.
 - **Banco Cambridge**: open cloze, word formation y key word transformation para los cuatro niveles.
 - **4 exámenes de nivel** de 40 ítems con la estructura del *Reading & Use of English*.
+- **4 simulacros completos** con el formato del examen oficial de cada nivel (A2 Key, B1 Preliminary,
+  B2 First, C1 Advanced): comprensión lectora larga, gapped text, multiple matching, listening,
+  writing con extensión medida y speaking en sus partes reales.
 - **20 anexos profesionales** de arquitectura y negocios (240 términos, 100 frases de uso real y
   100 ítems de test), en los días de repaso 7, 14, 21 y 28 y en el cierre de cada mes.
 
@@ -53,6 +56,26 @@ tres herramientas que un adulto sí puede usar: shadowing, repetición espaciada
   memoria por cajas, palabras que se resisten y proyección de fin de curso.
 - **SRS Leitner de 6 cajas por fechas reales** (1, 2, 4, 8, 16 y 35 días), de modo que hacer dos
   sesiones diarias no comprime los intervalos de memoria.
+
+## Simulacros Cambridge
+
+Cada nivel tiene un simulacro con el formato de **su propio examen oficial**, que no es el mismo en
+todos los niveles:
+
+| Nivel | Examen | Secciones del simulacro |
+|-------|--------|-------------------------|
+| A2 | A2 Key | Reading Part 2 (multiple matching) · Part 3 (texto largo) · Listening gap fill · Writing Part 6 (mensaje de 25 palabras) · Speaking en 2 partes |
+| B1 | B1 Preliminary | Reading Part 3 (texto largo) · Part 4 (gapped text) · Listening gap fill · Writing Part 1 (correo de 100 palabras) · Speaking en 4 partes |
+| B2 | B2 First | Part 5 (multiple choice) · Part 6 (gapped text) · Part 7 (multiple matching) · Listening sentence completion · Writing Part 1 (essay 140-190) · Speaking en 4 partes |
+| C1 | C1 Advanced | Part 5 · Part 6 (cross-text) · Part 7 (gapped text) · Part 8 (multiple matching) · Listening · Writing Part 1 (essay 220-260) · Speaking en 4 partes |
+
+El writing se corrige contra los criterios reales del examen (extensión, párrafos, conectores,
+registro y corrección) y se compara con una respuesta modelo. El *speaking* enlaza con el
+evaluador oral por reconocimiento de voz.
+
+**Nota honesta sobre A2 y B1:** los exámenes oficiales de esos niveles no incluyen *word formation*
+ni *key word transformation*. En el curso se trabajan igualmente desde el primer mes como
+preparación hacia el B2 First; los simulacros, en cambio, respetan el formato real de cada examen.
 
 ## Anexos de arquitectura y negocios
 

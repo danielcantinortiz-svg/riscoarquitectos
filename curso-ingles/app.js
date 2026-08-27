@@ -7,6 +7,7 @@
 var C = window.CURSO;
 var CAM = window.CAMBRIDGE || {};
 var ANX = window.ANEXOS || {};
+var SIM = window.SIMULACRO || {};
 function anexoDe(id, k) { return (ANX[id] || {})[k] || null; }
 var LEVELS = [
   { id: 'A2', nom: 'A2 → A2+ · Consolidación', mes: 1, dias: window.DIAS_A2, meta: C.metas.A2 },
@@ -30,11 +31,12 @@ function load() {
       o.dias = o.dias || {}; o.srs = o.srs || {}; o.ex = o.ex || {};
       o.stats = o.stats || {}; o.hist = o.hist || []; o.oral = o.oral || []; o.escr = o.escr || [];
       o.fallos = o.fallos || {}; o.fechas = o.fechas || {};
+      o.sim = o.sim || {};
       if (o.rate == null) o.rate = 0.95; if (o.auto == null) o.auto = true;
       return o;
     }
   } catch (e) {}
-  return { dias: {}, srs: {}, ex: {}, stats: {}, hist: [], oral: [], escr: [], fallos: {}, fechas: {},
+  return { dias: {}, srs: {}, ex: {}, sim: {}, stats: {}, hist: [], oral: [], escr: [], fallos: {}, fechas: {},
            ses: 0, voz: '', rate: 0.95, auto: true, doble: false, inicio: hoy() };
 }
 function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
@@ -115,7 +117,7 @@ function spkBtn(text, rate) {
 function gapHtml(q) { return esc(q).replace(/___+/g, '<b class="gap">_______</b>'); }
 
 // ---------- estadísticas ----------
-var CATS = { gram: 'Gramática', lex: 'Léxico', list: 'Comprensión oral', prod: 'Producción escrita', cam: 'Uso del inglés (Cambridge)' };
+var CATS = { gram: 'Gramática', lex: 'Léxico', read: 'Comprensión lectora', list: 'Comprensión oral', prod: 'Producción escrita', cam: 'Uso del inglés (Cambridge)' };
 function rec(cat, ok, label) {
   if (!cat) return;
   var s = S.stats[cat] = S.stats[cat] || { ok: 0, tot: 0 };
@@ -175,7 +177,7 @@ function route() {
   var p = h.split('/');
   document.querySelectorAll('.tab[data-go]').forEach(function (b) { b.classList.toggle('on', b.dataset.go === p[0]); });
   window.scrollTo(0, 0);
-  ({ home: vHome, plan: vPlan, repaso: vRepaso, progreso: vProgreso, oral: vOral, examenes: vExamenes, dia: vDia, examen: vExamen }[p[0]] || vHome)(p[1]);
+  ({ home: vHome, plan: vPlan, repaso: vRepaso, progreso: vProgreso, oral: vOral, examenes: vExamenes, dia: vDia, examen: vExamen, simulacro: vSimulacro }[p[0]] || vHome)(p[1]);
 }
 
 // ---------- motor de tests ----------
@@ -456,7 +458,8 @@ function vPlan() {
   h += '<div class="card"><h3>Evaluación</h3><ul>' +
     '<li><b>Test diario</b> (12 ítems, con dos de formato Cambridge): ≥ 70 % para completar el día.</li>' +
     '<li><b>Repaso semanal</b> los días 7, 14, 21 y 28 de cada mes: el test se amplía con la semana anterior.</li>' +
-    '<li><b>Examen de nivel</b> de 40 ítems al terminar cada mes. En B2 y C1 reproduce el <b>Reading &amp; Use of English</b> de Cambridge: multiple-choice cloze, open cloze, word formation y key word transformation, más listening y transformación de frases. <b>≥ 75 % = APTO</b>.</li>' +
+    '<li><b>Examen de nivel</b> de 40 ítems al terminar cada mes, con la estructura del <b>Reading &amp; Use of English</b>: multiple-choice cloze, open cloze, word formation y key word transformation, más listening y transformación de frases. <b>≥ 75 % = APTO</b>.</li>' +
+    '<li><b>Simulacro completo</b> por nivel, con el formato del examen oficial correspondiente —A2 Key, B1 Preliminary, B2 First y C1 Advanced—: comprensión lectora larga, gapped text, multiple matching, listening de formato oficial, writing con extensión medida y speaking en sus partes reales. Disponible desde el primer día, sin esperar a terminar el mes.</li>' +
     '<li><b>Evaluación oral</b> con reconocimiento de voz: fluidez, densidad léxica y uso de las estructuras objetivo.</li>' +
     '<li><b>Evaluación escrita</b> automática: longitud, riqueza léxica, uso del material del día y detección de los veinte errores fosilizados del hispanohablante.</li>' +
     '<li><b>SRS Leitner de 6 cajas por fechas reales</b> (1, 2, 4, 8, 16 y 35 días), de modo que hacer dos sesiones diarias no comprime los intervalos de memoria.</li></ul></div>';
@@ -695,13 +698,15 @@ function vOral() {
 
 // ---------- vista: exámenes ----------
 function vExamenes() {
-  var h = '<h1>Exámenes de nivel</h1>' +
-    '<p class="dim">Cuarenta ítems por examen y 75 % para aprobar. Los de <b>B2 y C1 reproducen la estructura del Reading &amp; Use of English de Cambridge</b> (First y Advanced): multiple-choice cloze, open cloze, word formation y key word transformation, más dictado y transformación de frases.</p>';
+  var h = '<h1>Exámenes y simulacros</h1>' +
+    '<p class="dim">Dos cosas distintas. El <b>examen de nivel</b> son 40 ítems de Use of English para cerrar el mes (apto con 75 %). El <b>simulacro completo</b> reproduce el examen oficial de cada nivel con sus secciones de comprensión lectora larga, listening, writing y speaking.</p>' +
+    '<div class="note small"><b>Aviso importante:</b> el examen oficial de cada nivel es distinto. A2 Key y B1 Preliminary no tienen word formation ni key word transformation; ese trabajo se hace aquí como <b>preparación hacia el B2 First</b>, que sí los incluye. Los simulacros, en cambio, siguen el formato real de cada examen: A2 Key, B1 Preliminary, B2 First y C1 Advanced.</div>';
   LEVELS.forEach(function (L, li) {
     var dn = doneDays().filter(function (n) { return n > li * 30 && n <= li * 30 + 30; }).length;
     var ex = S.ex['exam' + L.id];
     h += '<div class="card"><div class="row between"><h2 style="margin:0"><span class="pill ' + L.id.toLowerCase() + '">' + L.id + '</span> Examen del mes ' + L.mes + '</h2>' +
-      '<button class="btn small" data-ex="' + L.id + '"' + (dn < 30 ? ' disabled' : '') + '>' + (ex ? 'Repetir' : 'Empezar') + '</button></div>' +
+      '<div class="row"><button class="btn sec small" data-sim="' + L.id + '">Simulacro completo</button>' +
+      '<button class="btn small" data-ex="' + L.id + '"' + (dn < 30 ? ' disabled' : '') + '>' + (ex ? 'Repetir examen' : 'Examen de nivel') + '</button></div></div>' +
       '<div class="tablewrap"><table><tr><th>Parte</th><th>Ítems</th><th>Qué mide</th></tr>' +
       '<tr><td>Part 1 · Multiple-choice cloze</td><td>8</td><td class="dim">Léxico y gramática en contexto</td></tr>' +
       '<tr><td>Part 2 · Open cloze</td><td>8</td><td class="dim">Palabras gramaticales: una sola palabra por hueco</td></tr>' +
@@ -709,11 +714,14 @@ function vExamenes() {
       '<tr><td>Part 4 · Key word transformation</td><td>6</td><td class="dim">Reescritura con palabra clave (' + (L.id === 'C1' ? '3-6' : '2-5') + ' palabras)</td></tr>' +
       '<tr><td>Listening · Dictation</td><td>6</td><td class="dim">Comprensión oral y ortografía</td></tr>' +
       '<tr><td>Writing · Transformation</td><td>4</td><td class="dim">Producción escrita controlada</td></tr></table></div>' +
-      '<p class="dim small">' + (dn < 30 ? 'Completa los 30 días del mes para desbloquearlo (' + dn + '/30).'
-        : (ex ? 'Última nota: <b class="' + (ex.pass ? 'ok-t' : 'bad-t') + '">' + ex.pct + '%</b> · ' + ex.fecha : 'Disponible.')) + '</p></div>';
+      (SIM[L.id] ? '<p class="small"><b>Simulacro ' + esc(SIM[L.id].nom) + '</b> · ' + SIM[L.id].orden.map(function (k) { return esc(SIM[L.id][k].t); }).join(' · ') +
+        (S.sim[L.id] ? ' <span class="ok-t">· último intento ' + S.sim[L.id].pct + '%</span>' : '') + '</p>' : '') +
+      '<p class="dim small">' + (dn < 30 ? 'El examen de nivel se desbloquea al completar los 30 días (' + dn + '/30). El simulacro está siempre disponible.'
+        : (ex ? 'Última nota del examen: <b class="' + (ex.pass ? 'ok-t' : 'bad-t') + '">' + ex.pct + '%</b> · ' + ex.fecha : 'Disponible.')) + '</p></div>';
   });
   app.innerHTML = h;
   app.querySelectorAll('[data-ex]').forEach(function (b) { b.onclick = function () { go('examen', b.dataset.ex); }; });
+  app.querySelectorAll('[data-sim]').forEach(function (b) { b.onclick = function () { go('simulacro', b.dataset.sim); }; });
 }
 
 function vExamen(id) {
@@ -728,6 +736,230 @@ function vExamen(id) {
     b.onclick = function () { go('home'); };
     foot.appendChild(b);
   });
+}
+
+
+// ---------- vista: simulacro completo Cambridge ----------
+function vSimulacro(id) {
+  var L = LEVELS[lvlIndex(id)];
+  var X = SIM[id];
+  if (!L || L.id !== id || !X) return go('examenes');
+  var prev = S.sim[id];
+  var h = '<h1><span class="pill ' + id.toLowerCase() + '">' + id + '</span> Simulacro completo · ' + esc(X.nom) + '</h1>' +
+    '<p class="dim">Las secciones que el examen de nivel no cubre: comprensión lectora larga, listening de formato oficial, writing con extensión medida y speaking en cuatro partes. Duración del examen real: ' + esc(X.dur) + '. Aquí puedes hacerlo por partes y repetirlo.</p>' +
+    (prev ? '<div class="note small">Último intento: <b>' + prev.fecha + '</b> · ' + prev.pct + '% en las secciones corregibles automáticamente.</div>' : '') +
+    '<div id="secs"></div>' +
+    '<div class="card" id="simres"><p class="dim small">Al terminar las secciones de opción múltiple verás aquí tu resultado global.</p></div>';
+  app.innerHTML = h;
+  var host = document.getElementById('secs');
+  var marc = {};
+
+  X.orden.forEach(function (key, si) {
+    var S1 = X[key];
+    if (!S1) return;
+    var d = el('<details class="blk"' + (si === 0 ? ' open' : '') + '>' +
+      '<summary><span class="num">' + (si + 1) + '</span> ' + esc(S1.t) + '<span class="min" id="m-' + key + '"></span></summary>' +
+      '<div class="body"><p class="dim small">' + S1.instr + '</p><div class="secbody"></div></div></details>');
+    host.appendChild(d);
+    var body = d.querySelector('.secbody');
+    var tipo = S1.audio ? 'list' : S1.partes ? 'sp' : S1.tarea ? 'wr' : S1.ops ? 'gap' : S1.textos ? 'match' : 'mc';
+    ({ mc: secMC, gap: secGap, match: secMatch, list: secList, wr: secWr, sp: secSp })[tipo](body, S1, key, d);
+  });
+
+  function marca(key, ok, tot, d) {
+    marc[key] = { ok: ok, tot: tot };
+    var m = document.getElementById('m-' + key);
+    if (m) m.textContent = ok + '/' + tot;
+    d.classList.add('ok');
+    d.querySelector('.num').textContent = '✔';
+    var to = 0, oks = 0;
+    Object.keys(marc).forEach(function (k) { to += marc[k].tot; oks += marc[k].ok; });
+    var pct = to ? Math.round(oks / to * 100) : 0;
+    S.sim[id] = { fecha: hoy(), pct: pct, det: marc }; save();
+    document.getElementById('simres').innerHTML =
+      '<div style="text-align:center"><span class="score ' + (pct >= 60 ? 'ok-t' : 'bad-t') + '">' + pct + '%</span>' +
+      '<p>' + oks + ' de ' + to + ' en las secciones corregidas automáticamente.</p>' +
+      '<p class="small dim">Cambridge aprueba en 60 % (grado C). Writing y Speaking se evalúan aparte, con sus propios criterios.</p></div>';
+  }
+
+  function textoHtml(t) {
+    return (Array.isArray(t) ? t : String(t).split('\n')).filter(function (p) { return p.trim(); })
+      .map(function (p) { return '<p>' + p.replace(/\[(\d+)\]/g, '<b class="ghole">［$1］</b>') + '</p>'; }).join('');
+  }
+
+  function preguntasMC(body, lista, key, d, cat) {
+    var qh = el('<div></div>'); body.appendChild(qh);
+    var ok = 0, hechas = 0;
+    lista.forEach(function (q, qi) {
+      var c = el('<div class="q"><div class="qt">' + (qi + 1) + '. ' + esc(q.q) + '</div></div>');
+      q.o.forEach(function (o, oi) {
+        var b = el('<button class="opt">' + esc(o) + '</button>');
+        b.onclick = function () {
+          c.querySelectorAll('.opt').forEach(function (x) { x.disabled = true; });
+          var bien = oi === q.k;
+          b.classList.add(bien ? 'ok' : 'bad');
+          if (!bien) c.querySelectorAll('.opt')[q.k].classList.add('ok');
+          if (bien) ok++;
+          rec(cat, bien, q.q); save();
+          if (++hechas >= lista.length) marca(key, ok, lista.length, d);
+        };
+        c.appendChild(b);
+      });
+      qh.appendChild(c);
+    });
+  }
+
+  function secMC(body, S1, key, d) {
+    body.appendChild(el('<div class="reading en">' + textoHtml(S1.texto) + '</div>'));
+    var rb = el('<button class="btn sec small">▶ Escuchar el texto</button>');
+    rb.onclick = function () { speakSeq(String(S1.texto).split('\n').filter(Boolean)); };
+    body.appendChild(rb);
+    preguntasMC(body, S1.q, key, d, 'read');
+  }
+
+  function secMatch(body, S1, key, d) {
+    var w = el('<div class="grid gmatch"></div>');
+    S1.textos.forEach(function (t) {
+      w.appendChild(el('<div class="card flat mtext"><b>' + esc(t.id) + ' · ' + esc(t.t) + '</b><div class="en">' + esc(t.texto) + '</div></div>'));
+    });
+    body.appendChild(w);
+    preguntasMC(body, S1.q, key, d, 'read');
+  }
+
+  function secGap(body, S1, key, d) {
+    body.appendChild(el('<div class="reading en">' + textoHtml(S1.texto) + '</div>'));
+    body.appendChild(el('<h3>Frases para colocar</h3>'));
+    var lista = el('<div class="opslist en"></div>');
+    S1.ops.forEach(function (o, i) { lista.appendChild(el('<div class="opitem"><b>' + String.fromCharCode(65 + i) + '</b> ' + esc(o) + '</div>')); });
+    body.appendChild(lista);
+    var qh = el('<div></div>'); body.appendChild(qh);
+    var sels = [];
+    S1.k.forEach(function (kk, i) {
+      var c = el('<div class="q"><div class="qt">Hueco ［' + (i + 1) + '］</div></div>');
+      var sel = el('<select><option value="-1">— elige —</option>' + S1.ops.map(function (o, j) {
+        return '<option value="' + j + '">' + String.fromCharCode(65 + j) + ' · ' + esc(o.slice(0, 60)) + '…</option>';
+      }).join('') + '</select>');
+      c.appendChild(sel); qh.appendChild(c); sels.push({ sel: sel, k: kk, c: c });
+    });
+    var b = el('<button class="btn small" style="margin-top:12px">Comprobar sección</button>');
+    b.onclick = function () {
+      var ok = 0;
+      sels.forEach(function (x) {
+        var bien = parseInt(x.sel.value, 10) === x.k;
+        if (bien) ok++;
+        x.sel.disabled = true;
+        x.c.appendChild(el('<div class="fb ' + (bien ? 'ok' : 'bad') + '">' + (bien ? '✔ Correcto' : '✖ Era ' + String.fromCharCode(65 + x.k) + ': ' + esc(S1.ops[x.k])) + '</div>'));
+        rec('read', bien, 'gapped text');
+      });
+      b.disabled = true; save();
+      marca(key, ok, sels.length, d);
+    };
+    body.appendChild(b);
+  }
+
+  function secList(body, S1, key, d) {
+    var row = el('<div class="row" style="margin-bottom:12px"></div>');
+    var p1 = el('<button class="btn">▶ Escuchar</button>');
+    p1.onclick = function () { speak(S1.audio); };
+    var p2 = el('<button class="btn sec">🐢 Más despacio</button>');
+    p2.onclick = function () { speak(S1.audio, { rate: 0.7 }); };
+    var p3 = el('<button class="btn sec">■ Parar</button>');
+    p3.onclick = stopAudio;
+    row.appendChild(p1); row.appendChild(p2); row.appendChild(p3);
+    body.appendChild(row);
+    var qh = el('<div></div>'); body.appendChild(qh);
+    var ins = [];
+    S1.q.forEach(function (q, i) {
+      var c = el('<div class="q"><div class="qt">' + (i + 1) + '. ' + gapHtml(q.q) + '</div></div>');
+      var inp = el('<input type="text" autocomplete="off" spellcheck="false" placeholder="una, dos o tres palabras">');
+      c.appendChild(inp); qh.appendChild(c); ins.push({ inp: inp, a: q.a, c: c });
+    });
+    var b = el('<button class="btn small" style="margin-top:12px">Comprobar sección</button>');
+    b.onclick = function () {
+      var ok = 0;
+      ins.forEach(function (x) {
+        var bien = norm(x.inp.value) === norm(x.a);
+        if (bien) ok++;
+        x.inp.disabled = true;
+        x.c.appendChild(el('<div class="fb ' + (bien ? 'ok' : 'bad') + '">' + (bien ? '✔ Correcto' : '✖ Era: <b>' + esc(x.a) + '</b>') + '</div>'));
+        rec('list', bien, 'listening gap fill');
+      });
+      b.disabled = true; save();
+      var tr = el('<details class="blk" style="margin-top:12px"><summary><span class="num">T</span> Ver la transcripción</summary><div class="body en">' + esc(S1.audio) + '</div></details>');
+      body.appendChild(tr);
+      marca(key, ok, ins.length, d);
+    };
+    body.appendChild(b);
+  }
+
+  function secWr(body, S1, key, d) {
+    body.appendChild(el('<div class="anx">' + S1.tarea + '</div>'));
+    body.appendChild(el('<h3>Criterios de evaluación</h3>'));
+    body.appendChild(el('<ul class="errs">' + S1.criterios.map(function (c) { return '<li>' + esc(c) + '</li>'; }).join('') + '</ul>'));
+    var ta = el('<textarea style="min-height:200px" placeholder="Escribe aquí tu texto…"></textarea>');
+    var st2 = S.sim['txt' + id + key] || '';
+    ta.value = st2;
+    var cnt = el('<div class="row between small dim" style="margin-top:6px"><span id="wc">0 palabras</span><span>objetivo: ' + S1.min + '-' + S1.max + '</span></div>');
+    function cuenta() {
+      var w = ta.value.trim() ? ta.value.trim().split(/\s+/).length : 0;
+      var e = cnt.querySelector('#wc');
+      e.textContent = w + ' palabras';
+      e.className = w >= S1.min && w <= S1.max ? 'ok-t' : w > S1.max ? 'bad-t' : '';
+    }
+    ta.oninput = function () { S.sim['txt' + id + key] = ta.value; save(); cuenta(); };
+    body.appendChild(ta); body.appendChild(cnt); cuenta();
+    var row = el('<div class="row" style="margin-top:12px"></div>');
+    var ev = el('<button class="btn small">Evaluar según los criterios</button>');
+    var res = el('<div></div>');
+    ev.onclick = function () {
+      var t = ta.value.trim();
+      var w = t ? t.split(/\s+/).length : 0;
+      if (w < 10) { res.innerHTML = '<div class="note">Escribe el texto antes de evaluar.</div>'; return; }
+      var r = evalEscrito(t, null);
+      var paras = t.split(/\n\s*\n/).filter(function (x) { return x.trim(); }).length;
+      var links = (t.match(/\b(however|although|therefore|moreover|whereas|nevertheless|consequently|in addition|furthermore|on the other hand|because|so that|even though|in conclusion|firstly|secondly|as far as)\b/gi) || []);
+      var uniqLinks = {}; links.forEach(function (x) { uniqLinks[x.toLowerCase()] = 1; });
+      var nlinks = Object.keys(uniqLinks).length;
+      var contr = /\b(don't|can't|won't|it's|I'm|didn't|isn't|we're|they're)\b/i.test(t);
+      var checks = [
+        { ok: w >= S1.min && w <= S1.max, t: 'Extensión dentro del rango (' + w + ' de ' + S1.min + '-' + S1.max + ')' },
+        { ok: paras >= (S1.min >= 140 ? 4 : 2), t: 'Estructura en párrafos (' + paras + ', mínimo ' + (S1.min >= 140 ? 4 : 2) + ')' },
+        { ok: nlinks >= (S1.min >= 140 ? 4 : 2), t: 'Conectores de discurso distintos (' + nlinks + ', mínimo ' + (S1.min >= 140 ? 4 : 2) + ')' },
+        { ok: S1.min >= 140 ? !contr : true, t: S1.min >= 140 ? 'Registro formal: sin contracciones' : 'Registro informal permitido en esta tarea' },
+        { ok: r.errs.length === 0, t: 'Sin errores fosilizados detectados (' + r.errs.length + ')' }
+      ];
+      var okN = checks.filter(function (c) { return c.ok; }).length;
+      var nota = Math.round(okN / checks.length * 100);
+      res.innerHTML = '<div class="card flat"><div class="row between"><b>Evaluación Cambridge</b><span class="score sm ' + (nota >= 60 ? 'ok-t' : 'bad-t') + '">' + nota + '%</span></div>' +
+        '<ul class="errs">' + checks.map(function (c) { return '<li>' + (c.ok ? '✔ ' : '✖ ') + esc(c.t) + '</li>'; }).join('') + '</ul>' +
+        (r.errs.length ? '<h3>Errores</h3><ul class="errs">' + r.errs.map(function (e) { return '<li>' + e + '</li>'; }).join('') + '</ul>' : '') +
+        '<h3>Respuesta modelo</h3><div class="reading en">' + textoHtml(S1.modelo) + '</div>' +
+        '<p class="small dim">Compárala con la tuya buscando <b>estructura</b> y <b>conectores</b>, no vocabulario suelto.</p></div>';
+      S.escr.push({ f: hoy(), dia: 0, words: w, ttr: r.ttr, avg: r.avg, errs: r.errs.length, score: nota, lista: r.errs });
+      rec('prod', nota >= 60, 'writing ' + id); save();
+    };
+    row.appendChild(ev); body.appendChild(row); body.appendChild(res);
+  }
+
+  function secSp(body, S1, key, d) {
+    S1.partes.forEach(function (pt) {
+      var c = el('<div class="card flat"><b>' + esc(pt.t) + '</b><p class="dim small">' + esc(pt.prompt) + '</p></div>');
+      pt.items.forEach(function (i) {
+        var r = el('<div class="chunk"><div class="t en">' + esc(i) + '</div></div>');
+        var pb = el('<button class="btn sec small">▶</button>');
+        pb.onclick = function () { speak(i); };
+        r.appendChild(pb); c.appendChild(r);
+      });
+      body.appendChild(c);
+    });
+    var row = el('<div class="row"></div>');
+    var ob = el('<button class="btn">Grabar y evaluar mi respuesta</button>');
+    ob.onclick = function () { go('oral'); };
+    var okb = el('<button class="btn sec">Sección practicada</button>');
+    okb.onclick = function () { d.classList.add('ok'); d.querySelector('.num').textContent = '✔'; okb.disabled = true; };
+    row.appendChild(ob); row.appendChild(okb);
+    body.appendChild(row);
+  }
 }
 
 // ---------- vista: día ----------

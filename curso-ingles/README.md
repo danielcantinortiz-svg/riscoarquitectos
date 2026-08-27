@@ -16,6 +16,21 @@ en pantalla se muestran como «Módulo 0 · Día 1…30».
 No requiere instalación, servidor, cuenta ni conexión permanente: es HTML, CSS y JavaScript sin
 dependencias externas. El progreso se guarda en el navegador y puede exportarse a un archivo JSON.
 
+## Un solo archivo
+
+```
+python3 build.py            # genera curso-ingles.html
+python3 build.py destino.html
+```
+
+Empaqueta estilos, datos y motor dentro de un único HTML de unos 875 KB, sin dependencias. Se puede
+abrir con doble clic o subir suelto a cualquier hosting. Desde `file://` el navegador lo trata como
+contexto seguro, así que el micrófono y la síntesis de voz siguen funcionando —a diferencia de lo que
+ocurre dentro de visores que ejecutan la página en un iframe sin permiso de micrófono.
+
+El progreso se guarda por dirección de origen, de modo que cada copia lleva el suyo. Para llevártelo
+de una a otra, usa **Trasladar progreso a otra dirección** en el pie de página.
+
 ## El método
 
 Reproduce, comprimida en 60 minutos diarios, la secuencia con la que se adquiere una lengua materna

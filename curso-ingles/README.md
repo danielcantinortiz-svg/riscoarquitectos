@@ -1,7 +1,8 @@
-# English Immersion A2 → B2 · 90 días
+# English Immersion A2 → C1 · 120 días
 
-Curso completo de inglés en formato aplicación web. **Una hora al día, noventa días, tres niveles**
-(un nivel por mes), con audio integrado, repetición espaciada y evaluación continua.
+Curso completo de inglés en formato aplicación web. **Ciento veinte días, cuatro niveles** (A2, B1, B2 y C1),
+con audio integrado, mnemotecnia, repetición espaciada, evaluación oral y escrita automática y
+exámenes con formato Cambridge. Una hora al día en cuatro meses, o dos horas al día en dos.
 
 👉 **Abrir el curso:** [`index.html`](index.html) — publicado en
 <https://danielcantinortiz-svg.github.io/riscoarquitectos/curso-ingles/>
@@ -27,19 +28,35 @@ tres herramientas que un adulto sí puede usar: shadowing, repetición espaciada
 
 ## Contenido
 
-- **90 días** de contenido original: A2 (mes 1), B1 (mes 2), B2 (mes 3).
-- **900 palabras y expresiones** con traducción, ejemplo y audio, todas en el SRS.
-- **90 diálogos** bilingües de 10 líneas, con audio y comprensión auditiva.
-- **90 puntos de gramática** presentados de forma inductiva, con ejercicios.
-- **720 ítems de test** de opción múltiple, más dictados y traducción inversa generados dinámicamente.
-- **3 exámenes de nivel** de 40 ítems (gramática, léxico, listening y traducción).
+- **120 días** de contenido original: A2 (mes 1), B1 (mes 2), B2 (mes 3), C1 (mes 4).
+- **1 200 palabras y expresiones** con traducción, ejemplo, audio y ganchos mnemotécnicos.
+- **120 diálogos** bilingües de 10 líneas, con audio y comprensión auditiva.
+- **120 puntos de gramática** presentados de forma inductiva, con ejercicios.
+- **960 ítems de test** de opción múltiple, más dictados y traducción inversa generados dinámicamente.
+- **Banco Cambridge**: open cloze, word formation y key word transformation para los cuatro niveles.
+- **4 exámenes de nivel** de 40 ítems con la estructura del *Reading & Use of English*.
 
 ## Evaluación
 
-- **Test diario** (10 ítems): se necesita **≥ 70 %** para completar el día y desbloquear el siguiente.
+- **Test diario** (12 ítems, dos de ellos con formato Cambridge): **≥ 70 %** para completar el día.
 - **Repaso semanal** los días 7, 14, 21 y 28 de cada mes: el test se amplía con la semana anterior.
-- **Examen de nivel** al terminar cada mes: 40 ítems, **≥ 75 % = APTO**.
-- **SRS Leitner de 6 cajas** (1, 2, 4, 8, 16 y 30 sesiones).
+- **Examen de nivel** al terminar cada mes, **≥ 75 % = APTO**, con las seis partes del examen oficial:
+  multiple-choice cloze (8), open cloze (8), word formation (8), key word transformation (6),
+  dictado (6) y transformación de frases (4).
+- **Evaluación oral** con reconocimiento de voz: palabras por minuto, densidad léxica, cobertura de
+  las estructuras objetivo y banda estimada (A2-C1).
+- **Evaluación escrita** automática: extensión, riqueza léxica, madurez sintáctica, uso del material
+  del día y detección de los veintitrés errores fosilizados más frecuentes del hispanohablante.
+- **Panel de progreso**: racha, ritmo, evolución de notas, aciertos por destreza, estado de la
+  memoria por cajas, palabras que se resisten y proyección de fin de curso.
+- **SRS Leitner de 6 cajas por fechas reales** (1, 2, 4, 8, 16 y 35 días), de modo que hacer dos
+  sesiones diarias no comprime los intervalos de memoria.
+
+## Doble sesión
+
+El modo doble sesión (activable desde el panel) reorganiza la jornada en dos horas separadas por un
+mínimo de cuatro horas: material nuevo por la mañana, consolidación por la tarde, microrepaso a
+mediodía y tres minutos de escucha antes de dormir. Permite completar los 120 días en dos meses.
 
 ## Audio y voz
 

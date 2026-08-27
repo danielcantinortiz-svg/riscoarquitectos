@@ -30,7 +30,7 @@
 
 ---
 
-## 🎧 Curso de inglés A2 → B2
+## 🎧 Curso de inglés A2 → C1
 
-Aplicación de aprendizaje de inglés en 90 días, una hora al día, con audio y tests evaluativos:
-**[English Immersion A2 → B2](curso-ingles/)**
+Aplicación de aprendizaje de inglés en 120 días (A2 → C1), con audio, mnemotecnia, evaluación oral y escrita y exámenes con formato Cambridge:
+**[English Immersion A2 → C1](curso-ingles/)**

@@ -35,6 +35,8 @@ tres herramientas que un adulto sí puede usar: shadowing, repetición espaciada
 - **960 ítems de test** de opción múltiple, más dictados y traducción inversa generados dinámicamente.
 - **Banco Cambridge**: open cloze, word formation y key word transformation para los cuatro niveles.
 - **4 exámenes de nivel** de 40 ítems con la estructura del *Reading & Use of English*.
+- **20 anexos profesionales** de arquitectura y negocios (240 términos, 100 frases de uso real y
+  100 ítems de test), en los días de repaso 7, 14, 21 y 28 y en el cierre de cada mes.
 
 ## Evaluación
 
@@ -51,6 +53,21 @@ tres herramientas que un adulto sí puede usar: shadowing, repetición espaciada
   memoria por cajas, palabras que se resisten y proyección de fin de curso.
 - **SRS Leitner de 6 cajas por fechas reales** (1, 2, 4, 8, 16 y 35 días), de modo que hacer dos
   sesiones diarias no comprime los intervalos de memoria.
+
+## Anexos de arquitectura y negocios
+
+Los días 7, 14, 21, 28 y 30 de cada mes incorporan un octavo bloque de seis minutos con terminología
+profesional, frases listas para copiar en un correo y una nota de uso (falsos amigos, diferencias
+entre el sistema británico y el español, registro). Progresan por nivel:
+
+| Nivel | Anexos |
+|-------|--------|
+| A2 | El estudio y las personas · Partes del edificio · Materiales y herramientas · Planos y espacios · El dinero del estudio |
+| B1 | El encargo y el cliente · Licencias y normativa · En la obra · Presupuestar y facturar · Correos y reuniones |
+| B2 | Reforma y cambio de uso · Estructura y patología · Sostenibilidad y eficiencia · Negociar con clientes y proveedores · Captación y marketing |
+| C1 | Contratos y responsabilidad · Urbanismo y planeamiento · El discurso de proyecto · Dirección de obra y riesgos · La estrategia del estudio |
+
+Su terminología entra en el SRS, en el test de ese día y en el examen del mes.
 
 ## Doble sesión
 

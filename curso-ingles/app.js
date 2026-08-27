@@ -6,6 +6,8 @@
 
 var C = window.CURSO;
 var CAM = window.CAMBRIDGE || {};
+var ANX = window.ANEXOS || {};
+function anexoDe(id, k) { return (ANX[id] || {})[k] || null; }
 var LEVELS = [
   { id: 'A2', nom: 'A2 → A2+ · Consolidación', mes: 1, dias: window.DIAS_A2, meta: C.metas.A2 },
   { id: 'B1', nom: 'B1 · Autonomía', mes: 2, dias: window.DIAS_B1, meta: C.metas.B1 },
@@ -134,6 +136,12 @@ function camItems(id, type, n) {
   var pool = camPool(id, type); if (!pool.length) return [];
   var lo = (id === 'C1') ? 3 : 2, hi = (id === 'C1') ? 6 : 5;
   return pick(pool, n).map(function (s) { return type === 'oc' ? qOC(s) : type === 'wf' ? qWF(s) : qKWT(s, lo, hi); });
+}
+function anexoQuestions(id, n) {
+  var pool = [];
+  var A = ANX[id] || {};
+  Object.keys(A).forEach(function (k) { (A[k].test || []).forEach(function (t) { pool.push(t); }); });
+  return pick(pool, n).map(function (t) { var q = qMC(t.q, t.o, t.k, t.exp, 'lex'); q.part = 'Anexo · Arquitectura y negocios'; return q; });
 }
 function vocabQuestions(days, n) {
   var all = [];
@@ -278,8 +286,9 @@ function runTest(host, items, opts, done) {
 // ---------- examen de nivel con formato Cambridge ----------
 function buildExam(L) {
   var id = L.id;
-  var p1 = gramQuestions(L.dias, 5).concat(vocabQuestions(L.dias, 3));
+  var p1 = gramQuestions(L.dias, 4).concat(vocabQuestions(L.dias, 2));
   p1.forEach(function (x) { x.part = 'Part 1 · Multiple-choice cloze'; });
+  p1 = p1.concat(anexoQuestions(id, 2));
   var p2 = camItems(id, 'oc', 8);
   var p3 = camItems(id, 'wf', 8);
   var p4 = camItems(id, 'kwt', 6);
@@ -418,7 +427,9 @@ function vHome() {
     for (var i = 1; i <= 30; i++) {
       var n = li * 30 + i, st = S.dias[n];
       var cls = 'day' + (st && st.fin ? ' done' : '') + (n === next ? ' now' : '') + (unlocked(n) ? '' : ' lock');
-      var b = el('<div class="' + cls + '" tabindex="0"><b>' + i + '</b><span class="sc">' + (st && st.fin ? st.pct + '%' : (i % 7 === 0 ? 'repaso' : '')) + '</span></div>');
+      var anx = !!anexoDe(L.id, i);
+      var etq = st && st.fin ? st.pct + '%' : (i === 30 ? 'cierre' : i % 7 === 0 ? 'repaso' : '');
+      var b = el('<div class="' + cls + (anx ? ' anxd' : '') + '" tabindex="0" title="' + (anx ? 'Incluye anexo profesional: ' + esc(anexoDe(L.id, i).tema) : 'Día ' + n) + '"><b>' + i + '</b><span class="sc">' + etq + '</span></div>');
       if (unlocked(n)) { b.onclick = (function (x) { return function () { go('dia', x); }; })(n); b.onkeydown = function (e) { if (e.key === 'Enter') this.click(); }; }
       g.appendChild(b);
     }
@@ -726,10 +737,12 @@ function vDia(nStr) {
   var L = lvlOf(n), D = dayData(n), k = ((n - 1) % 30) + 1;
   var st = S.dias[n] = S.dias[n] || { fin: false, pct: 0, blk: {} };
   var semanal = k % 7 === 0;
+  var ANEXO = anexoDe(L.id, k);
 
   app.innerHTML = '<div class="row between"><h1 style="margin:0"><span class="pill ' + L.id.toLowerCase() + '">' + L.id + '</span> Día ' + n +
     ' <span class="dim">· ' + esc(D.tema) + '</span></h1><div class="row"><button class="btn sec small" id="foco">Modo enfoque</button><div class="timer" id="clock">60:00</div></div></div>' +
     '<p class="dim">🎯 ' + esc(D.objetivo) + (semanal ? ' <b>· Hoy es día de repaso semanal.</b>' : '') + '</p>' +
+    (ANEXO ? '<div class="note small"><b>Anexo profesional:</b> ' + esc(ANEXO.tema) + '. Doce términos de arquitectura y negocios que entran en el test del día y en el examen del mes.</div>' : '') +
     (S.doble ? '<div class="note small"><b>Doble sesión.</b> ' + (n % 2 ? 'Esta es la sesión de <b>mañana</b>: material nuevo, con la cabeza descansada.' : 'Esta es la sesión de <b>tarde o noche</b>: consolidación. Duerme después: el sueño es parte del método, no el final del día.') + '</div>' : '') +
     '<div id="blocks"></div><div class="card" id="finish"></div>';
   startClock();
@@ -739,12 +752,21 @@ function vDia(nStr) {
   };
 
   var B = document.getElementById('blocks');
-  var blocks = [
-    { t: 'Calentamiento y repaso', m: semanal ? 12 : 6, f: b1 },
+  var blocks = ANEXO ? [
+    { t: 'Calentamiento y repaso', m: 8, f: b1 },
+    { t: 'Input: escucha a ciegas', m: 8, f: b2 },
+    { t: 'Texto y vocabulario', m: 10, f: b3 },
+    { t: 'Shadowing y pronunciación', m: 8, f: b4 },
+    { t: 'Gramática inductiva', m: 6, f: b5 },
+    { t: 'Producción: hablar y escribir', m: 8, f: b6 },
+    { t: 'Anexo profesional · ' + ANEXO.tema, m: 6, f: bAnexo },
+    { t: 'Test del día', m: 6, f: b7 }
+  ] : [
+    { t: 'Calentamiento y repaso', m: 6, f: b1 },
     { t: 'Input: escucha a ciegas', m: 8, f: b2 },
     { t: 'Texto y vocabulario', m: 10, f: b3 },
     { t: 'Shadowing y pronunciación', m: 10, f: b4 },
-    { t: 'Gramática inductiva', m: semanal ? 6 : 8, f: b5 },
+    { t: 'Gramática inductiva', m: 8, f: b5 },
     { t: 'Producción: hablar y escribir', m: 10, f: b6 },
     { t: 'Test del día', m: 8, f: b7 }
   ];
@@ -939,13 +961,50 @@ function vDia(nStr) {
     host.appendChild(row); host.appendChild(res); host.appendChild(mo);
   }
 
+  function bAnexo(host, D, n, done) {
+    var A = ANEXO;
+    host.innerHTML = '<div class="anx"><b class="en">' + esc(A.t) + '</b><p class="dim small" style="margin:.4em 0 0">' + A.intro + '</p></div>';
+    host.appendChild(el('<h3>Terminología (' + A.vocab.length + ')</h3>'));
+    var vb = el('<div class="card flat"></div>');
+    A.vocab.forEach(function (v) {
+      var o = vparts(v);
+      srsAdd('ANX-' + L.id + '-' + k + '-' + o.w, o.w, o.es, o.ex, o.g);
+      var r = el('<div class="vw"><div><div class="w">' + esc(o.w) + ' <span class="dim">— ' + esc(o.es) + '</span></div>' +
+        (o.ex ? '<div class="ex">' + esc(o.ex) + '</div>' : '') +
+        (o.g ? '<div class="gk">🧠 ' + esc(o.g) + '</div>' : '') + '</div></div>');
+      r.appendChild(spkBtn(o.ex || o.w));
+      vb.appendChild(r);
+    });
+    host.appendChild(vb); save();
+    host.appendChild(el('<h3>Frases para usar tal cual</h3>'));
+    A.frases.forEach(function (c) {
+      var row = el('<div class="chunk"><div class="t">' + esc(c) + '</div></div>');
+      var slow = el('<button class="btn sec small" title="Despacio">🐢</button>');
+      slow.onclick = function () { speak(c, { rate: 0.62 }); };
+      var nb = el('<button class="btn small" title="Normal">▶</button>');
+      nb.onclick = function () { speak(c); };
+      var mic = el('<button class="btn sec small" title="Compara tu pronunciación">🎤</button>');
+      mic.onclick = function () { listen(c, row, mic); };
+      row.appendChild(slow); row.appendChild(nb); row.appendChild(mic);
+      host.appendChild(row);
+    });
+    var all = el('<button class="btn sec small" style="margin:10px 8px 0 0">▶ Todas seguidas</button>');
+    all.onclick = function () { speakSeq(A.frases); };
+    host.appendChild(all);
+    host.appendChild(el('<div class="note"><b>Uso profesional</b><br>' + A.nota + '</div>'));
+    var okb = el('<button class="btn small">Anexo hecho</button>');
+    okb.onclick = function () { done(); okb.disabled = true; };
+    host.appendChild(okb);
+  }
+
   function b7(host, D, n, done) {
     var base = (D.test || []).map(function (t) { return qMC(t.q, t.o, t.k, t.exp); });
     var extra = [qDic(pick(D.chunks, 1)[0])];
     if (D.prod && D.prod.tr) extra.push(qTr(D.prod.tr[0], D.prod.tr[1]));
     var cam = camItems(L.id, 'oc', 1).concat(camItems(L.id, 'wf', 1));
     if (semanal) cam = cam.concat(camItems(L.id, 'kwt', 1));
-    var items = base.concat(extra, cam);
+    var anx = ANEXO ? ANEXO.test.map(function (t) { var q = qMC(t.q, t.o, t.k, t.exp, 'lex'); q.part = 'Anexo · Arquitectura y negocios'; return q; }) : [];
+    var items = base.concat(extra, cam, anx);
     if (semanal) {
       var prevDays = [];
       for (var x = Math.max(1, n - 6); x < n; x++) prevDays.push(dayData(x));

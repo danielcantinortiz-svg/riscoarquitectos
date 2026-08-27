@@ -1320,23 +1320,71 @@ document.getElementById('testVoice').onclick = function () { speak('This is your
 document.getElementById('rate').value = S.rate;
 document.getElementById('rateV').textContent = Number(S.rate).toFixed(2);
 document.getElementById('autoplay').checked = !!S.auto;
-document.getElementById('exportBtn').onclick = function () {
-  var json = JSON.stringify(S);
-  function fallback() {
-    var a = document.createElement('a');
-    a.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(json);
-    a.download = 'progreso-ingles.json'; a.click();
-  }
-  if (window.claude && typeof window.claude.use === 'function') {
-    window.claude.use('downloads').then(function (d) {
-      if (!d) { fallback(); return; }
-      d.save({ filename: 'progreso-ingles.json', data: json })['catch'](function (e) {
-        if (e && e.code === 'declined') return;
-        alert('No se pudo guardar el archivo.');
-      });
-    })['catch'](fallback);
-  } else { fallback(); }
-};
+document.getElementById('exportBtn').onclick = function () { vTransferir(); };
+
+// ---------- traslado de progreso entre direcciones ----------
+function vTransferir() {
+  stopAudio();
+  var done = doneDays().length;
+  app.innerHTML = '<h1>Trasladar tu progreso</h1>' +
+    '<p class="dim">El progreso se guarda en el navegador y va asociado a la dirección web. Si abres el curso en otra dirección —por ejemplo para poder usar el micrófono— empieza vacío. Con este código lo llevas de una a otra sin perder nada.</p>' +
+    '<div class="card"><h3>1 · Copia el código de esta dirección</h3>' +
+    '<p class="small dim">Contiene tus ' + done + ' días completados, ' + Object.keys(S.srs).length + ' tarjetas de vocabulario, notas, textos y resultados.</p>' +
+    '<textarea id="tOut" readonly style="min-height:120px;font-family:var(--mono);font-size:12px"></textarea>' +
+    '<div class="row" style="margin-top:10px"><button class="btn" id="tCopy">Copiar código</button>' +
+    '<button class="btn sec" id="tFile">Descargar como archivo</button><span class="small dim" id="tMsg"></span></div></div>' +
+    '<div class="card"><h3>2 · Pégalo en la otra dirección</h3>' +
+    '<p class="small dim">Abre el curso en la dirección nueva, entra aquí otra vez y pega el código en este recuadro. <b>Sustituye</b> el progreso de esa dirección por el que traes.</p>' +
+    '<textarea id="tIn" placeholder="Pega aquí el código copiado…" style="min-height:120px;font-family:var(--mono);font-size:12px"></textarea>' +
+    '<div class="row" style="margin-top:10px"><button class="btn" id="tPaste">Restaurar progreso</button>' +
+    '<button class="btn sec" id="tImp">Cargar desde archivo</button><span class="small dim" id="tMsg2"></span></div></div>' +
+    '<div class="card"><h3>Micrófono</h3><p class="small dim">El reconocimiento de voz —la prueba oral y el botón 🎤 del shadowing— necesita permiso de micrófono, y eso solo lo concede un navegador con la página abierta en su propia pestaña, con Chrome o Edge. Dentro de un visor incrustado no funciona nunca, por seguridad del navegador. Todo lo demás del curso sí funciona en cualquier sitio.</p></div>' +
+    '<div class="row"><button class="btn sec" id="tBack">Volver al panel</button></div>';
+  var out = document.getElementById('tOut');
+  out.value = JSON.stringify(S);
+  document.getElementById('tCopy').onclick = function () {
+    var m = document.getElementById('tMsg');
+    out.select(); out.setSelectionRange(0, 999999);
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) {}
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(out.value).then(function () { m.textContent = '✔ Copiado'; m.className = 'small ok-t'; })
+        ['catch'](function () { m.textContent = ok ? '✔ Copiado' : 'Selecciona el texto y copia con Ctrl+C'; m.className = 'small ' + (ok ? 'ok-t' : 'dim'); });
+    } else { m.textContent = ok ? '✔ Copiado' : 'Selecciona el texto y copia con Ctrl+C'; m.className = 'small ' + (ok ? 'ok-t' : 'dim'); }
+  };
+  document.getElementById('tFile').onclick = function () {
+    var json = JSON.stringify(S);
+    function fallback() {
+      var a = document.createElement('a');
+      a.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(json);
+      a.download = 'progreso-ingles.json'; a.click();
+    }
+    if (window.claude && typeof window.claude.use === 'function') {
+      window.claude.use('downloads').then(function (d) {
+        if (!d) { fallback(); return; }
+        d.save({ filename: 'progreso-ingles.json', data: json })['catch'](function (e) {
+          if (e && e.code === 'declined') return;
+          document.getElementById('tMsg').textContent = 'Usa el botón de copiar en su lugar.';
+        });
+      })['catch'](fallback);
+    } else { fallback(); }
+  };
+  document.getElementById('tPaste').onclick = function () {
+    var m = document.getElementById('tMsg2');
+    var txt = document.getElementById('tIn').value.trim();
+    if (!txt) { m.textContent = 'Pega primero el código.'; m.className = 'small bad-t'; return; }
+    var o;
+    try { o = JSON.parse(txt); } catch (e) { m.textContent = 'El código no es válido: cópialo entero, de principio a fin.'; m.className = 'small bad-t'; return; }
+    if (!o || typeof o !== 'object' || !o.dias) { m.textContent = 'Ese código no es un progreso del curso.'; m.className = 'small bad-t'; return; }
+    var n = Object.keys(o.dias).filter(function (k) { return o.dias[k].fin; }).length;
+    if (!confirm('Vas a sustituir el progreso de esta dirección por uno con ' + n + ' días completados. ¿Continuar?')) return;
+    S = o; save();
+    m.textContent = '✔ Progreso restaurado: ' + n + ' días.'; m.className = 'small ok-t';
+    setTimeout(function () { go('home'); route(); }, 900);
+  };
+  document.getElementById('tImp').onclick = function () { document.getElementById('importBtn').click(); };
+  document.getElementById('tBack').onclick = function () { go('home'); };
+}
 document.getElementById('importBtn').onclick = function () {
   var i = document.createElement('input'); i.type = 'file'; i.accept = '.json';
   i.onchange = function () {

@@ -106,6 +106,18 @@ mediodía y tres minutos de escucha antes de dormir. Permite completar los 120 d
   con la frase modelo. Requiere Chrome o Edge; en el resto de navegadores se degrada sin romper nada.
 - Recomendado: Chrome o Edge de escritorio, con auriculares.
 
+## Micrófono y traslado de progreso
+
+El reconocimiento de voz (prueba oral y botón 🎤 del shadowing) necesita permiso de micrófono, que el
+navegador solo concede a una página **abierta en su propia pestaña sobre HTTPS**, en Chrome o Edge.
+Dentro de un visor incrustado en otra aplicación no funciona nunca. Todo lo demás del curso —audio,
+tests, exámenes, simulacros, evaluación escrita, SRS— funciona en cualquier contexto.
+
+Como el progreso se guarda en `localStorage` y va asociado a la dirección, cambiar de dirección
+implicaría empezar de cero. Para evitarlo, el pie de página tiene **«Trasladar progreso a otra
+dirección»**: genera un código con todo el estado (días, tarjetas, ganchos mnemotécnicos, cajas del
+SRS, historial, textos y resultados) que se copia y se pega en la dirección nueva.
+
 ## Estructura de archivos
 
 ```

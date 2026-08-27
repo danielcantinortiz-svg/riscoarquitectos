@@ -1,8 +1,14 @@
-# English Immersion A2 → C1 · 120 días
+# English Immersion · Módulo 0 + A2 → C1 · 150 días
 
-Curso completo de inglés en formato aplicación web. **Ciento veinte días, cuatro niveles** (A2, B1, B2 y C1),
-con audio integrado, mnemotecnia, repetición espaciada, evaluación oral y escrita automática y
-exámenes con formato Cambridge. Una hora al día en cuatro meses, o dos horas al día en dos.
+Curso completo de inglés en formato aplicación web. **Ciento cincuenta días**: un **Módulo 0** que
+parte de cero (A0 → A1+) y el itinerario de **cuatro niveles** (A2, B1, B2 y C1), con audio integrado,
+mnemotecnia, repetición espaciada, evaluación oral y escrita automática y exámenes con formato
+Cambridge. Una hora al día en cuatro meses, o dos horas al día en dos.
+
+Los dos itinerarios son **independientes**: empezar el Módulo 0 no bloquea ni altera el avance en el
+camino A2 → C1, y se pueden alternar. Internamente los días del Módulo 0 se numeran 121-150 —el
+módulo se añadió después— precisamente para que la numeración de los días ya completados no se mueva;
+en pantalla se muestran como «Módulo 0 · Día 1…30».
 
 👉 **Abrir el curso:** [`index.html`](index.html) — publicado en
 <https://danielcantinortiz-svg.github.io/riscoarquitectos/curso-ingles/>
@@ -28,18 +34,32 @@ tres herramientas que un adulto sí puede usar: shadowing, repetición espaciada
 
 ## Contenido
 
-- **120 días** de contenido original: A2 (mes 1), B1 (mes 2), B2 (mes 3), C1 (mes 4).
-- **1 200 palabras y expresiones** con traducción, ejemplo, audio y ganchos mnemotécnicos.
-- **120 diálogos** bilingües de 10 líneas, con audio y comprensión auditiva.
-- **120 puntos de gramática** presentados de forma inductiva, con ejercicios.
-- **960 ítems de test** de opción múltiple, más dictados y traducción inversa generados dinámicamente.
-- **Banco Cambridge**: open cloze, word formation y key word transformation para los cuatro niveles.
-- **4 exámenes de nivel** de 40 ítems con la estructura del *Reading & Use of English*.
+- **150 días** de contenido original: Módulo 0 (desde cero), A2 (mes 1), B1 (mes 2), B2 (mes 3), C1 (mes 4).
+- **1 500 palabras y expresiones** con traducción, ejemplo, audio y ganchos mnemotécnicos.
+- **150 diálogos** bilingües de 10 líneas, con audio y comprensión auditiva.
+- **150 puntos de gramática** presentados de forma inductiva, con ejercicios.
+- **1 200 ítems de test** de opción múltiple, más dictados y traducción inversa generados dinámicamente.
+- **Banco Cambridge**: open cloze, word formation y key word transformation para los cuatro niveles;
+  el Módulo 0 tiene open cloze y word formation básicos, sin key word transformation (no existe a
+  ese nivel), sustituida por una parte de vocabulario del módulo.
+- **5 exámenes de nivel** de 40 ítems con la estructura del *Reading & Use of English*.
 - **4 simulacros completos** con el formato del examen oficial de cada nivel (A2 Key, B1 Preliminary,
   B2 First, C1 Advanced): comprensión lectora larga, gapped text, multiple matching, listening,
   writing con extensión medida y speaking en sus partes reales.
-- **20 anexos profesionales** de arquitectura y negocios (240 términos, 100 frases de uso real y
-  100 ítems de test), en los días de repaso 7, 14, 21 y 28 y en el cierre de cada mes.
+- **25 anexos profesionales** de arquitectura y negocios (300 términos, 125 frases de uso real y
+  125 ítems de test), en los días de repaso 7, 14, 21 y 28 y en el cierre de cada mes. Los cinco del
+  Módulo 0 cubren inglés laboral de supervivencia: presentarse, la oficina, números y dinero, el
+  teléfono y el primer correo profesional.
+
+## Módulo 0 · desde cero (A0 → A1+)
+
+Treinta días con la misma metodología de siete bloques, pensados para quien parte de cero o quiere
+reconstruir la base. Progresión: sonidos y saludos · *to be* · números y edad · artículos · plurales ·
+*have got* · presente simple (afirmativo, tercera persona, negativo, interrogativo) · la hora y las
+preposiciones de tiempo · rutina y secuenciadores · *can* · *there is/are* · preposiciones de lugar ·
+adjetivos · *like* + *-ing* · presente continuo · *was/were* · pasado regular · diez irregulares
+esenciales · preguntas y negativas en pasado · *going to* · comparativos · conectores. Cierra con un
+día de consolidación que deja lista la entrada al mes 1.
 
 ## Evaluación
 

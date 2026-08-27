@@ -1,5 +1,6 @@
-/* English Immersion A2 → C1 · motor del curso
-   120 días · 4 niveles · audio · SRS por fechas · evaluación oral y escrita
+/* English Immersion · motor del curso
+   150 días · Módulo 0 (desde cero) + itinerario A2 → C1 · audio · SRS por fechas
+   · evaluación oral y escrita
    · tests y exámenes con formato Cambridge (B2 First / C1 Advanced) */
 (function () {
 'use strict';
@@ -13,8 +14,13 @@ var LEVELS = [
   { id: 'A2', nom: 'A2 → A2+ · Consolidación', mes: 1, dias: window.DIAS_A2, meta: C.metas.A2 },
   { id: 'B1', nom: 'B1 · Autonomía', mes: 2, dias: window.DIAS_B1, meta: C.metas.B1 },
   { id: 'B2', nom: 'B2 · Fluidez', mes: 3, dias: window.DIAS_B2, meta: C.metas.B2 },
-  { id: 'C1', nom: 'C1 · Precisión y matiz', mes: 4, dias: window.DIAS_C1, meta: C.metas.C1 }
+  { id: 'C1', nom: 'C1 · Precisión y matiz', mes: 4, dias: window.DIAS_C1, meta: C.metas.C1 },
+  // Módulo 0 va el último en el array (días 121-150) para no mover la numeración
+  // de los días ya completados, y el primero en pantalla mediante ORDEN.
+  { id: 'A1', nom: 'Módulo 0 · Desde cero (A0 → A1+)', mes: 0, dias: window.DIAS_A1, meta: C.metas.A1 }
 ];
+var ORDEN = [4, 0, 1, 2, 3];
+var CORE = 120;
 var TOTAL = LEVELS.length * 30;
 function lvlOf(n) { return LEVELS[Math.floor((n - 1) / 30)]; }
 function dayData(n) { var L = lvlOf(n); return L.dias[(n - 1) % 30]; }
@@ -45,7 +51,15 @@ function addDays(iso, n) { var t = new Date(iso + 'T12:00:00'); t.setDate(t.getD
 function diffDays(a, b) { return Math.round((new Date(b + 'T12:00:00') - new Date(a + 'T12:00:00')) / 86400000); }
 function doneDays() { return Object.keys(S.dias).filter(function (k) { return S.dias[k].fin; }).map(Number); }
 function maxDone() { var d = doneDays(); return d.length ? Math.max.apply(null, d) : 0; }
-function unlocked(n) { return n <= maxDone() + 1; }
+// Dos itinerarios independientes: Módulo 0 (121-150) y el camino A2→C1 (1-120).
+// Empezar el módulo básico no bloquea el otro ni al revés.
+function tramo(n) { return n > CORE ? [CORE + 1, TOTAL] : [1, CORE]; }
+function maxEn(a, b) { var d = doneDays().filter(function (n) { return n >= a && n <= b; }); return d.length ? Math.max.apply(null, d) : a - 1; }
+function unlocked(n) { var t = tramo(n); return n <= maxEn(t[0], t[1]) + 1; }
+// Los días del Módulo 0 se numeran internamente 121-150 para no mover la
+// numeración del itinerario, pero en pantalla se muestran como 1-30.
+function etiquetaDia(n) { return n > CORE ? 'Módulo 0 · Día ' + ((n - 1) % 30 + 1) : 'Día ' + n; }
+function siguiente(n) { var t = tramo(n); return Math.min(t[1], maxEn(t[0], t[1]) + 1); }
 
 // ---------- SRS v2: repetición espaciada por FECHAS ----------
 var GAPS_D = [0, 1, 2, 4, 8, 16, 35];
@@ -294,6 +308,7 @@ function buildExam(L) {
   var p2 = camItems(id, 'oc', 8);
   var p3 = camItems(id, 'wf', 8);
   var p4 = camItems(id, 'kwt', 6);
+  if (!p4.length) { p4 = vocabQuestions(L.dias, 6); p4.forEach(function (x) { x.part = 'Part 4 · Vocabulario del módulo'; }); }
   var p5 = dicQuestions(L.dias, 6); p5.forEach(function (x) { x.part = 'Listening · Dictation'; });
   var p6 = trQuestions(L.dias, 4); p6.forEach(function (x) { x.part = 'Writing · Sentence transformation'; });
   return p1.concat(p2, p3, p4, p5, p6);
@@ -400,21 +415,27 @@ function bars(rows) {
 
 // ---------- vista: panel ----------
 function vHome() {
-  var done = doneDays().length, next = Math.min(TOTAL, maxDone() + 1);
-  var h = '<h1>Tu plan de ' + TOTAL + ' días</h1>' +
-    '<p class="dim">Del A2 al C1. Escuchar → imitar → entender → producir, una hora al día. ' +
+  var done = doneDays().length;
+  var hechoCore = doneDays().filter(function (n) { return n <= CORE; }).length;
+  var hechoMod = done - hechoCore;
+  var ultimo = maxDone();
+  var next = siguiente(ultimo > 0 ? ultimo : 1);
+  var h = '<h1>Tu plan</h1>' +
+    '<p class="dim">Un Módulo 0 desde cero y el itinerario A2 → C1. Escuchar → imitar → entender → producir, una hora al día. ' +
     (S.doble ? '<b>Modo doble sesión activo</b>: dos días por jornada, mañana y tarde.' : 'Activa el <b>modo doble sesión</b> para hacer dos días diarios y llegar al C1 en tres meses.') + '</p>' +
-    '<div class="card"><div class="row between"><div><b>' + done + ' / ' + TOTAL + '</b> días completados' +
+    '<div class="card"><div class="row between"><div><b>' + hechoCore + ' / ' + CORE + '</b> días del itinerario A2 → C1' +
+    (hechoMod ? ' <span class="dim small">· ' + hechoMod + '/30 del Módulo 0</span>' : '') +
     ' <span class="dim small">· ' + Object.keys(S.srs).length + ' palabras en el sistema · ' + srsDue().length + ' para repasar hoy</span></div>' +
     '<div class="row"><button class="btn sec small" id="dob">' + (S.doble ? '✓ Doble sesión' : 'Activar doble sesión') + '</button>' +
-    '<button class="btn" id="cont">' + (done ? 'Continuar · Día ' + next : 'Empezar Día 1') + '</button></div></div>' +
-    '<div class="bar" style="margin-top:14px"><i style="width:' + (done / TOTAL * 100).toFixed(1) + '%"></i></div></div>';
+    '<button class="btn" id="cont">' + (done ? 'Continuar · ' + etiquetaDia(next) : 'Empezar Día 1') + '</button></div></div>' +
+    '<div class="bar" style="margin-top:14px"><i style="width:' + (hechoCore / CORE * 100).toFixed(1) + '%"></i></div></div>';
 
-  LEVELS.forEach(function (L, li) {
-    var d0 = li * 30, dn = doneDays().filter(function (n) { return n > d0 && n <= d0 + 30; }).length;
+  ORDEN.forEach(function (li) {
+    var L = LEVELS[li], d0 = li * 30, dn = doneDays().filter(function (n) { return n > d0 && n <= d0 + 30; }).length;
     var ex = S.ex['exam' + L.id];
-    h += '<div class="card"><div class="row between"><h2 style="margin:0"><span class="pill ' + L.id.toLowerCase() + '">' + L.id + '</span> Mes ' + L.mes + ' · ' + L.nom + '</h2>' +
+    h += '<div class="card"><div class="row between"><h2 style="margin:0"><span class="pill ' + L.id.toLowerCase() + '">' + L.id + '</span> ' + (L.mes ? 'Mes ' + L.mes + ' · ' : '') + L.nom + '</h2>' +
       '<span class="dim small mono">' + dn + '/30</span></div>' +
+      (L.id === 'A1' ? '<div class="note small">Este módulo es <b>independiente</b>: puedes empezarlo hoy sin tocar tu avance del itinerario A2 → C1, y alternarlos. Sirve para reconstruir la base desde cero o para acompañar a alguien que empieza.</div>' : '') +
       '<p class="dim small">' + L.meta + '</p><div class="grid g5" id="g' + li + '"></div>' +
       '<div class="row" style="margin-top:14px">' +
       '<button class="btn sec small" data-ex="' + L.id + '"' + (dn < 30 ? ' disabled' : '') + '>Examen ' + L.id + (L.id === 'B2' || L.id === 'C1' ? ' · formato Cambridge' : '') + '</button>' +
@@ -424,14 +445,14 @@ function vHome() {
   });
   app.innerHTML = h;
 
-  LEVELS.forEach(function (L, li) {
-    var g = document.getElementById('g' + li);
+  ORDEN.forEach(function (li) {
+    var L = LEVELS[li], g = document.getElementById('g' + li);
     for (var i = 1; i <= 30; i++) {
       var n = li * 30 + i, st = S.dias[n];
       var cls = 'day' + (st && st.fin ? ' done' : '') + (n === next ? ' now' : '') + (unlocked(n) ? '' : ' lock');
       var anx = !!anexoDe(L.id, i);
       var etq = st && st.fin ? st.pct + '%' : (i === 30 ? 'cierre' : i % 7 === 0 ? 'repaso' : '');
-      var b = el('<div class="' + cls + (anx ? ' anxd' : '') + '" tabindex="0" title="' + (anx ? 'Incluye anexo profesional: ' + esc(anexoDe(L.id, i).tema) : 'Día ' + n) + '"><b>' + i + '</b><span class="sc">' + etq + '</span></div>');
+      var b = el('<div class="' + cls + (anx ? ' anxd' : '') + '" tabindex="0" title="' + (anx ? 'Incluye anexo profesional: ' + esc(anexoDe(L.id, i).tema) : etiquetaDia(n)) + '"><b>' + i + '</b><span class="sc">' + etq + '</span></div>');
       if (unlocked(n)) { b.onclick = (function (x) { return function () { go('dia', x); }; })(n); b.onkeydown = function (e) { if (e.key === 'Enter') this.click(); }; }
       g.appendChild(b);
     }
@@ -613,7 +634,7 @@ function vOral() {
   var n = Math.max(1, maxDone()), D = dayData(n), L = lvlOf(n);
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   var h = '<h1>Prueba de expresión oral</h1>' +
-    '<p class="dim">Dos minutos hablando sin parar. Se mide tu <b>fluidez</b> (palabras por minuto), tu <b>densidad léxica</b> (cuántas palabras distintas usas) y cuántas <b>estructuras objetivo del día ' + n + '</b> te salen sin pensarlas.</p>';
+    '<p class="dim">Dos minutos hablando sin parar. Se mide tu <b>fluidez</b> (palabras por minuto), tu <b>densidad léxica</b> (cuántas palabras distintas usas) y cuántas <b>estructuras objetivo del ' + etiquetaDia(n).toLowerCase() + '</b> te salen sin pensarlas.</p>';
   if (!SR) {
     app.innerHTML = h + '<div class="card"><p class="bad-t"><b>Tu navegador no permite reconocimiento de voz.</b></p><p>Necesitas Chrome o Edge de escritorio. Mientras tanto puedes hacer la prueba igual: habla dos minutos con el cronómetro y luego escribe de memoria lo que dijiste en el bloque de escritura.</p></div>';
     return;
@@ -690,7 +711,7 @@ function vOral() {
       '<p class="small dim">' + (wpm < 90 ? 'Vas entrecortada: el objetivo no es hablar rápido, sino no detenerte. Repite la misma tarea tres veces seguidas y verás subir las palabras por minuto sin esfuerzo.' :
         wpm > 170 ? 'Vas demasiado rápido para que el ritmo acentual del inglés se sostenga; baja el ritmo y marca más las sílabas tónicas.' :
         'Fluidez dentro del rango natural. Ahora el margen de mejora está en la precisión, no en la velocidad.') + '</p>' +
-      (hit.length ? '<p class="small ok-t">Usaste: ' + hit.map(esc).join(' · ') + '</p>' : '<p class="small bad-t">No has usado ninguna de las estructuras objetivo. Vuelve al bloque 4 del día ' + n + ' y haz shadowing antes de repetir la prueba.</p>') +
+      (hit.length ? '<p class="small ok-t">Usaste: ' + hit.map(esc).join(' · ') + '</p>' : '<p class="small bad-t">No has usado ninguna de las estructuras objetivo. Vuelve al bloque 4 del ' + etiquetaDia(n).toLowerCase() + ' y haz shadowing antes de repetir la prueba.</p>') +
       '<h3>Transcripción</h3><div class="live en">' + esc(texto) + '</div>' +
       '<p class="small dim">Léela buscando tus errores fosilizados: lo que ves escrito es exactamente lo que oye tu interlocutor.</p>';
   }
@@ -701,22 +722,24 @@ function vExamenes() {
   var h = '<h1>Exámenes y simulacros</h1>' +
     '<p class="dim">Dos cosas distintas. El <b>examen de nivel</b> son 40 ítems de Use of English para cerrar el mes (apto con 75 %). El <b>simulacro completo</b> reproduce el examen oficial de cada nivel con sus secciones de comprensión lectora larga, listening, writing y speaking.</p>' +
     '<div class="note small"><b>Aviso importante:</b> el examen oficial de cada nivel es distinto. A2 Key y B1 Preliminary no tienen word formation ni key word transformation; ese trabajo se hace aquí como <b>preparación hacia el B2 First</b>, que sí los incluye. Los simulacros, en cambio, siguen el formato real de cada examen: A2 Key, B1 Preliminary, B2 First y C1 Advanced.</div>';
-  LEVELS.forEach(function (L, li) {
+  ORDEN.forEach(function (li) {
+    var L = LEVELS[li];
     var dn = doneDays().filter(function (n) { return n > li * 30 && n <= li * 30 + 30; }).length;
     var ex = S.ex['exam' + L.id];
-    h += '<div class="card"><div class="row between"><h2 style="margin:0"><span class="pill ' + L.id.toLowerCase() + '">' + L.id + '</span> Examen del mes ' + L.mes + '</h2>' +
-      '<div class="row"><button class="btn sec small" data-sim="' + L.id + '">Simulacro completo</button>' +
+    h += '<div class="card"><div class="row between"><h2 style="margin:0"><span class="pill ' + L.id.toLowerCase() + '">' + L.id + '</span> ' + (L.mes ? 'Examen del mes ' + L.mes : 'Examen del Módulo 0') + '</h2>' +
+      '<div class="row">' + (SIM[L.id] ? '<button class="btn sec small" data-sim="' + L.id + '">Simulacro completo</button>' : '') +
       '<button class="btn small" data-ex="' + L.id + '"' + (dn < 30 ? ' disabled' : '') + '>' + (ex ? 'Repetir examen' : 'Examen de nivel') + '</button></div></div>' +
       '<div class="tablewrap"><table><tr><th>Parte</th><th>Ítems</th><th>Qué mide</th></tr>' +
       '<tr><td>Part 1 · Multiple-choice cloze</td><td>8</td><td class="dim">Léxico y gramática en contexto</td></tr>' +
       '<tr><td>Part 2 · Open cloze</td><td>8</td><td class="dim">Palabras gramaticales: una sola palabra por hueco</td></tr>' +
       '<tr><td>Part 3 · Word formation</td><td>8</td><td class="dim">Derivación a partir de una raíz</td></tr>' +
-      '<tr><td>Part 4 · Key word transformation</td><td>6</td><td class="dim">Reescritura con palabra clave (' + (L.id === 'C1' ? '3-6' : '2-5') + ' palabras)</td></tr>' +
+      (SIM[L.id] ? '<tr><td>Part 4 · Key word transformation</td><td>6</td><td class="dim">Reescritura con palabra clave (' + (L.id === 'C1' ? '3-6' : '2-5') + ' palabras)</td></tr>'
+                 : '<tr><td>Part 4 · Vocabulario del módulo</td><td>6</td><td class="dim">Léxico básico: la key word transformation no existe en este nivel</td></tr>') +
       '<tr><td>Listening · Dictation</td><td>6</td><td class="dim">Comprensión oral y ortografía</td></tr>' +
       '<tr><td>Writing · Transformation</td><td>4</td><td class="dim">Producción escrita controlada</td></tr></table></div>' +
       (SIM[L.id] ? '<p class="small"><b>Simulacro ' + esc(SIM[L.id].nom) + '</b> · ' + SIM[L.id].orden.map(function (k) { return esc(SIM[L.id][k].t); }).join(' · ') +
         (S.sim[L.id] ? ' <span class="ok-t">· último intento ' + S.sim[L.id].pct + '%</span>' : '') + '</p>' : '') +
-      '<p class="dim small">' + (dn < 30 ? 'El examen de nivel se desbloquea al completar los 30 días (' + dn + '/30). El simulacro está siempre disponible.'
+      '<p class="dim small">' + (dn < 30 ? 'El examen se desbloquea al completar los 30 días (' + dn + '/30).' + (SIM[L.id] ? ' El simulacro está siempre disponible.' : '')
         : (ex ? 'Última nota del examen: <b class="' + (ex.pass ? 'ok-t' : 'bad-t') + '">' + ex.pct + '%</b> · ' + ex.fecha : 'Disponible.')) + '</p></div>';
   });
   app.innerHTML = h;
@@ -743,6 +766,7 @@ function vExamen(id) {
 function vSimulacro(id) {
   var L = LEVELS[lvlIndex(id)];
   var X = SIM[id];
+  if (!X) { app.innerHTML = '<h1>Simulacro</h1><div class="card"><p>El Módulo 0 no tiene simulacro oficial: Cambridge no examina por debajo del A2. Termina sus 30 días, haz el examen del módulo y pasa al simulacro de <b>A2 Key</b>.</p></div>'; return; }
   if (!L || L.id !== id || !X) return go('examenes');
   var prev = S.sim[id];
   var h = '<h1><span class="pill ' + id.toLowerCase() + '">' + id + '</span> Simulacro completo · ' + esc(X.nom) + '</h1>' +
@@ -968,10 +992,11 @@ function vDia(nStr) {
   if (!n || n < 1 || n > TOTAL || !unlocked(n)) return go('home');
   var L = lvlOf(n), D = dayData(n), k = ((n - 1) % 30) + 1;
   var st = S.dias[n] = S.dias[n] || { fin: false, pct: 0, blk: {} };
+  if (!st.blk) st.blk = {};  // tolera estados restaurados desde otra dirección
   var semanal = k % 7 === 0;
   var ANEXO = anexoDe(L.id, k);
 
-  app.innerHTML = '<div class="row between"><h1 style="margin:0"><span class="pill ' + L.id.toLowerCase() + '">' + L.id + '</span> Día ' + n +
+  app.innerHTML = '<div class="row between"><h1 style="margin:0"><span class="pill ' + L.id.toLowerCase() + '">' + L.id + '</span> ' + etiquetaDia(n) +
     ' <span class="dim">· ' + esc(D.tema) + '</span></h1><div class="row"><button class="btn sec small" id="foco">Modo enfoque</button><div class="timer" id="clock">60:00</div></div></div>' +
     '<p class="dim">🎯 ' + esc(D.objetivo) + (semanal ? ' <b>· Hoy es día de repaso semanal.</b>' : '') + '</p>' +
     (ANEXO ? '<div class="note small"><b>Anexo profesional:</b> ' + esc(ANEXO.tema) + '. Doce términos de arquitectura y negocios que entran en el test del día y en el examen del mes.</div>' : '') +
@@ -1253,7 +1278,7 @@ function vDia(nStr) {
         if (pass && !st.fin) { st.fin = true; S.fechas[hoy()] = (S.fechas[hoy()] || 0) + 1; done(); S.ses++; }
         else if (pass) { done(); }
         save(); renderFinish();
-        if (pass && n < TOTAL) {
+        if (pass && n < tramo(n)[1]) {
           var nx = el('<button class="btn">Siguiente día →</button>');
           nx.onclick = function () { go('dia', n + 1); };
           foot.appendChild(nx);
@@ -1267,12 +1292,13 @@ function vDia(nStr) {
     var f = document.getElementById('finish');
     if (!f) return;
     if (st.fin) {
-      f.innerHTML = '<div class="row between"><b class="ok-t">✔ Día ' + n + ' completado · ' + st.pct + '%</b><div class="row" id="fr"></div></div>';
+      f.innerHTML = '<div class="row between"><b class="ok-t">✔ ' + etiquetaDia(n) + ' completado · ' + st.pct + '%</b><div class="row" id="fr"></div></div>';
       var r = f.querySelector('#fr');
       var b1x = el('<button class="btn sec small">Panel</button>'); b1x.onclick = function () { go('home'); }; r.appendChild(b1x);
       var b0 = el('<button class="btn sec small">Ver mi progreso</button>'); b0.onclick = function () { go('progreso'); }; r.appendChild(b0);
-      if (n < TOTAL) { var b2x = el('<button class="btn small">Día ' + (n + 1) + ' →</button>'); b2x.onclick = function () { go('dia', n + 1); }; r.appendChild(b2x); }
+      if (n < tramo(n)[1]) { var b2x = el('<button class="btn small">' + etiquetaDia(n + 1) + ' →</button>'); b2x.onclick = function () { go('dia', n + 1); }; r.appendChild(b2x); }
       if (k === 30) { var b3x = el('<button class="btn small">Examen ' + L.id + ' →</button>'); b3x.onclick = function () { go('examen', L.id); }; r.appendChild(b3x); }
+      if (n === TOTAL) { var b4x = el('<button class="btn small">Empezar el itinerario A2 →</button>'); b4x.onclick = function () { go('dia', siguiente(1)); }; r.appendChild(b4x); }
     } else {
       f.innerHTML = '<p class="dim small">Termina los siete bloques y aprueba el test del día (≥ 70 %) para desbloquear el día siguiente.</p>';
     }

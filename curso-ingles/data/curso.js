@@ -61,6 +61,7 @@ window.CURSO = {
     '<b>Duerme.</b> La consolidación de lo aprendido ocurre durante el sueño profundo. Estudiar y dormir cuatro horas es tirar media sesión.'
   ],
   metas: {
+    A1: 'Objetivo del Módulo 0: partir de cero y llegar al umbral del A2. Alfabeto y sonidos, el verbo to be, artículos y plurales, presente simple y continuo, can, there is/are, pasado simple con los diez irregulares esenciales y el futuro con going to. Salida esperada: A1+ sólido, listo para empezar el mes 1.',
     A2: 'Objetivo del mes: dominar el presente, el pasado y el futuro básicos, describir rutina, gente y lugares, y sostener conversaciones de supervivencia en tiempo real sin traducir. Salida esperada: A2+ sólido rozando B1.',
     B1: 'Objetivo del mes: contar experiencias y planes, dar opiniones con razones, manejar condicionales, presente perfecto y voz pasiva, y desenvolverte en trabajo, viajes y trámites. Salida esperada: B1 alto.',
     B2: 'Objetivo del mes: argumentar, matizar, negociar y entender inglés nativo a velocidad real; hipótesis pasadas, estructuras enfáticas, phrasal verbs y registro formal/informal. Salida esperada: B2 con criterio.',

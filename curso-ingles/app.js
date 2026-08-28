@@ -11,6 +11,7 @@ var ANX = window.ANEXOS || {};
 var SIM = window.SIMULACRO || {};
 var VRB = window.VERBOS || { grupos: [] };
 var DRV = window.DERIVADAS || { familias: [] };
+var GYM = window.GIMNASIO || {};
 // Enlace al traductor de Google, para no tener que poner el español en pantalla.
 function trad(t) { return '<a class="tr" target="_blank" rel="noopener" title="Abrir en el traductor de Google" href="https://translate.google.com/?sl=en&amp;tl=es&amp;op=translate&amp;text=' + encodeURIComponent(t) + '">translate</a>'; }
 function anexoDe(id, k) { return (ANX[id] || {})[k] || null; }
@@ -195,7 +196,7 @@ function route() {
   var p = h.split('/');
   document.querySelectorAll('.tab[data-go]').forEach(function (b) { b.classList.toggle('on', b.dataset.go === p[0]); });
   window.scrollTo(0, 0);
-  ({ home: vHome, plan: vPlan, repaso: vRepaso, progreso: vProgreso, oral: vOral, verbos: vVerbos, derivadas: vDerivadas, examenes: vExamenes, dia: vDia, examen: vExamen, simulacro: vSimulacro }[p[0]] || vHome)(p[1]);
+  ({ home: vHome, plan: vPlan, repaso: vRepaso, progreso: vProgreso, oral: vOral, verbos: vVerbos, derivadas: vDerivadas, gimnasio: vGimnasio, examenes: vExamenes, dia: vDia, examen: vExamen, simulacro: vSimulacro }[p[0]] || vHome)(p[1]);
 }
 
 // ---------- motor de tests ----------
@@ -652,6 +653,292 @@ function selectorDia(n) {
   return '<div class="card flat"><label class="small"><b>Día que quieres practicar</b> ' +
     '<select id="oralDia">' + ops + '</select></label>' +
     '<p class="small dim" style="margin:8px 0 0">Las tareas y las estructuras objetivo son las de ese día. Los días con ✔ ya tienen prueba oral guardada.</p></div>';
+}
+
+// ---------- vista: gimnasio · ejercicios rápidos de asociación ----------
+// Cuatro modos, todos cortos y con corrección inmediata: emparejar contra
+// reloj, ordenar la frase, elegir el que encaja y velocidad de 60 segundos.
+function mazoDe(id) {
+  if (id === 'derivadas') {
+    var v = [];
+    DRV.familias.forEach(function (G) { G.v.forEach(function (l) { var p = l.split('|'); v.push([p[0], p[1]]); }); });
+    return { t: 'Raíz y palabra derivada', v: v, izq: 'Raíz', der: 'Derivada' };
+  }
+  if (id === 'conectores') {
+    var c = [];
+    (GYM.conectores.grupos || []).forEach(function (G) { G.v.forEach(function (l) { var p = l.split('|'); c.push([p[0], p[1]]); }); });
+    return { t: 'Conector y su función', v: c, izq: 'Conector', der: 'Para qué sirve' };
+  }
+  return { t: 'Adjetivo y su contrario', v: (GYM.adjetivos.opuestos || []).map(function (l) { return l.split('|'); }),
+           izq: 'Adjetivo', der: 'Su contrario' };
+}
+
+// Qué ejercicio del gimnasio le corresponde a cada día, para poder entrar
+// desde la propia sesión en vez de tener que buscarlo.
+function gymDe(n) {
+  var k = (n - 1) % 30 + 1, esMod0 = n > CORE;
+  if (esMod0) {
+    if (k === 12 || k === 17) return { id: 'hue-prepos', t: 'preposiciones', txt: 'Hoy tocan preposiciones. Doce huecos aquí te las dejan asentadas antes de empezar.' };
+    if (k === 18) return { id: 'par-adjetivos', t: 'adjetivos y contrarios', txt: 'Hoy tocan adjetivos. Empieza emparejando cada uno con su contrario contra el reloj.' };
+    if (k === 27) return { id: 'hue-cantidad', t: 'much y many', txt: 'Junto a los comparativos conviene tener claro el contraste much / many.' };
+    if (k === 29) return { id: 'hue-conectores', t: 'conectores', txt: 'Hoy tocan conectores. Aquí se eligen por la relación entre las ideas, que es como se aciertan.' };
+    if (k === 4 || k === 5 || k === 9) return { id: 'ord-1', t: 'orden de palabras', txt: 'El orden del inglés es más rígido que el del español. Dos minutos ordenando frases valen por media hora de teoría.' };
+  }
+  if (k % 7 === 0 || k === 30) return { id: 'vel', t: 'velocidad', txt: 'Día de repaso: sesenta segundos para ver qué tienes ya automatizado y qué no.' };
+  return null;
+}
+
+function vGimnasio(arg) {
+  var h = '<h1>Gimnasio</h1>' +
+    '<p class="dim">Series cortas y con corrección inmediata para lo que no se aprende leyendo: conectores, ' +
+    'adjetivos, preposiciones, derivadas y orden de palabras. Cada partida dura entre uno y tres minutos, ' +
+    'que es justo lo que aguanta la atención con este tipo de material.</p>' + panelFlojo() +
+    '<div class="card"><h2 style="margin-top:0">⏱ Parejas contrarreloj</h2>' +
+    '<p class="dim small">Doce parejas. Pincha una de la izquierda y su pareja de la derecha. El reloj corre y cada fallo suma cinco segundos. Es el ejercicio que más rápido crea la asociación.</p>' +
+    '<div class="row"><button class="btn" data-par="derivadas">Derivadas</button>' +
+    '<button class="btn" data-par="conectores">Conectores</button>' +
+    '<button class="btn" data-par="adjetivos">Adjetivos y contrarios</button></div><div id="gpar"></div></div>' +
+    '<div class="card"><h2 style="margin-top:0">🧩 Ordena la frase</h2>' +
+    '<p class="dim small">Las palabras salen desordenadas y hay que colocarlas. Entrena las cinco reglas de orden que el español coloca al revés.</p>' +
+    '<div class="row">' + (GYM.orden.grupos || []).map(function (G, i) {
+      return '<button class="btn sec small" data-ord="' + i + '">' + esc(G.t.split('·')[0].trim()) + '</button>';
+    }).join('') + '<button class="btn small" data-ord="adj">Varios adjetivos seguidos</button></div><div id="gord"></div></div>' +
+    '<div class="card"><h2 style="margin-top:0">🎯 ¿Cuál encaja?</h2>' +
+    '<p class="dim small">Un hueco y tres candidatos. Al responder te dice <b>por qué</b> es ese y no el otro, que es lo que hace que la próxima vez lo aciertes.</p>' +
+    '<div class="row"><button class="btn" data-hue="conectores">Conectores</button>' +
+    '<button class="btn" data-hue="prepos">Preposiciones</button>' +
+    '<button class="btn" data-hue="cantidad">much / many</button>' +
+    '<button class="btn sec" data-hue="todo">Mezcla de todo</button></div><div id="ghue"></div></div>' +
+    '<div class="card"><h2 style="margin-top:0">⚡ Velocidad · 60 segundos</h2>' +
+    '<p class="dim small">Sesenta segundos, las que puedas. Sin explicaciones y sin pensar: aquí se entrena el automatismo, no el análisis.</p>' +
+    '<div class="row"><button class="btn" data-vel="1">Empezar</button></div><div id="gvel"></div></div>';
+  app.innerHTML = h;
+  app.querySelectorAll('[data-par]').forEach(function (b) { b.onclick = function () { juegoParejas(b.dataset.par); }; });
+  app.querySelectorAll('[data-ord]').forEach(function (b) { b.onclick = function () { juegoOrden(b.dataset.ord); }; });
+  app.querySelectorAll('[data-hue]').forEach(function (b) { b.onclick = function () { juegoHuecos(b.dataset.hue); }; });
+  app.querySelectorAll('[data-vel]').forEach(function (b) { b.onclick = function () { juegoVelocidad(); }; });
+  if (arg) {
+    var pa = String(arg).split('-'), resto = pa.slice(1).join('-');
+    if (pa[0] === 'par') juegoParejas(resto);
+    else if (pa[0] === 'hue') juegoHuecos(resto);
+    else if (pa[0] === 'ord') juegoOrden(resto);
+    else if (pa[0] === 'vel') juegoVelocidad();
+  }
+}
+
+// Recomendación a partir de los fallos reales, no de suposiciones.
+function panelFlojo() {
+  var st = S.stats || {}, peor = null;
+  Object.keys(CATS).forEach(function (c) {
+    var s = st[c]; if (!s || s.tot < 8) return;
+    var p = s.ok / s.tot; if (!peor || p < peor.p) peor = { c: c, p: p, s: s };
+  });
+  if (!peor) return '<div class="note small">Haz unas cuantas series y aquí aparecerá, a partir de tus fallos reales, por dónde te conviene empezar.</div>';
+  var reco = peor.c === 'cam' ? 'las <b>derivadas</b> y los <b>conectores</b>' :
+             peor.c === 'gram' ? 'el <b>orden de palabras</b> y las <b>preposiciones</b>' :
+             peor.c === 'lex' ? 'los <b>adjetivos y sus contrarios</b>' :
+             'las <b>parejas contrarreloj</b>, que fijan vocabulario rápido';
+  return '<div class="note small"><b>Tu punto más flojo ahora mismo:</b> ' + CATS[peor.c] +
+    ' (' + peor.s.ok + ' de ' + peor.s.tot + ' · ' + Math.round(peor.p * 100) + ' %). Empieza por ' + reco + '.</div>';
+}
+
+
+// --- juego 1: emparejar contrarreloj ---
+function juegoParejas(id) {
+  var M = mazoDe(id), pares = pick(M.v, Math.min(12, M.v.length));
+  var host = document.getElementById('gpar');
+  var t0 = Date.now(), penal = 0, fallos = 0, quedan = pares.length, elegida = null, iv = null;
+  host.innerHTML = '<div class="row between" style="margin:14px 0 8px"><b>' + esc(M.t) + '</b>' +
+    '<span class="timer" id="ptm">0:00</span></div>' +
+    '<div class="pares"><div id="pA"></div><div id="pB"></div></div><div id="pfin"></div>';
+  var A = host.querySelector('#pA'), B = host.querySelector('#pB'), tm = host.querySelector('#ptm');
+  A.innerHTML = '<h3>' + esc(M.izq) + '</h3>'; B.innerHTML = '<h3>' + esc(M.der) + '</h3>';
+  shuffle(pares.slice()).forEach(function (p, i) { A.appendChild(ficha(p[0], p[0], true)); });
+  shuffle(pares.slice()).forEach(function (p) { B.appendChild(ficha(p[1], p[0], false)); });
+  iv = setInterval(function () {
+    var s2 = Math.round((Date.now() - t0) / 1000) + penal;
+    tm.textContent = Math.floor(s2 / 60) + ':' + String(s2 % 60).padStart(2, '0');
+  }, 500);
+
+  function ficha(txt, clave, esIzq) {
+    var b = el('<button class="ficha' + (esIzq ? ' en' : '') + '">' + esc(txt) + '</button>');
+    b.dataset.k = clave;
+    b.onclick = function () {
+      if (b.classList.contains('hecha')) return;
+      if (!elegida) { limpiar(); elegida = b; b.classList.add('sel'); if (esIzq) speak(txt); return; }
+      if (elegida === b) { b.classList.remove('sel'); elegida = null; return; }
+      if (elegida.parentNode === b.parentNode) { limpiar(); elegida = b; b.classList.add('sel'); return; }
+      if (elegida.dataset.k === b.dataset.k) {
+        elegida.classList.add('hecha'); b.classList.add('hecha');
+        elegida.classList.remove('sel'); elegida = null; quedan--;
+        if (!quedan) terminar();
+      } else {
+        fallos++; penal += 5;
+        b.classList.add('mal'); elegida.classList.add('mal');
+        var otra = elegida;
+        setTimeout(function () { b.classList.remove('mal'); otra.classList.remove('mal', 'sel'); }, 500);
+        elegida = null;
+      }
+    };
+    return b;
+  }
+  function limpiar() { host.querySelectorAll('.ficha.sel').forEach(function (x) { x.classList.remove('sel'); }); }
+  function terminar() {
+    clearInterval(iv);
+    var segs = Math.round((Date.now() - t0) / 1000), total = segs + penal;
+    rec('lex', fallos <= 2, 'parejas · ' + id);
+    S.ses++; save();
+    var f = host.querySelector('#pfin');
+    f.innerHTML = '<div class="card flat"><div class="metrics">' +
+      metric(Math.floor(total / 60) + ':' + String(total % 60).padStart(2, '0'), 'tiempo con penalización') +
+      metric(segs + ' s', 'tiempo real') + metric(fallos, 'fallos') + '</div>' +
+      '<p class="small ' + (fallos === 0 ? 'ok-t' : fallos <= 2 ? 'dim' : 'bad-t') + '">' +
+      (fallos === 0 ? 'Sin un solo fallo. Repite el mismo mazo mañana y verás bajar el tiempo: eso es la asociación consolidándose.'
+        : fallos <= 2 ? 'Casi limpio. Vuelve a jugar ahora mismo el mismo mazo: la segunda vuelta inmediata es la que fija.'
+        : 'Muchos fallos para doce parejas. Antes de repetir, mira la tabla de referencia dos minutos y vuelve.') + '</p></div>';
+    var r = el('<div class="row"></div>');
+    var b1 = el('<button class="btn small">Otra ronda</button>'); b1.onclick = function () { juegoParejas(id); };
+    r.appendChild(b1); f.appendChild(r);
+  }
+}
+
+// --- juego 2: ordenar la frase ---
+function juegoOrden(which) {
+  var host = document.getElementById('gord');
+  var lote, regla, titulo;
+  if (which === 'adj') {
+    lote = pick(GYM.adjetivos.orden.v, 8).map(function (l) { return l.split('|')[0]; });
+    regla = GYM.adjetivos.orden.regla; titulo = 'Varios adjetivos seguidos';
+  } else {
+    var G = GYM.orden.grupos[which | 0];
+    lote = pick(G.v, Math.min(8, G.v.length)); regla = G.regla; titulo = G.t;
+  }
+  var i = 0, aciertos = 0;
+  host.innerHTML = '<div class="card flat" style="margin-top:14px"><b>' + esc(titulo) + '</b>' +
+    '<p class="small dim">' + regla + '</p></div><div id="ozona"></div>';
+  paint();
+
+  function paint() {
+    var z = document.getElementById('ozona');
+    if (i >= lote.length) {
+      var pct = Math.round(aciertos / lote.length * 100);
+      rec('gram', pct >= 70, 'ordenar frases · ' + titulo); S.ses++; save();
+      z.innerHTML = '<div class="card flat"><div class="metrics">' + metric(pct + '%', 'aciertos') +
+        metric(aciertos + '/' + lote.length, 'frases') + '</div></div>';
+      var b = el('<button class="btn small">Otra tanda</button>');
+      b.onclick = function () { juegoOrden(which); };
+      z.appendChild(b); return;
+    }
+    var frase = lote[i], fin = /[.?]$/.test(frase) ? frase.slice(-1) : '';
+    var limpio = fin ? frase.slice(0, -1) : frase;
+    var palabras = limpio.split(' ');
+    var puestas = [];
+    z.innerHTML = '<p class="small dim">Frase ' + (i + 1) + ' de ' + lote.length + '</p>' +
+      '<div class="bandeja en" id="obandeja"></div><div class="row" id="obolsa"></div>' +
+      '<div class="row" style="margin-top:10px"><button class="btn small" id="ock">Comprobar</button>' +
+      '<button class="btn sec small" id="ozap">Borrar</button></div><div id="ofb"></div>';
+    var bandeja = z.querySelector('#obandeja'), bolsa = z.querySelector('#obolsa');
+    var orden = shuffle(palabras.map(function (w, k) { return { w: w, k: k }; }));
+    orden.forEach(function (o) {
+      var b = el('<button class="ficha en">' + esc(o.w) + '</button>');
+      b.onclick = function () {
+        if (b.classList.contains('hecha')) return;
+        b.classList.add('hecha'); puestas.push(o); pinta();
+      };
+      bolsa.appendChild(b); o.btn = b;
+    });
+    function pinta() { bandeja.textContent = puestas.map(function (o) { return o.w; }).join(' ') + (puestas.length ? fin : ''); }
+    pinta();
+    z.querySelector('#ozap').onclick = function () {
+      puestas.forEach(function (o) { o.btn.classList.remove('hecha'); }); puestas = []; pinta();
+    };
+    z.querySelector('#ock').onclick = function () {
+      var mia = puestas.map(function (o) { return o.w; }).join(' ');
+      var ok = mia === limpio;
+      if (ok) aciertos++;
+      z.querySelector('#ofb').innerHTML = '<div class="fb ' + (ok ? 'ok' : 'bad') + '">' +
+        (ok ? '✔ Correcto.' : '✖ Era: <b class="en">' + esc(frase) + '</b>') + '</div>';
+      if (ok) speak(frase);
+      rec('gram', ok, 'orden: ' + frase);
+      save();
+      setTimeout(function () { i++; paint(); }, ok ? 900 : 2400);
+    };
+  }
+}
+
+// --- juego 3: ¿cuál encaja? ---
+function huecosDe(id) {
+  var src = id === 'todo' ? [].concat(GYM.conectores.huecos, GYM.prepos.huecos, GYM.cantidad.huecos)
+                          : (GYM[id] || {}).huecos || [];
+  return src.map(function (l) {
+    var p = l.split('|');
+    var ops = shuffle([p[1], p[2], p[3]]);
+    var q = qMC('Completa el hueco:<br>' + gapHtml(p[0]), ops, ops.indexOf(p[1]), p[4], 'gram');
+    q.part = id === 'prepos' ? 'Preposiciones' : id === 'cantidad' ? 'much / many' : 'Conectores';
+    return q;
+  });
+}
+function juegoHuecos(id) {
+  var items = pick(huecosDe(id), 12);
+  var host = document.getElementById('ghue');
+  host.innerHTML = '';
+  runTest(host, items, { min: 75, pasoTxt: 'Bien: ya los eliges por la relación, no por la traducción' }, function (pct, pass, foot) {
+    S.ses++; save();
+    var b = el('<button class="btn sec small">Otra tanda</button>');
+    b.onclick = function () { juegoHuecos(id); };
+    foot.appendChild(b);
+  });
+}
+
+// --- juego 4: velocidad 60 segundos ---
+function juegoVelocidad() {
+  var pool = shuffle(huecosDe('todo').concat(
+    (GYM.adjetivos.opuestos || []).map(function (l) {
+      var p = l.split('|'), malas = pick(GYM.adjetivos.opuestos.filter(function (x) { return x !== l; }), 2)
+        .map(function (x) { return x.split('|')[Math.random() < 0.5 ? 0 : 1]; });
+      var ops = shuffle([p[1]].concat(malas));
+      return qMC('Lo contrario de <b class="en">' + esc(p[0]) + '</b>', ops, ops.indexOf(p[1]), '', 'lex');
+    })));
+  var host = document.getElementById('gvel');
+  var i = 0, ok = 0, mal = 0, segs = 60, iv;
+  host.innerHTML = '<div class="row between" style="margin:14px 0 8px"><b id="vsc">0 aciertos</b><span class="timer" id="vtm">1:00</span></div><div id="vzona"></div>';
+  var sc = host.querySelector('#vsc'), tm = host.querySelector('#vtm');
+  iv = setInterval(function () {
+    segs--; tm.textContent = '0:' + String(Math.max(0, segs)).padStart(2, '0');
+    if (segs <= 0) fin();
+  }, 1000);
+  paint();
+  function paint() {
+    if (segs <= 0) return;
+    var it = pool[i % pool.length];
+    var z = document.getElementById('vzona');
+    z.innerHTML = '<div class="qt">' + it.q + '</div>';
+    var row = el('<div class="opts"></div>');
+    it.o.forEach(function (o, k) {
+      var b = el('<button class="opt' + (/[a-z]{2}/.test(o) && !/ /.test(o) ? ' en' : '') + '">' + esc(o) + '</button>');
+      b.onclick = function () {
+        if (k === it.k) { ok++; b.classList.add('good'); } else { mal++; b.classList.add('bad'); }
+        rec(it.cat, k === it.k, it.q);
+        sc.textContent = ok + (ok === 1 ? ' acierto' : ' aciertos');
+        i++; setTimeout(paint, k === it.k ? 140 : 420);
+      };
+      row.appendChild(b);
+    });
+    z.appendChild(row);
+  }
+  function fin() {
+    clearInterval(iv);
+    var tot = ok + mal, prec = tot ? Math.round(ok / tot * 100) : 0;
+    S.ses++; save();
+    document.getElementById('vzona').innerHTML = '<div class="card flat"><div class="metrics">' +
+      metric(ok, 'aciertos en 60 s') + metric(prec + '%', 'precisión') + metric(tot, 'intentos') + '</div>' +
+      '<p class="small dim">' + (ok >= 20 ? 'Ese es el ritmo del automatismo: ya no traduces, reconoces.'
+        : ok >= 12 ? 'Buen ritmo. El objetivo son veinte aciertos con más del ochenta por ciento de precisión.'
+        : 'Todavía vas analizando cada frase. Es normal al principio: juega primero a parejas, que crea la asociación, y vuelve aquí.') + '</p></div>';
+    var b = el('<button class="btn small">Otra vez</button>');
+    b.onclick = function () { juegoVelocidad(); };
+    document.getElementById('vzona').appendChild(b);
+  }
 }
 
 // ---------- vista: palabras derivadas (word formation) ----------
@@ -1205,6 +1492,13 @@ function vDia(nStr) {
   function b1(host, D, n, done) {
     var due = srsDue();
     host.innerHTML = '<p class="dim small">Antes de meter nada nuevo, recupera lo viejo. La recuperación activa —no la relectura— es lo que fija la memoria.</p>';
+    var gy = gymDe(n);
+    if (gy) {
+      var nota = el('<div class="note small">🏋 <b>Gimnasio de hoy: ' + esc(gy.t) + '.</b> ' + esc(gy.txt) + ' </div>');
+      var gb = el('<button class="btn sec small" style="margin-top:8px">Abrir el gimnasio</button>');
+      gb.onclick = function () { go('gimnasio', gy.id); };
+      nota.appendChild(gb); host.appendChild(nota);
+    }
     var row = el('<div class="row"></div>');
     if (due.length) {
       host.appendChild(el('<p><b>' + due.length + '</b> tarjetas pendientes' + (semanal ? ' · <b>repaso semanal ampliado</b>' : '') + '.</p>'));

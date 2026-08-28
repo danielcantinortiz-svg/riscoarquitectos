@@ -76,6 +76,31 @@ adjetivos · *like* + *-ing* · presente continuo · *was/were* · pasado regula
 esenciales · preguntas y negativas en pasado · *going to* · comparativos · conectores. Cierra con un
 día de consolidación que deja lista la entrada al mes 1.
 
+## Gimnasio · ejercicios de asociación
+
+Series de uno a tres minutos para lo que no se aprende leyendo. Cuatro formatos, cada uno con una
+función distinta:
+
+| Juego | Qué entrena | Contenido |
+|---|---|---|
+| **Parejas contrarreloj** | La asociación bruta, con presión de tiempo | Derivadas, conectores, adjetivos y sus contrarios |
+| **Ordena la frase** | El orden rígido del inglés, que el español coloca al revés | Cinco reglas de orden + adjetivos encadenados |
+| **¿Cuál encaja?** | El criterio de elección, con el *por qué* de cada respuesta | Conectores, preposiciones, much/many |
+| **Velocidad · 60 s** | El automatismo: reconocer sin traducir | Mezcla de todo lo anterior |
+
+El panel de arriba señala el punto más flojo **a partir de los fallos reales registrados**, no de una
+suposición, y recomienda por dónde empezar. En el Módulo 0 el gimnasio entra en la propia sesión: el
+bloque 1 de los días de preposiciones, adjetivos, conectores, orden de palabras y comparativos abre
+directamente el ejercicio que toca, y los días de repaso proponen la serie de velocidad.
+
+### Huecos del Módulo 0 que cubre
+
+Auditando el contenido salieron cuatro temas con cobertura cero que son error clásico del
+hispanohablante, y el gimnasio los añade: **orden de palabras** (el sujeto nunca se omite, el
+adjetivo va delante), **genitivo sajón** (*my brother's office*, no *the office of my brother*),
+**posición de los adverbios de frecuencia** (*I always work*, no *I work always*) y el contraste
+**much / many**.
+
 ## Referencias de consulta
 
 - **Palabras derivadas (word formation)** — 219 palabras en diez familias de sufijos y prefijos, con el

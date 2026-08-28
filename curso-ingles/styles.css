@@ -211,6 +211,18 @@ td:nth-child(2){font-family:var(--mono); color:var(--dim); font-variant-numeric:
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--c1:#d9a86a; --c1-soft:#3a2b1a}}
 :root[data-theme="dark"]{--c1:#d9a86a; --c1-soft:#3a2b1a}
 .vb{cursor:pointer; border-bottom:1px dotted var(--line)}
+.pares{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+.pares h3{margin:0 0 8px}
+.ficha{display:block; width:100%; text-align:left; margin:0 0 7px; padding:9px 12px; border:1px solid var(--line);
+  border-radius:8px; background:var(--surface); color:var(--ink); font:500 14px var(--sans); cursor:pointer}
+.ficha:hover{border-color:var(--accent); color:var(--accent)}
+.ficha.sel{border-color:var(--accent); box-shadow:inset 0 0 0 1px var(--accent); color:var(--accent)}
+.ficha.hecha{background:var(--ok-soft); border-color:transparent; color:var(--ok); cursor:default; opacity:.75}
+.ficha.mal{background:var(--bad-soft); border-color:var(--bad); color:var(--bad)}
+#obolsa .ficha{display:inline-block; width:auto; margin:0}
+.bandeja{min-height:52px; padding:13px 14px; margin:12px 0; border:1px dashed var(--line);
+  border-radius:8px; background:var(--alt); font-size:1.06em}
+@media (max-width:620px){ .pares{grid-template-columns:1fr} }
 .tr{font:500 10.5px var(--mono); letter-spacing:.06em; text-transform:uppercase; color:var(--faint); text-decoration:none; white-space:nowrap}
 .tr:hover{color:var(--accent); text-decoration:underline}
 .vb:hover{color:var(--accent); border-bottom-color:var(--accent)}

@@ -677,15 +677,15 @@ function mazoDe(id) {
   if (id === 'derivadas') {
     var v = [];
     DRV.familias.forEach(function (G) { G.v.forEach(function (l) { var p = l.split('|'); v.push([p[0], p[1]]); }); });
-    return { t: 'Raíz y palabra derivada', v: v, izq: 'Raíz', der: 'Derivada' };
+    return { t: 'Raíz y palabra derivada', v: v, izq: 'Raíz', der: 'Derivada', enIzq: true, enDer: true };
   }
   if (id === 'conectores') {
     var c = [];
     (GYM.conectores.grupos || []).forEach(function (G) { G.v.forEach(function (l) { var p = l.split('|'); c.push([p[0], p[1]]); }); });
-    return { t: 'Conector y su función', v: c, izq: 'Conector', der: 'Para qué sirve' };
+    return { t: 'Conector y su función', v: c, izq: 'Conector', der: 'Para qué sirve', enIzq: true, enDer: false };
   }
   return { t: 'Adjetivo y su contrario', v: (GYM.adjetivos.opuestos || []).map(function (l) { return l.split('|'); }),
-           izq: 'Adjetivo', der: 'Su contrario' };
+           izq: 'Adjetivo', der: 'Su contrario', enIzq: true, enDer: true };
 }
 
 // Qué ejercicio del gimnasio le corresponde a cada día, para poder entrar
@@ -710,6 +710,7 @@ function vGimnasio(arg) {
     'que es justo lo que aguanta la atención con este tipo de material.</p>' + panelFlojo() +
     '<div class="card"><h2 style="margin-top:0">⏱ Parejas contrarreloj</h2>' +
     '<p class="dim small">Doce parejas. Pincha una de la izquierda y su pareja de la derecha. El reloj corre y cada fallo suma cinco segundos. Es el ejercicio que más rápido crea la asociación.</p>' +
+    '<p class="dim small">Cada palabra inglesa <b>se pronuncia al pulsarla</b>, así que oyes las doce mientras juegas, y el enlace <b>es</b> de al lado la traduce por si hace falta. Al terminar tienes las doce parejas juntas para repasarlas.</p>' +
     '<div class="row"><button class="btn" data-par="derivadas">Derivadas</button>' +
     '<button class="btn" data-par="conectores">Conectores</button>' +
     '<button class="btn" data-par="adjetivos">Adjetivos y contrarios</button></div><div id="gpar"></div></div>' +
@@ -768,21 +769,31 @@ function juegoParejas(id) {
     '<div class="pares"><div id="pA"></div><div id="pB"></div></div><div id="pfin"></div>';
   var A = host.querySelector('#pA'), B = host.querySelector('#pB'), tm = host.querySelector('#ptm');
   A.innerHTML = '<h3>' + esc(M.izq) + '</h3>'; B.innerHTML = '<h3>' + esc(M.der) + '</h3>';
-  shuffle(pares.slice()).forEach(function (p, i) { A.appendChild(ficha(p[0], p[0], true)); });
-  shuffle(pares.slice()).forEach(function (p) { B.appendChild(ficha(p[1], p[0], false)); });
+  shuffle(pares.slice()).forEach(function (p) { A.appendChild(fila(p[0], p[0], true)); });
+  shuffle(pares.slice()).forEach(function (p) { B.appendChild(fila(p[1], p[0], false)); });
   iv = setInterval(function () {
     var s2 = Math.round((Date.now() - t0) / 1000) + penal;
     tm.textContent = Math.floor(s2 / 60) + ':' + String(s2 % 60).padStart(2, '0');
   }, 500);
 
-  function ficha(txt, clave, esIzq) {
-    var b = el('<button class="ficha' + (esIzq ? ' en' : '') + '">' + esc(txt) + '</button>');
+  // Cada ficha va acompañada de un enlace al traductor, para cuando haga falta.
+  function fila(txt, clave, esIzq) {
+    var ingles = esIzq ? M.enIzq : M.enDer;
+    var f = el('<div class="fpar"></div>');
+    f.appendChild(ficha(txt, clave, esIzq, ingles));
+    if (ingles) f.appendChild(el(trad(txt).replace('>translate<', '>es<')));
+    return f;
+  }
+  function ficha(txt, clave, esIzq, ingles) {
+    var b = el('<button class="ficha' + (ingles ? ' en' : '') + '"' +
+      (ingles ? ' title="Pulsa para oírla"' : '') + '>' + esc(txt) + '</button>');
     b.dataset.k = clave;
     b.onclick = function () {
       if (b.classList.contains('hecha')) return;
-      if (!elegida) { limpiar(); elegida = b; b.classList.add('sel'); if (esIzq) speak(txt); return; }
+      if (ingles) speak(txt);   // se pronuncia siempre que la palabra esté en inglés
+      if (!elegida) { limpiar(); elegida = b; b.classList.add('sel'); return; }
       if (elegida === b) { b.classList.remove('sel'); elegida = null; return; }
-      if (elegida.parentNode === b.parentNode) { limpiar(); elegida = b; b.classList.add('sel'); return; }
+      if (elegida.parentNode.parentNode === b.parentNode.parentNode) { limpiar(); elegida = b; b.classList.add('sel'); return; }
       if (elegida.dataset.k === b.dataset.k) {
         elegida.classList.add('hecha'); b.classList.add('hecha');
         elegida.classList.remove('sel'); elegida = null; quedan--;
@@ -810,10 +821,20 @@ function juegoParejas(id) {
       '<p class="small ' + (fallos === 0 ? 'ok-t' : fallos <= 2 ? 'dim' : 'bad-t') + '">' +
       (fallos === 0 ? 'Sin un solo fallo. Repite el mismo mazo mañana y verás bajar el tiempo: eso es la asociación consolidándose.'
         : fallos <= 2 ? 'Casi limpio. Vuelve a jugar ahora mismo el mismo mazo: la segunda vuelta inmediata es la que fija.'
-        : 'Muchos fallos para doce parejas. Antes de repetir, mira la tabla de referencia dos minutos y vuelve.') + '</p></div>';
+        : 'Muchos fallos para doce parejas. Antes de repetir, mira la tabla de referencia dos minutos y vuelve.') + '</p>' +
+      '<h3>Las doce parejas</h3><div class="tablewrap"><table><tr><th>' + esc(M.izq) + '</th><th>' + esc(M.der) + '</th></tr>' +
+      pares.map(function (p) {
+        return '<tr><td>' + celda(p[0], M.enIzq) + '</td><td>' + celda(p[1], M.enDer) + '</td></tr>';
+      }).join('') + '</table></div>' +
+      '<p class="small dim">Pulsa cualquier palabra en inglés para oírla otra vez, o «es» para traducirla.</p></div>';
+    f.querySelectorAll('.vb').forEach(function (x) { x.onclick = function () { speak(x.dataset.say); }; });
     var r = el('<div class="row"></div>');
     var b1 = el('<button class="btn small">Otra ronda</button>'); b1.onclick = function () { juegoParejas(id); };
     r.appendChild(b1); f.appendChild(r);
+  }
+  function celda(txt, ingles) {
+    return ingles ? '<span class="en vb" data-say="' + esc(txt) + '" title="Escuchar">' + esc(txt) + '</span> ' + trad(txt).replace('>translate<', '>es<')
+                  : esc(txt);
   }
 }
 

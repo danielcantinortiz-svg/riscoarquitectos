@@ -84,6 +84,10 @@ función distinta:
 | Juego | Qué entrena | Contenido |
 |---|---|---|
 | **Parejas contrarreloj** | La asociación bruta, con presión de tiempo | Derivadas, conectores, adjetivos y sus contrarios |
+
+En las parejas, cada palabra inglesa **se pronuncia al pulsarla** —de modo que se oyen las doce mientras
+se juega— y lleva al lado un enlace al traductor por si hace falta. Al terminar la ronda se listan las doce
+parejas juntas, con audio y traducción, que es el momento natural de repasarlas.
 | **Ordena la frase** | El orden rígido del inglés, que el español coloca al revés | Cinco reglas de orden + adjetivos encadenados |
 | **¿Cuál encaja?** | El criterio de elección, con el *por qué* de cada respuesta | Conectores, preposiciones, much/many |
 | **Velocidad · 60 s** | El automatismo: reconocer sin traducir | Mezcla de todo lo anterior |

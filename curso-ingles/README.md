@@ -76,6 +76,18 @@ adjetivos · *like* + *-ing* · presente continuo · *was/were* · pasado regula
 esenciales · preguntas y negativas en pasado · *going to* · comparativos · conectores. Cierra con un
 día de consolidación que deja lista la entrada al mes 1.
 
+## Referencias de consulta
+
+- **Palabras derivadas (word formation)** — 219 palabras en diez familias de sufijos y prefijos, con el
+  tipo que es cada una y una frase de trabajo real. Incluye el caso que más se falla, `-ing` frente a
+  `-ed` (*the film was boring* / *I was bored*), y un **generador de práctica** que convierte la propia
+  tabla en veinte huecos con el formato de la Parte 3 del examen.
+- **Verbos** — 109 verbos con pasado, participio y ejemplo, agrupados por patrón (las tres formas
+  iguales, pasado y participio iguales, las tres distintas) más los regulares de arquitectura y negocios.
+
+Ambas se muestran en inglés, con audio al pulsar cualquier palabra y un enlace al traductor de Google
+por si hace falta; en la tabla de verbos el español está detrás de un interruptor, apagado por defecto.
+
 ## Evaluación
 
 - **Test diario** (12 ítems, dos de ellos con formato Cambridge): **≥ 70 %** para completar el día.
@@ -84,7 +96,9 @@ día de consolidación que deja lista la entrada al mes 1.
   multiple-choice cloze (8), open cloze (8), word formation (8), key word transformation (6),
   dictado (6) y transformación de frases (4).
 - **Evaluación oral** con reconocimiento de voz: palabras por minuto, densidad léxica, cobertura de
-  las estructuras objetivo y banda estimada (A2-C1).
+  las estructuras objetivo y banda estimada (A2-C1). La tarea es siempre la **del día que eliges**
+  —se selecciona en la propia vista o se entra desde el bloque 6 de la sesión— y el resultado queda
+  guardado en ese día concreto, de modo que la rejilla marca cuáles ya tienen prueba oral hecha.
 - **Evaluación escrita** automática: extensión, riqueza léxica, madurez sintáctica, uso del material
   del día y detección de los veintitrés errores fosilizados más frecuentes del hispanohablante.
 - **Panel de progreso**: racha, ritmo, evolución de notas, aciertos por destreza, estado de la

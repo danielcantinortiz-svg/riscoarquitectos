@@ -9,6 +9,10 @@ var C = window.CURSO;
 var CAM = window.CAMBRIDGE || {};
 var ANX = window.ANEXOS || {};
 var SIM = window.SIMULACRO || {};
+var VRB = window.VERBOS || { grupos: [] };
+var DRV = window.DERIVADAS || { familias: [] };
+// Enlace al traductor de Google, para no tener que poner el español en pantalla.
+function trad(t) { return '<a class="tr" target="_blank" rel="noopener" title="Abrir en el traductor de Google" href="https://translate.google.com/?sl=en&amp;tl=es&amp;op=translate&amp;text=' + encodeURIComponent(t) + '">translate</a>'; }
 function anexoDe(id, k) { return (ANX[id] || {})[k] || null; }
 var LEVELS = [
   { id: 'A2', nom: 'A2 → A2+ · Consolidación', mes: 1, dias: window.DIAS_A2, meta: C.metas.A2 },
@@ -191,7 +195,7 @@ function route() {
   var p = h.split('/');
   document.querySelectorAll('.tab[data-go]').forEach(function (b) { b.classList.toggle('on', b.dataset.go === p[0]); });
   window.scrollTo(0, 0);
-  ({ home: vHome, plan: vPlan, repaso: vRepaso, progreso: vProgreso, oral: vOral, examenes: vExamenes, dia: vDia, examen: vExamen, simulacro: vSimulacro }[p[0]] || vHome)(p[1]);
+  ({ home: vHome, plan: vPlan, repaso: vRepaso, progreso: vProgreso, oral: vOral, verbos: vVerbos, derivadas: vDerivadas, examenes: vExamenes, dia: vDia, examen: vExamen, simulacro: vSimulacro }[p[0]] || vHome)(p[1]);
 }
 
 // ---------- motor de tests ----------
@@ -263,13 +267,19 @@ function runTest(host, items, opts, done) {
     if (it.t === 'dic') { prompt = 'Escucha y escribe la frase exacta'; audio = it.s; }
     else if (it.t === 'tr') { prompt = 'Traduce al inglés: <i>' + esc(it.es) + '</i>'; }
     else if (it.t === 'oc') { prompt = 'Completa el hueco con <b>UNA sola palabra</b>:<br>' + gapHtml(it.q); }
-    else if (it.t === 'wf') { prompt = 'Forma la palabra derivada de <b>' + esc(it.root) + '</b>:<br>' + gapHtml(it.q); }
+    else if (it.t === 'wf') {
+      prompt = 'Cambia la terminación de <b>' + esc(it.root) + '</b> para que encaje en el hueco:<br>' + gapHtml(it.q);
+      hint = 'No se traduce: se escribe otra palabra de la misma familia (RELAX → relaxing, relaxed, relaxation). ' +
+        'Mira qué pide el hueco —sustantivo, adjetivo o adverbio— y si el sentido es negativo. ' +
+        '<a href="#derivadas" target="_blank">Ver la tabla de derivadas</a>.';
+    }
     else if (it.t === 'kwt') {
       prompt = 'Reescribe la frase con la palabra clave, sin cambiarla:<br><i>' + esc(it.orig) + '</i><br><b class="key">' + esc(it.key) + '</b><br>' + gapHtml(it.q);
       hint = 'Entre ' + it.lo + ' y ' + it.hi + ' palabras.';
     }
     q.appendChild(el('<div class="qt">' + prompt + '</div>'));
     if (hint) q.appendChild(el('<div class="small dim" style="margin-bottom:6px">' + hint + '</div>'));
+    if (it.t === 'oc') q.appendChild(el('<div class="small dim" style="margin-bottom:6px">Va una palabra gramatical: preposición, auxiliar, artículo, pronombre o conjunción. Nunca un verbo con significado propio.</div>'));
     if (audio) {
       var rw = el('<div class="row" style="margin:8px 0"></div>');
       rw.appendChild(spkBtn(audio));
@@ -629,14 +639,155 @@ function vProgreso() {
   if (b) b.onclick = function () { go('oral'); };
 }
 
+// Lista de días disponibles para la prueba oral, con marca de los ya evaluados.
+function selectorDia(n) {
+  var ops = '';
+  for (var i = 1; i <= TOTAL; i++) {
+    if (!unlocked(i)) continue;
+    var o = (S.dias[i] || {}).oral;
+    ops += '<option value="' + i + '"' + (i === n ? ' selected' : '') + '>' +
+      esc(etiquetaDia(i)) + ' · ' + esc(lvlOf(i).id) + ' · ' + esc(dayData(i).tema) +
+      (o ? '  ✔ ' + o.score : '') + '</option>';
+  }
+  return '<div class="card flat"><label class="small"><b>Día que quieres practicar</b> ' +
+    '<select id="oralDia">' + ops + '</select></label>' +
+    '<p class="small dim" style="margin:8px 0 0">Las tareas y las estructuras objetivo son las de ese día. Los días con ✔ ya tienen prueba oral guardada.</p></div>';
+}
+
+// ---------- vista: palabras derivadas (word formation) ----------
+function vDerivadas() {
+  var h = '<h1>Palabras derivadas · word formation</h1>' +
+    '<p class="dim">' + DRV.intro + '</p>' +
+    '<div class="card"><h3>Cómo se resuelve el ejercicio</h3><ol>' +
+    DRV.pasos.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ol></div>' +
+    '<div class="card"><div class="row between"><div><h3 style="margin:0">Practicar</h3>' +
+    '<p class="small dim" style="margin:4px 0 0">Veinte huecos con el mismo formato del examen. Se corrigen al momento y te dice por qué.</p></div>' +
+    '<div class="row"><button class="btn sec small" data-prac="familia">Solo -ing / -ed</button>' +
+    '<button class="btn" data-prac="todo">Empezar práctica</button></div></div><div id="prac"></div></div>' +
+    '<div class="card flat"><label class="small"><b>Buscar</b> ' +
+    '<input id="dq" type="text" placeholder="una raíz o una terminación: RELAX, -ness, im-…" style="min-width:260px"></label>' +
+    '<span class="dim small" id="dn" style="margin-left:10px"></span></div><div id="dlist"></div>';
+  app.innerHTML = h;
+  app.querySelectorAll('[data-prac]').forEach(function (b) {
+    b.onclick = function () { practicar(b.dataset.prac === 'familia'); };
+  });
+
+  // Genera huecos a partir de la propia tabla: se tapa la palabra derivada
+  // dentro de su frase de ejemplo y se da la raíz, igual que en el examen.
+  function practicar(soloIngEd) {
+    var pool = [];
+    DRV.familias.forEach(function (G, gi) {
+      if (soloIngEd && gi !== 0) return;
+      G.v.forEach(function (l) {
+        var p = l.split('|');
+        var re = new RegExp('\\b' + p[1].replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i');
+        if (!re.test(p[3])) return;
+        pool.push({ t: 'wf', root: p[0], a: p[1], q: p[3].replace(re, '___'), tipo: p[2], fam: G.t,
+                    cat: 'cam', part: 'Word formation · ' + G.t });
+      });
+    });
+    var items = pick(pool, Math.min(20, pool.length));
+    var host = document.getElementById('prac');
+    host.innerHTML = '';
+    runTest(host, items, { min: 70, pasoTxt: 'Bien: dominas la derivación' }, function (pct, pass, foot) {
+      rec('cam', pass, 'práctica de derivadas'); S.ses++; save();
+      var b2 = el('<button class="btn sec small">Otra tanda</button>');
+      b2.onclick = function () { practicar(soloIngEd); };
+      foot.appendChild(b2);
+    });
+    host.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  var q = document.getElementById('dq');
+  q.oninput = function () { pinta(q.value); };
+  pinta('');
+
+  function pinta(f) {
+    f = norm(f || '').replace(/-/g, '');
+    var total = 0;
+    var out = DRV.familias.map(function (G) {
+      var filas = G.v.map(function (l) { return l.split('|'); })
+        .filter(function (p) { return !f || norm(p[0] + ' ' + p[1] + ' ' + p[2]).indexOf(f) >= 0; });
+      total += filas.length;
+      if (!filas.length) return '';
+      return '<div class="card"><h2 style="margin-top:0">' + esc(G.t) + '</h2>' +
+        (f ? '' : '<p class="dim small">' + G.nota + '</p>') +
+        '<div class="tablewrap"><table><tr><th>Raíz</th><th>Palabra derivada</th><th>Qué es</th><th>Ejemplo</th></tr>' +
+        filas.map(function (p) {
+          return '<tr><td><span class="mono">' + esc(p[0]) + '</span></td>' +
+            '<td><b class="en vb" data-say="' + esc(p[1]) + '" title="Escuchar">' + esc(p[1]) + '</b> ' + trad(p[1]) + '</td>' +
+            '<td class="dim small">' + esc(p[2]) + '</td>' +
+            '<td><span class="en vb" data-say="' + esc(p[3]) + '" title="Escuchar la frase">' + esc(p[3]) + '</span> ' + trad(p[3]) + '</td></tr>';
+        }).join('') + '</table></div></div>';
+    }).join('');
+    document.getElementById('dlist').innerHTML = out || '<div class="card"><p>Nada coincide con esa búsqueda.</p></div>';
+    document.getElementById('dn').textContent = total + (total === 1 ? ' palabra' : ' palabras') + ' · pulsa el inglés para oírlo, «translate» para traducirlo';
+    app.querySelectorAll('.vb').forEach(function (x) { x.onclick = function () { speak(x.dataset.say); }; });
+  }
+}
+
+// ---------- vista: verbos ----------
+function vVerbos(filtroInicial) {
+  var h = '<h1>Verbos y sus equivalentes</h1>' +
+    '<p class="dim">Ciento nueve verbos con su pasado, su participio y una frase de trabajo real. ' +
+    'Los irregulares van <b>agrupados por patrón</b>, no en orden alfabético: se memorizan mucho mejor en familias ' +
+    '(<i>buy-bought-bought</i>, <i>speak-spoke-spoken</i>) que en una lista de cien palabras sueltas.</p>' +
+    '<div class="note small"><b>Cómo se usan las tres formas.</b> La <b>base</b> es el presente y lo que va detrás de <i>to</i>, ' +
+    '<i>do/does</i> y <i>did</i>: <i>I work · to work · Did you work?</i> · El <b>pasado</b> va solo, sin auxiliar: ' +
+    '<i>I worked yesterday</i> · El <b>participio</b> nunca va solo: acompaña a <i>have/has/had</i> (<i>I have worked here for years</i>) ' +
+    'o a <i>be</i> en la pasiva (<i>The house was built in 1920</i>). Por eso hay que saberse las tres.</div>' +
+    '<div class="card flat"><label class="small"><b>Buscar</b> ' +
+    '<input id="vq" type="text" placeholder="build, deliver, pay…" style="min-width:260px"></label>' +
+    '<label class="small" style="margin-left:16px"><input type="checkbox" id="ves"> Mostrar también el español</label>' +
+    '<span class="dim small" id="vn" style="margin-left:10px"></span></div>' +
+    '<div id="vlist"></div>';
+  app.innerHTML = h;
+  var q = document.getElementById('vq'), ces = document.getElementById('ves');
+  q.oninput = function () { pinta(q.value); };
+  ces.onchange = function () { pinta(q.value); };
+  if (filtroInicial) { q.value = decodeURIComponent(filtroInicial); }
+  pinta(q.value);
+
+  function pinta(f) {
+    f = norm(f || '');
+    var verEs = ces.checked;
+    var total = 0;
+    var out = VRB.grupos.map(function (G) {
+      var filas = G.v.map(function (l) { return l.split('|'); })
+        .filter(function (p) { return !f || norm(p[0] + ' ' + p[1] + ' ' + p[2] + ' ' + p[3]).indexOf(f) >= 0; });
+      total += filas.length;
+      if (!filas.length) return '';
+      return '<div class="card"><h2 style="margin-top:0">' + esc(G.t) + '</h2>' +
+        (f ? '' : '<p class="dim small">' + G.nota + '</p>') +
+        '<div class="tablewrap"><table><tr><th>Base</th><th>Pasado</th><th>Participio</th><th>Ejemplo</th></tr>' +
+        filas.map(function (p) {
+          return '<tr>' +
+            '<td><b class="en vb" data-say="' + esc(p[0] + ', ' + p[2] + ', ' + p[3]) + '" title="Escuchar las tres formas">' + esc(p[0]) + '</b> ' + trad(p[0]) +
+            (verEs ? '<br><span class="dim small">' + esc(p[1]) + '</span>' : '') + '</td>' +
+            '<td class="en">' + esc(p[2]) + '</td><td class="en">' + esc(p[3]) + '</td>' +
+            '<td><span class="en vb" data-say="' + esc(p[4]) + '" title="Escuchar la frase">' + esc(p[4]) + '</span> ' + trad(p[4]) +
+            (verEs ? '<br><span class="dim small">' + esc(p[5]) + '</span>' : '') + '</td></tr>';
+        }).join('') + '</table></div></div>';
+    }).join('');
+    document.getElementById('vlist').innerHTML = out || '<div class="card"><p>Ningún verbo coincide con esa búsqueda.</p></div>';
+    document.getElementById('vn').textContent = total + (total === 1 ? ' verbo' : ' verbos') + ' · pulsa el inglés para oírlo, «translate» para traducirlo';
+    app.querySelectorAll('.vb').forEach(function (x) { x.onclick = function () { speak(x.dataset.say); }; });
+  }
+}
+
 // ---------- vista: prueba oral ----------
-function vOral() {
-  var n = Math.max(1, maxDone()), D = dayData(n), L = lvlOf(n);
+function vOral(arg) {
+  // El día lo manda la ruta (#oral/N). Sin argumento se toma el día en curso,
+  // no el último completado: si no, estando en el día 4 salía la tarea del 3.
+  var n = parseInt(arg, 10);
+  if (!(n >= 1 && n <= TOTAL) || !unlocked(n)) { var u = maxDone(); n = siguiente(u > 0 ? u : 1); }
+  var D = dayData(n), L = lvlOf(n);
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   var h = '<h1>Prueba de expresión oral</h1>' +
     '<p class="dim">Dos minutos hablando sin parar. Se mide tu <b>fluidez</b> (palabras por minuto), tu <b>densidad léxica</b> (cuántas palabras distintas usas) y cuántas <b>estructuras objetivo del ' + etiquetaDia(n).toLowerCase() + '</b> te salen sin pensarlas.</p>';
+  h += selectorDia(n);
   if (!SR) {
     app.innerHTML = h + '<div class="card"><p class="bad-t"><b>Tu navegador no permite reconocimiento de voz.</b></p><p>Necesitas Chrome o Edge de escritorio. Mientras tanto puedes hacer la prueba igual: habla dos minutos con el cronómetro y luego escribe de memoria lo que dijiste en el bloque de escritura.</p></div>';
+    cablearSelector();
     return;
   }
   h += '<div class="card"><h3>Tu tarea</h3><p><b>' + esc(D.prod.habla) + '</b></p>' +
@@ -645,6 +796,16 @@ function vOral() {
     '<div class="row" style="margin-top:14px"><button class="btn" id="rec">● Empezar a grabar</button><span class="timer" id="ot">2:00</span><span class="dim small" id="ost"></span></div>' +
     '<div id="live" class="live en hidden"></div><div id="ores"></div></div>';
   app.innerHTML = h;
+  cablearSelector();
+  var yaHecho = (S.dias[n] || {}).oral;
+  if (yaHecho) document.getElementById('ores').innerHTML =
+    '<div class="note small">Ya hiciste la prueba oral de este día el <b>' + esc(yaHecho.f.split('-').reverse().join('/')) +
+    '</b> con <b>' + yaHecho.score + '</b> puntos (banda ' + esc(yaHecho.band) + '). Puedes repetirla: se guarda la mejor marca.</div>';
+
+  function cablearSelector() {
+    var sel = document.getElementById('oralDia');
+    if (sel) sel.onchange = function () { go('oral', sel.value); };
+  }
 
   var r = new SR();
   r.lang = (voice && voice.lang) || 'en-GB';
@@ -703,7 +864,13 @@ function vOral() {
     score = Math.max(0, Math.min(100, score));
     var band = wpm >= 120 && distinct >= 45 && score >= 78 ? 'C1' : wpm >= 100 && score >= 62 ? 'B2' : wpm >= 80 && score >= 45 ? 'B1' : 'A2';
     var rw = { f: hoy(), dia: n, wpm: wpm, words: toks.length, distinct: distinct, cov: cov, score: score, band: band };
-    S.oral.push(rw); rec('prod', score >= 60, 'prueba oral'); save();
+    S.oral.push(rw);
+    // Queda registrada en el día concreto (antes solo se apilaba en el historial,
+    // así que el día no mostraba nunca la prueba como hecha).
+    var stD = S.dias[n] = S.dias[n] || { fin: false, pct: 0, blk: {} };
+    if (!stD.blk) stD.blk = {};
+    if (!stD.oral || score > stD.oral.score) stD.oral = { f: hoy(), score: score, band: band, wpm: wpm };
+    rec('prod', score >= 60, 'prueba oral ' + etiquetaDia(n).toLowerCase()); save();
     document.getElementById('ores').innerHTML =
       '<h3>Resultado</h3><div class="metrics">' + metric(score, 'puntuación') + metric(wpm, 'palabras/minuto') + metric(toks.length, 'palabras') +
       metric(distinct + '%', 'léxico distinto') + metric(hit.length + '/' + D.chunks.length, 'estructuras usadas') + metric(band, 'banda estimada') + '</div>' +
@@ -1188,8 +1355,10 @@ function vDia(nStr) {
         if (s <= 0) { clearInterval(iv); t.disabled = false; tv.textContent = '¡Tiempo!'; }
       }, 1000);
     };
-    var ov = el('<button class="btn sec small" style="margin-left:8px">Prueba oral evaluada</button>');
-    ov.onclick = function () { go('oral'); };
+    var oralHecha = (S.dias[n] || {}).oral;
+    var ov = el('<button class="btn sec small" style="margin-left:8px">' +
+      (oralHecha ? '✔ Prueba oral · ' + oralHecha.score + ' pts · repetir' : 'Prueba oral evaluada') + '</button>');
+    ov.onclick = function () { go('oral', n); };  // el día concreto, no el último completado
     sp.appendChild(t); sp.appendChild(tv); sp.appendChild(ov); host.appendChild(sp);
 
     host.appendChild(el('<h3>✍ Escribe</h3>'));

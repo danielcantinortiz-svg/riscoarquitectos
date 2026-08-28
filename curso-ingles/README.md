@@ -116,6 +116,10 @@ por si hace falta; en la tabla de verbos el español está detrás de un interru
 ## Evaluación
 
 - **Test diario** (12 ítems, dos de ellos con formato Cambridge): **≥ 70 %** para completar el día.
+- **Ritmo de la corrección.** Al acertar se avanza solo tras un segundo, porque no hay nada que leer.
+  Al fallar **no hay cuenta atrás**: la solución y su explicación se quedan en pantalla hasta que
+  pulsas «Continuar» o la tecla Intro. Leer por qué se ha fallado es la parte que enseña, y no puede
+  depender de la velocidad de lectura de cada uno.
 - **Repaso semanal** los días 7, 14, 21 y 28 de cada mes: el test se amplía con la semana anterior.
 - **Examen de nivel** al terminar cada mes, **≥ 75 % = APTO**, con las seis partes del examen oficial:
   multiple-choice cloze (8), open cloze (8), word formation (8), key word transformation (6),

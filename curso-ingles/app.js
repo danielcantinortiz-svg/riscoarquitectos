@@ -213,7 +213,22 @@ function runTest(host, items, opts, done) {
     porCat[item.cat].tot++; if (ok) porCat[item.cat].ok++;
     rec(item.cat, ok, item.t === 'mc' ? item.q : item.t === 'dic' ? item.s : item.t === 'tr' ? item.es : item.q);
     i++;
-    setTimeout(function () { i < items.length ? paint() : end(); }, ok ? 600 : 1700);
+    var seguir = function () { i < items.length ? paint() : end(); };
+    if (ok) { setTimeout(seguir, 900); return; }
+    // Al fallar hay algo que leer: la solución y su explicación. Nada de
+    // cuenta atrás — se avanza cuando tú quieras, con el botón o con Enter.
+    var q = box.querySelector('#qq') || box;
+    var r = el('<div class="row" style="margin-top:12px"></div>');
+    var b = el('<button class="btn small">Continuar →</button>');
+    b.onclick = function () { document.removeEventListener('keydown', tecla); seguir(); };
+    function tecla(e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); document.removeEventListener('keydown', tecla); seguir(); }
+    }
+    document.addEventListener('keydown', tecla);
+    r.appendChild(b);
+    r.appendChild(el('<span class="dim small">Tómate el tiempo que necesites. También vale la tecla Intro.</span>'));
+    q.appendChild(r);
+    b.focus();
   }
   function end() {
     stopAudio(); save();
@@ -861,7 +876,12 @@ function juegoOrden(which) {
       if (ok) speak(frase);
       rec('gram', ok, 'orden: ' + frase);
       save();
-      setTimeout(function () { i++; paint(); }, ok ? 900 : 2400);
+      var seguir = function () { i++; paint(); };
+      if (ok) { setTimeout(seguir, 1000); return; }
+      var cont = el('<button class="btn small" style="margin-top:10px">Continuar →</button>');
+      cont.onclick = seguir;
+      z.querySelector('#ofb').appendChild(cont);
+      cont.focus();
     };
   }
 }
@@ -917,10 +937,13 @@ function juegoVelocidad() {
     it.o.forEach(function (o, k) {
       var b = el('<button class="opt' + (/[a-z]{2}/.test(o) && !/ /.test(o) ? ' en' : '') + '">' + esc(o) + '</button>');
       b.onclick = function () {
-        if (k === it.k) { ok++; b.classList.add('good'); } else { mal++; b.classList.add('bad'); }
-        rec(it.cat, k === it.k, it.q);
+        var acierto = k === it.k;
+        row.querySelectorAll('.opt').forEach(function (x) { x.disabled = true; });
+        if (acierto) { ok++; b.classList.add('ok'); }
+        else { mal++; b.classList.add('bad'); row.querySelectorAll('.opt')[it.k].classList.add('ok'); }
+        rec(it.cat, acierto, it.q);
         sc.textContent = ok + (ok === 1 ? ' acierto' : ' aciertos');
-        i++; setTimeout(paint, k === it.k ? 140 : 420);
+        i++; setTimeout(paint, acierto ? 200 : 1100);  // al fallar, tiempo para ver la buena
       };
       row.appendChild(b);
     });

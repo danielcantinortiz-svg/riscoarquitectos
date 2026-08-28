@@ -12,6 +12,9 @@ var SIM = window.SIMULACRO || {};
 var VRB = window.VERBOS || { grupos: [] };
 var DRV = window.DERIVADAS || { familias: [] };
 var GYM = window.GIMNASIO || {};
+var DIC = window.ES || {};
+// Significado de una palabra suelta, para mostrarlo al pulsarla.
+function traduccion(t) { return DIC[String(t).trim().toLowerCase()] || null; }
 // Enlace al traductor de Google, para no tener que poner el español en pantalla.
 function trad(t) { return '<a class="tr" target="_blank" rel="noopener" title="Abrir en el traductor de Google" href="https://translate.google.com/?sl=en&amp;tl=es&amp;op=translate&amp;text=' + encodeURIComponent(t) + '">translate</a>'; }
 function anexoDe(id, k) { return (ANX[id] || {})[k] || null; }
@@ -710,7 +713,7 @@ function vGimnasio(arg) {
     'que es justo lo que aguanta la atención con este tipo de material.</p>' + panelFlojo() +
     '<div class="card"><h2 style="margin-top:0">⏱ Parejas contrarreloj</h2>' +
     '<p class="dim small">Doce parejas. Pincha una de la izquierda y su pareja de la derecha. El reloj corre y cada fallo suma cinco segundos. Es el ejercicio que más rápido crea la asociación.</p>' +
-    '<p class="dim small">Cada palabra inglesa <b>se pronuncia al pulsarla</b>, así que oyes las doce mientras juegas, y el enlace <b>es</b> de al lado la traduce por si hace falta. Al terminar tienes las doce parejas juntas para repasarlas.</p>' +
+    '<p class="dim small">Al pulsar una palabra inglesa <b>se pronuncia y aparece debajo qué significa</b>, así que oyes las doce mientras juegas y resuelves cualquier duda sin salir. Al terminar tienes las doce parejas juntas para repasarlas.</p>' +
     '<div class="row"><button class="btn" data-par="derivadas">Derivadas</button>' +
     '<button class="btn" data-par="conectores">Conectores</button>' +
     '<button class="btn" data-par="adjetivos">Adjetivos y contrarios</button></div><div id="gpar"></div></div>' +
@@ -781,16 +784,20 @@ function juegoParejas(id) {
     var ingles = esIzq ? M.enIzq : M.enDer;
     var f = el('<div class="fpar"></div>');
     f.appendChild(ficha(txt, clave, esIzq, ingles));
-    if (ingles) f.appendChild(el(trad(txt).replace('>translate<', '>es<')));
     return f;
   }
   function ficha(txt, clave, esIzq, ingles) {
+    var es = ingles ? traduccion(txt) : null;
     var b = el('<button class="ficha' + (ingles ? ' en' : '') + '"' +
-      (ingles ? ' title="Pulsa para oírla"' : '') + '>' + esc(txt) + '</button>');
+      (ingles ? ' title="Pulsa para oírla y ver qué significa"' : '') + '><span class="w">' + esc(txt) + '</span></button>');
     b.dataset.k = clave;
     b.onclick = function () {
       if (b.classList.contains('hecha')) return;
-      if (ingles) speak(txt);   // se pronuncia siempre que la palabra esté en inglés
+      if (ingles) {
+        speak(txt);                       // se pronuncia
+        if (es && !b.querySelector('.es'))  // y se revela el significado
+          b.appendChild(el('<span class="sig">' + esc(es) + '</span>'));
+      }
       if (!elegida) { limpiar(); elegida = b; b.classList.add('sel'); return; }
       if (elegida === b) { b.classList.remove('sel'); elegida = null; return; }
       if (elegida.parentNode.parentNode === b.parentNode.parentNode) { limpiar(); elegida = b; b.classList.add('sel'); return; }
@@ -826,16 +833,13 @@ function juegoParejas(id) {
       pares.map(function (p) {
         return '<tr><td>' + celda(p[0], M.enIzq) + '</td><td>' + celda(p[1], M.enDer) + '</td></tr>';
       }).join('') + '</table></div>' +
-      '<p class="small dim">Pulsa cualquier palabra en inglés para oírla otra vez, o «es» para traducirla.</p></div>';
-    f.querySelectorAll('.vb').forEach(function (x) { x.onclick = function () { speak(x.dataset.say); }; });
+      '<p class="small dim">Pulsa cualquier palabra para oírla otra vez y ver qué significa.</p></div>';
+    cablearPalabras(f);
     var r = el('<div class="row"></div>');
     var b1 = el('<button class="btn small">Otra ronda</button>'); b1.onclick = function () { juegoParejas(id); };
     r.appendChild(b1); f.appendChild(r);
   }
-  function celda(txt, ingles) {
-    return ingles ? '<span class="en vb" data-say="' + esc(txt) + '" title="Escuchar">' + esc(txt) + '</span> ' + trad(txt).replace('>translate<', '>es<')
-                  : esc(txt);
-  }
+  function celda(txt, ingles) { return ingles ? palabraES(txt) : esc(txt); }
 }
 
 // --- juego 2: ordenar la frase ---
@@ -986,6 +990,24 @@ function juegoVelocidad() {
 }
 
 // ---------- vista: palabras derivadas (word formation) ----------
+// Palabra en inglés que se oye y muestra su significado al pulsarla.
+function palabraES(w) {
+  var es = traduccion(w);
+  return '<b class="en vb pal" data-say="' + esc(w) + '"' + (es ? ' data-es="' + esc(es) + '"' : '') +
+    ' title="' + (es ? 'Pulsa para oírla y ver qué significa' : 'Pulsa para oírla') + '">' + esc(w) + '</b>' +
+    (es ? '' : ' ' + trad(w));
+}
+function cablearPalabras(raiz) {
+  raiz.querySelectorAll('.pal').forEach(function (x) {
+    x.onclick = function () {
+      speak(x.dataset.say);
+      if (x.dataset.es && !x.nextElementSibling) {
+        x.insertAdjacentHTML('afterend', ' <span class="sig">' + esc(x.dataset.es) + '</span>');
+      }
+    };
+  });
+}
+
 function vDerivadas() {
   var h = '<h1>Palabras derivadas · word formation</h1>' +
     '<p class="dim">' + DRV.intro + '</p>' +
@@ -1045,14 +1067,15 @@ function vDerivadas() {
         '<div class="tablewrap"><table><tr><th>Raíz</th><th>Palabra derivada</th><th>Qué es</th><th>Ejemplo</th></tr>' +
         filas.map(function (p) {
           return '<tr><td><span class="mono">' + esc(p[0]) + '</span></td>' +
-            '<td><b class="en vb" data-say="' + esc(p[1]) + '" title="Escuchar">' + esc(p[1]) + '</b> ' + trad(p[1]) + '</td>' +
+            '<td>' + palabraES(p[1]) + '</td>' +
             '<td class="dim small">' + esc(p[2]) + '</td>' +
             '<td><span class="en vb" data-say="' + esc(p[3]) + '" title="Escuchar la frase">' + esc(p[3]) + '</span> ' + trad(p[3]) + '</td></tr>';
         }).join('') + '</table></div></div>';
     }).join('');
     document.getElementById('dlist').innerHTML = out || '<div class="card"><p>Nada coincide con esa búsqueda.</p></div>';
-    document.getElementById('dn').textContent = total + (total === 1 ? ' palabra' : ' palabras') + ' · pulsa el inglés para oírlo, «translate» para traducirlo';
+    document.getElementById('dn').textContent = total + (total === 1 ? ' palabra' : ' palabras') + ' · pulsa la palabra para oírla y ver qué significa';
     app.querySelectorAll('.vb').forEach(function (x) { x.onclick = function () { speak(x.dataset.say); }; });
+    cablearPalabras(app);
   }
 }
 

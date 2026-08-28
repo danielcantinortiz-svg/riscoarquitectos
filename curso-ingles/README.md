@@ -85,9 +85,17 @@ función distinta:
 |---|---|---|
 | **Parejas contrarreloj** | La asociación bruta, con presión de tiempo | Derivadas, conectores, adjetivos y sus contrarios |
 
-En las parejas, cada palabra inglesa **se pronuncia al pulsarla** —de modo que se oyen las doce mientras
-se juega— y lleva al lado un enlace al traductor por si hace falta. Al terminar la ronda se listan las doce
-parejas juntas, con audio y traducción, que es el momento natural de repasarlas.
+En las parejas, al pulsar una palabra inglesa **se pronuncia y aparece debajo qué significa**, sin salir de
+la aplicación: se oyen las doce mientras se juega y se resuelve cualquier duda sobre la marcha. Al terminar
+la ronda se listan las doce parejas juntas, con el mismo comportamiento, que es el momento natural de
+repasarlas. La misma pulsación funciona en la tabla de palabras derivadas.
+
+El diccionario de apoyo (`data/es.js`) tiene 457 entradas y cubre por completo el vocabulario del gimnasio
+y de la tabla de derivadas —raíces, derivadas, adjetivos y conectores—, comprobado con un test que falla si
+aparece una palabra sin traducción. Distingue los pares que más se confunden: *boring* es «aburrido (la
+cosa)» y *bored* «aburrido (la persona)»; *economic* es «de la economía» y *economical* «que ahorra».
+Para las frases de ejemplo completas, que un diccionario de palabras sueltas no puede cubrir, se mantiene
+el enlace al traductor.
 | **Ordena la frase** | El orden rígido del inglés, que el español coloca al revés | Cinco reglas de orden + adjetivos encadenados |
 | **¿Cuál encaja?** | El criterio de elección, con el *por qué* de cada respuesta | Conectores, preposiciones, much/many |
 | **Velocidad · 60 s** | El automatismo: reconocer sin traducir | Mezcla de todo lo anterior |

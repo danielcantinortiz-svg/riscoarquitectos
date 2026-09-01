@@ -320,3 +320,30 @@ details.expl[open] summary{margin-bottom:8px}
 .destreza{border-left:3px solid var(--line); padding:2px 0 2px 12px; margin:12px 0}
 .destreza h4{margin:0 0 4px; font-size:13px}
 .destreza p{margin:2px 0}
+
+/* modo profesor · corrección palabra a palabra · taller de habla */
+details.prof{margin:12px 0; border:1px solid var(--line); border-radius:8px; padding:10px 12px; background:var(--alt)}
+details.prof summary{cursor:pointer; font-weight:600; font-size:13px; color:var(--dim)}
+details.prof[open] summary{margin-bottom:6px; color:var(--ink)}
+details.prof h4{margin:12px 0 4px; font-size:13px}
+details.prof p, details.prof li{font-size:13px; line-height:1.62}
+ol.proto-l{margin:6px 0 0; padding-left:20px}
+ol.proto-l li{margin:5px 0}
+.proto{margin-top:12px; border-left:3px solid var(--line); padding:6px 0 6px 12px; font-size:12.5px}
+.proto b{display:block; margin-bottom:2px}
+.corr{margin-top:10px; border:1px solid var(--line); border-radius:8px; overflow:hidden}
+.corr-l{padding:8px 12px; border-bottom:1px solid var(--line)}
+.corr-l .et{display:block; font:700 10.5px/1.6 var(--mono); letter-spacing:.1em; text-transform:uppercase; color:var(--faint)}
+.corr-l p{margin:2px 0 0}
+.corr s.sobra{text-decoration-thickness:2px; opacity:.75}
+.corr u.falta{text-decoration-style:wavy; font-weight:700}
+.corr .leyenda{margin:0; padding:4px 12px; border-bottom:1px solid var(--line)}
+.corr .porque{padding:8px 12px}
+.corr .porque ul{margin:4px 0 0; padding-left:18px}
+.corr .porque li{margin:4px 0; font-size:13px; line-height:1.6}
+.son .truco{border-left:3px solid var(--line); padding-left:10px}
+.pmin{display:flex; flex-wrap:wrap; gap:6px 14px; margin-top:6px}
+.pmin .par{font-size:13px}
+.ritmo b.golpe{font-weight:800}
+.lectura{line-height:1.9; font-size:15px}
+.en.big{font-size:18px; line-height:1.6; margin:6px 0}

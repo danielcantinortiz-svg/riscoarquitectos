@@ -113,6 +113,49 @@ adjetivo va delante), **genitivo sajón** (*my brother's office*, no *the office
 **posición de los adverbios de frecuencia** (*I always work*, no *I work always*) y el contraste
 **much / many**.
 
+### Modo profesor
+
+Cada juego del gimnasio lleva desplegado un bloque **«Modo profesor»** con tres apartados: *por qué existe
+este ejercicio*, *cómo se hace bien* y *qué hacer exactamente cuando fallo*, más el error concreto que se
+quiere desterrar. El de «¿Cuál encaja?» es el más largo a propósito, porque es el ejercicio central: explica
+que los conectores y las preposiciones **no se traducen, se eligen**, y da un protocolo de cuatro pasos para
+responder y otro de cinco para después de un fallo. Ese protocolo vuelve a aparecer **en la propia pantalla
+cada vez que se falla**, que es cuando sirve de algo.
+
+### Corrección palabra a palabra
+
+Cuando lo que falla es una frase entera —ordenar palabras, traducir al inglés, un dictado, una
+transformación— enseñar la solución no basta. La corrección compara lo escrito con el modelo por
+subsecuencia común más larga y muestra las dos líneas enfrentadas: **tachado lo que sobra, subrayado lo que
+falta**. Debajo nombra el error, con las categorías que de verdad comete un hispanohablante: sujeto omitido,
+artículo que falta o que sobra, auxiliar ausente, `-s` de tercera persona, preposición cambiada, orden de
+palabras, y el caso de «solo era una mayúscula o el punto final», que se dice tal cual en vez de fingir que
+el fallo era gramatical.
+
+## Taller de expresión oral · pestaña «Habla»
+
+La pestaña **Oral** mide; la pestaña **Habla** enseña. La premisa: un hispanohablante adulto no falla en
+«todo el inglés», falla en unos pocos sonidos que su boca nunca ha tenido que hacer y en una forma distinta
+de repartir el peso dentro de la frase. Cinco apartados, en este orden por método:
+
+1. **Los sonidos que te delatan** — diez fichas: `/ɪ/` frente a `/iː/` (*ship* / *sheep*), `/æ/` frente a
+   `/e/` (*bad* / *bed*), la schwa `/ə/`, `/b/` frente a `/v/`, las dos *th*, la *h* aspirada, la *s* inicial
+   (*Spain*, no *espain*), las terminaciones `-ed`, la `/ŋ/` final y el acento de palabra. Cada una explica
+   por qué falla en español, **qué hace exactamente la boca**, un truco y pares mínimos. Y una **prueba de
+   oído**: se pronuncia una de las dos palabras y hay que decir cuál era, porque no se puede producir un
+   sonido que aún no se distingue.
+2. **Repite y compara** — tres niveles por longitud. Suena el modelo, se repite al micrófono y el
+   reconocimiento de voz devuelve la corrección palabra a palabra: lo subrayado es lo que no se ha
+   entendido. No es un examinador, es un espejo.
+3. **El ritmo de la frase** — diez frases con los golpes marcados en negrita. El español reparte el tiempo
+   por sílabas; el inglés, por acentos.
+4. **Lectura en voz alta** — tres textos profesionales cronometrados, con palabras por minuto, porcentaje
+   entendido y la lista de las que se han perdido.
+5. **Monólogo guiado** — noventa segundos sobre un tema de trabajo con tres puntos obligatorios, con
+   transcripción y recuento de muletillas.
+
+Todo lo que no necesita micrófono —sonidos, pares mínimos, ritmo, lecturas— funciona en cualquier navegador.
+
 ## Referencias de consulta
 
 - **Palabras derivadas (word formation)** — 219 palabras en diez familias de sufijos y prefijos, con el

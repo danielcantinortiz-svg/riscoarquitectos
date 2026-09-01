@@ -210,7 +210,7 @@ function route() {
   var p = h.split('/');
   document.querySelectorAll('.tab[data-go]').forEach(function (b) { b.classList.toggle('on', b.dataset.go === p[0]); });
   window.scrollTo(0, 0);
-  ({ home: vHome, plan: vPlan, repaso: vRepaso, progreso: vProgreso, oral: vOral, verbos: vVerbos, derivadas: vDerivadas, frases: vFrases, gimnasio: vGimnasio, examenes: vExamenes, dia: vDia, examen: vExamen, simulacro: vSimulacro }[p[0]] || vHome)(p[1]);
+  ({ home: vHome, plan: vPlan, repaso: vRepaso, progreso: vProgreso, oral: vOral, habla: vHabla, verbos: vVerbos, derivadas: vDerivadas, frases: vFrases, gimnasio: vGimnasio, examenes: vExamenes, dia: vDia, examen: vExamen, simulacro: vSimulacro }[p[0]] || vHome)(p[1]);
 }
 
 // ---------- motor de tests ----------
@@ -232,6 +232,9 @@ function runTest(host, items, opts, done) {
     // Al fallar hay algo que leer: la solución y su explicación. Nada de
     // cuenta atrás — se avanza cuando tú quieras, con el botón o con Enter.
     var q = box.querySelector('#qq') || box;
+    // Un fallo es el momento en que más se aprende, así que aquí se recuerda
+    // qué hacer con él en vez de dejar pasar la pregunta.
+    if (opts.protocolo) q.appendChild(el('<div class="proto"><b>Qué hacer ahora</b>' + opts.protocolo + '</div>'));
     var r = el('<div class="row" style="margin-top:12px"></div>');
     var b = el('<button class="btn small">Continuar →</button>');
     b.onclick = function () { document.removeEventListener('keydown', tecla); seguir(); };
@@ -327,8 +330,12 @@ function runTest(host, items, opts, done) {
       var words = mine ? mine.split(' ').length : 0;
       var lenBad = it.t === 'kwt' && ok === false && (words < it.lo || words > it.hi);
       inp.disabled = true; send.disabled = true;
-      var msg = ok ? '✔ Correcto.' : '✖ Solución: <b>' + esc(it.t === 'dic' ? it.s : it.t === 'tr' ? it.en : it.a) + '</b>' + (lenBad ? ' <span class="dim">(tu respuesta tenía ' + words + ' palabras)</span>' : '');
+      var sol = it.t === 'dic' ? it.s : it.t === 'tr' ? it.en : it.a;
+      var msg = ok ? '✔ Correcto.' : '✖ Solución: <b>' + esc(sol) + '</b>' + (lenBad ? ' <span class="dim">(tu respuesta tenía ' + words + ' palabras)</span>' : '');
       q.appendChild(el('<div class="fb ' + (ok ? 'ok' : 'bad') + '">' + msg + '</div>'));
+      // Con frases enteras la solución sola no enseña nada: se marca palabra a
+      // palabra lo que sobra y lo que falta, y se nombra el tipo de error.
+      if (!ok && toks(sol).length >= 3) q.appendChild(el(correccion(inp.value, sol)));
       if (it.t === 'dic' || it.t === 'tr') speak(it.t === 'dic' ? it.s : it.en);
       next(ok, it);
     };
@@ -337,6 +344,122 @@ function runTest(host, items, opts, done) {
     if (audio) speak(audio);
     setTimeout(function () { inp.focus(); }, 60);
   }
+}
+
+// ---------- corrección modo profesor: diferencia palabra a palabra ----------
+// Cuando fallas una frase entera no basta con enseñarte la solución: hay que
+// enseñarte QUÉ palabra falló y POR QUÉ. Se compara lo que has escrito con el
+// modelo por subsecuencia común más larga y se marca lo que sobra, lo que
+// falta y lo que está cambiado de sitio. Luego se diagnostica el tipo de fallo.
+function toks(t) { return String(t).trim().split(/\s+/).filter(Boolean); }
+function limpiaTok(w) { return String(w).toLowerCase().replace(/[’']/g, "'").replace(/[.,;:!?"«»()]/g, ''); }
+
+function diffPalabras(mias, buenas) {
+  var A = mias.map(limpiaTok), B = buenas.map(limpiaTok);
+  var n = A.length, m = B.length, i, j;
+  var L = []; for (i = 0; i <= n; i++) { L[i] = []; for (j = 0; j <= m; j++) L[i][j] = 0; }
+  for (i = n - 1; i >= 0; i--) for (j = m - 1; j >= 0; j--)
+    L[i][j] = A[i] === B[j] ? L[i + 1][j + 1] + 1 : Math.max(L[i + 1][j], L[i][j + 1]);
+  var out = []; i = 0; j = 0;
+  while (i < n && j < m) {
+    if (A[i] === B[j]) { out.push({ op: '=', w: buenas[j] }); i++; j++; }
+    else if (L[i + 1][j] >= L[i][j + 1]) { out.push({ op: '-', w: mias[i] }); i++; }
+    else { out.push({ op: '+', w: buenas[j] }); j++; }
+  }
+  while (i < n) { out.push({ op: '-', w: mias[i] }); i++; }
+  while (j < m) { out.push({ op: '+', w: buenas[j] }); j++; }
+  return out;   // '=' coincide · '-' sobra en la tuya · '+' falta, está en la buena
+}
+
+var ART = { a: 1, an: 1, the: 1 };
+var SUJ = { i: 1, you: 1, he: 1, she: 1, it: 1, we: 1, they: 1, there: 1 };
+var AUX = { do: 1, does: 1, did: 1, is: 1, are: 1, was: 1, were: 1, am: 1 };
+var AUXP = { have: 1, has: 1, had: 1, will: 1, would: 1, can: 1, could: 1, should: 1, must: 1 };
+var TERC = { he: 1, she: 1, it: 1 };
+var PREP = { in: 1, on: 1, at: 1, to: 1, for: 1, from: 1, of: 1, with: 1, by: 1, into: 1, under: 1, over: 1 };
+
+// Diagnóstico: los errores típicos del hispanohablante, nombrados con su regla.
+function diagnostico(mias, buenas, d) {
+  var faltan = d.filter(function (x) { return x.op === '+'; }).map(function (x) { return limpiaTok(x.w); });
+  var sobran = d.filter(function (x) { return x.op === '-'; }).map(function (x) { return limpiaTok(x.w); });
+  var msg = [];
+  var mismasPalabras = mias.length === buenas.length && !faltan.length && !sobran.length;
+  // Si no hay ni una palabra distinta, lo único que cambiaba era una mayúscula,
+  // una tilde o un punto: decir «falló el orden» sería mentirte.
+  if (!faltan.length && !sobran.length && mias.join(' ') !== buenas.join(' ')) {
+    return ['<b>Las palabras eran todas correctas y estaban en su sitio.</b> Lo único que ha fallado ha sido la escritura: ' +
+      'una mayúscula, una coma o el punto final. En el examen escrito eso resta, así que conviene cogerlo como costumbre: ' +
+      'mayúscula inicial, punto al final y <b class="en">I</b> siempre en mayúscula, vaya donde vaya.'];
+  }
+  var setM = {}, setB = {};
+  mias.forEach(function (w) { setM[limpiaTok(w)] = 1; });
+  buenas.forEach(function (w) { setB[limpiaTok(w)] = 1; });
+  var mismoLexico = Object.keys(setB).every(function (k) { return setM[k]; }) &&
+                    Object.keys(setM).every(function (k) { return setB[k]; });
+
+  if (mismasPalabras) {
+    msg.push('<b>Tenías todas las palabras.</b> Lo único que falló fue el orden, que en inglés es mucho más rígido que en español: sujeto + verbo + complemento, y el adjetivo siempre delante del sustantivo.');
+  } else if (mismoLexico) {
+    msg.push('<b>Las palabras eran las correctas y las has repetido, pero no en su sitio.</b> En inglés la posición de una palabra es parte de su significado: cambiarla de sitio cambia lo que dices.');
+  }
+  // Cuando el léxico es idéntico y solo cambia el orden, hablar de palabras
+  // «que faltan» o «que sobran» despista: no falta ninguna, están movidas.
+  if (mismoLexico || mismasPalabras) {
+    var prim = null;
+    for (var z = 0; z < d.length; z++) if (d[z].op !== '=') { prim = d[z].w; break; }
+    if (prim) msg.push('La primera palabra que se sale de sitio es <b class="en">' + esc(prim) +
+      '</b>. Reconstruye la frase desde el principio preguntándote, en este orden: ¿quién lo hace? ¿qué hace? ¿a qué o a quién? ' +
+      'y solo al final el resto (dónde, cuándo, cómo).');
+    return msg.slice(0, 3);
+  }
+  faltan.forEach(function (w) {
+    if (SUJ[w]) msg.push('Te has dejado el sujeto <b class="en">' + esc(w) + '</b>. En español se puede decir «llueve» o «es caro»; en inglés <b>el sujeto nunca se omite</b>: <i>it rains</i>, <i>it is expensive</i>, <i>there is</i>.');
+    else if (ART[w]) msg.push('Falta el artículo <b class="en">' + esc(w) + '</b>. El inglés lo exige delante de un sustantivo contable en singular: <i>an architect</i>, no <i>architect</i>.');
+    else if (AUX[w]) msg.push('Falta el auxiliar <b class="en">' + esc(w) + '</b>. Las preguntas y las negativas en inglés no se hacen con la entonación como en español: necesitan <i>do / does / did</i> o el verbo <i>be</i>.');
+    else if (AUXP[w]) msg.push('Falta <b class="en">' + esc(w) + '</b>. En inglés el tiempo verbal se construye con un auxiliar delante del participio o del infinitivo (<i>I have worked</i>, <i>I will send</i>): el verbo solo no basta, aunque en español baste.');
+    else if (PREP[w]) msg.push('Falta la preposición <b class="en">' + esc(w) + '</b>. No se traduce desde el español: va pegada a la palabra que la rige y se aprende con ella.');
+    else if (/^to$/.test(w)) msg.push('Falta el <b class="en">to</b> del infinitivo.');
+  });
+  sobran.forEach(function (w) {
+    if (ART[w]) msg.push('Sobra el artículo <b class="en">' + esc(w) + '</b>. En inglés no se pone delante de nombres en plural o incontables cuando se habla en general: <i>architects work…</i>, no <i>the architects work…</i>.');
+    else if (PREP[w]) msg.push('Sobra la preposición <b class="en">' + esc(w) + '</b>: ese verbo en inglés va directo, sin preposición detrás.');
+  });
+  // concordancia de tercera persona y plurales
+  for (var i = 0; i < d.length - 1; i++) {
+    if (d[i].op === '-' && d[i + 1].op === '+') {
+      var a = limpiaTok(d[i].w), b = limpiaTok(d[i + 1].w);
+      if (b === a + 's' || b === a + 'es') {
+        var antes = i > 0 ? limpiaTok(d[i - 1].w) : '';
+        msg.push('Escribiste <b class="en">' + esc(a) + '</b> y era <b class="en">' + esc(b) + '</b>: ' +
+          (TERC[antes] ? 'falta la <b>-s</b> de la tercera persona. Con <i>he</i>, <i>she</i> e <i>it</i> el verbo la lleva siempre en presente: <i>he works</i>, <i>she designs</i>, <i>it costs</i>.'
+                       : 'falta una <b>-s</b>: o es el plural del sustantivo o es la tercera persona del verbo. En inglés el plural se marca aunque haya un número delante: <i>three walls</i>, no <i>three wall</i>.'));
+      }
+      else if (a === b + 's' || a === b + 'es') msg.push('Escribiste <b class="en">' + esc(a) + '</b> y era <b class="en">' + esc(b) + '</b>: aquí sobra la -s.');
+      else if (PREP[a] && PREP[b]) msg.push('Cambiaste <b class="en">' + esc(a) + '</b> por <b class="en">' + esc(b) + '</b>. Es un fallo de preposición, no de vocabulario: repásalas en el gimnasio, en «¿Cuál encaja?».');
+      else if (a.replace(/[^a-z]/g, '') === b.replace(/[^a-z]/g, '')) msg.push('Solo cambiaba un signo o una mayúscula: <b class="en">' + esc(b) + '</b>.');
+    }
+  }
+  if (!msg.length) msg.push('Compara las dos líneas de arriba palabra por palabra: lo tachado sobra y lo subrayado falta. Ese hueco es exactamente lo que hay que memorizar.');
+  return msg.slice(0, 4);
+}
+
+// La corrección completa: tu frase marcada, la buena marcada y el porqué.
+function correccion(mio, bueno) {
+  var mias = toks(mio), buenas = toks(bueno);
+  var d = diffPalabras(mias, buenas);
+  var tuya = d.filter(function (x) { return x.op !== '+'; }).map(function (x) {
+    return x.op === '-' ? '<s class="sobra">' + esc(x.w) + '</s>' : esc(x.w);
+  }).join(' ');
+  var suya = d.filter(function (x) { return x.op !== '-'; }).map(function (x) {
+    return x.op === '+' ? '<u class="falta">' + esc(x.w) + '</u>' : esc(x.w);
+  }).join(' ');
+  var dg = diagnostico(mias, buenas, d);
+  return '<div class="corr">' +
+    '<div class="corr-l"><span class="et">Lo que has escrito</span><p class="en">' + (tuya || '<span class="dim">(en blanco)</span>') + '</p></div>' +
+    '<div class="corr-l ok"><span class="et">Cómo se dice</span><p class="en">' + suya + '</p></div>' +
+    '<p class="small dim leyenda"><s class="sobra">tachado</s> sobra · <u class="falta">subrayado</u> falta</p>' +
+    '<div class="porque"><b>Por qué:</b><ul>' + dg.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul></div>' +
+    '</div>';
 }
 
 // ---------- examen de nivel con formato Cambridge ----------
@@ -711,6 +834,26 @@ function selectorDia(n) {
     '<p class="small dim" style="margin:8px 0 0">Las tareas y las estructuras objetivo son las de ese día. Los días con ✔ ya tienen prueba oral guardada.</p></div>';
 }
 
+// ---------- modo profesor: por qué existe cada ejercicio y qué hacer al fallar ----------
+// Un ejercicio sin explicación es un pasatiempo. Cada juego del gimnasio lleva
+// desplegada su razón de ser, su método y —lo más importante— el protocolo
+// exacto para cuando la respuesta sale mal.
+function profe(qb) {
+  return '<details class="prof"><summary>Modo profesor · por qué este ejercicio y qué hacer cuando fallo</summary>' +
+    '<h4>Por qué existe</h4>' + qb.porque +
+    '<h4>Cómo se hace bien</h4>' + qb.como +
+    '<h4>Qué hacer exactamente cuando fallo</h4>' + qb.fallo +
+    (qb.error ? '<h4>El error que quiero que dejes de cometer</h4>' + qb.error : '') +
+    '</details>';
+}
+
+var PROTO_HUECOS =
+  '<ol class="proto-l">' +
+  '<li><b>No pases de pantalla.</b> El botón «Continuar» no tiene prisa: la pregunta ya está corregida y el tiempo que pases aquí es el único que cuenta.</li>' +
+  '<li><b>Lee la explicación entera</b>, sobre todo la segunda mitad: dice por qué falla la opción que tú elegiste. Saber por qué la buena es buena no basta; el fallo se repite mientras la mala te siga pareciendo posible.</li>' +
+  '<li><b>Lee la frase completa en voz alta ya resuelta.</b> La oirás además pronunciada. Estás guardando el ritmo de la frase entera, no una regla suelta.</li>' +
+  '<li><b>Ponle nombre a la relación</b> en una palabra: contraste, causa, consecuencia, tiempo, condición. Esa palabra es la que vas a recordar dentro de una semana, no la lista de conectores.</li>' +
+  '<li><b>Si fallas la misma dos veces</b>, escríbela a mano en un papel con su explicación. Lo escrito a mano se fija; lo leído en pantalla, no.</li></ol>';
 // ---------- vista: gimnasio · ejercicios rápidos de asociación ----------
 // Cuatro modos, todos cortos y con corrección inmediata: emparejar contra
 // reloj, ordenar la frase, elegir el que encaja y velocidad de 60 segundos.
@@ -753,8 +896,37 @@ function vGimnasio(arg) {
   var h = '<h1>Gimnasio</h1>' +
     '<p class="dim">Series cortas y con corrección inmediata para lo que no se aprende leyendo: conectores, ' +
     'adjetivos, preposiciones, derivadas y orden de palabras. Cada partida dura entre uno y tres minutos, ' +
-    'que es justo lo que aguanta la atención con este tipo de material.</p>' + panelFlojo() +
+    'que es justo lo que aguanta la atención con este tipo de material.</p>' +
+    profe({
+      porque: '<p>Hay una parte del inglés que no se aprende entendiéndola, sino <b>usándola muchas veces seguidas</b>. ' +
+        'Tú ya entiendes qué es un conector o una preposición: lo que falla es que, en el momento de hablar o de elegir en un examen, ' +
+        'no te sale <i>sola</i> la palabra correcta. Eso no es un problema de conocimiento, es de <b>velocidad de acceso</b>. ' +
+        'Y la velocidad de acceso solo sube con repeticiones cortas, frecuentes y corregidas al instante.</p>' +
+        '<p>Por eso el gimnasio no explica teoría nueva: coge lo que ya has visto en los días del curso y te obliga a recuperarlo ' +
+        'muchas veces en poco tiempo. Se llama <b>recuperación activa</b> y es, con diferencia, lo que más rinde por minuto invertido.</p>',
+      como: '<p><b>Series cortas y a menudo.</b> Diez minutos al día en cuatro tandas rinden más que una hora del sábado. ' +
+        'La memoria consolida en los intervalos, no durante el esfuerzo.</p>' +
+        '<p><b>Responde rápido y sin traducir.</b> Si te descubres traduciendo al español para decidir, has perdido el ejercicio: ' +
+        'aquí se entrena el reflejo, no el análisis. Prefiero que falles rápido a que aciertes lento.</p>' +
+        '<p><b>Repite el mismo mazo dos veces seguidas.</b> La segunda vuelta inmediata es la que fija; la tercera ya no aporta. ' +
+        'Y vuelve a él al día siguiente: ahí es donde se gana.</p>',
+      fallo: '<p>Un fallo no es un suspenso, es <b>información</b>: te acaba de señalar exactamente dónde está el hueco. ' +
+        'Lo único que no puedes hacer es pasar de pantalla sin mirarlo.</p>' + PROTO_HUECOS,
+      error: '<p>Estudiar listas. Una lista de treinta conectores leída del tirón se olvida entera en dos días. ' +
+        'Doce elegidos bajo presión, con su corrección, se quedan. El material de este gimnasio es el mismo; lo que cambia es que aquí ' +
+        '<b>lo tienes que producir tú</b>.</p>'
+    }) + panelFlojo() +
     '<div class="card"><h2 style="margin-top:0">⏱ Parejas contrarreloj</h2>' +
+    profe({
+      porque: '<p>Emparejar es la forma más rápida de crear una <b>asociación</b>. No estás memorizando una definición: estás ' +
+        'atando dos cosas en la cabeza, y el reloj impide que te apoyes en la traducción, que es la muleta que hay que quitar.</p>',
+      como: '<p>Pincha una de la izquierda y su pareja de la derecha. Al pulsar una palabra inglesa <b>se pronuncia y aparece debajo ' +
+        'qué significa</b>: así oyes las doce mientras juegas. No busques la pareja «correcta» leyendo las doce: coge la primera que ' +
+        'te suene y comprueba. Fallar cuesta cinco segundos y enseña más que dudar treinta.</p>',
+      fallo: '<p>Cada fallo suma cinco segundos, y eso es todo el castigo que hay. Al terminar aparecen <b>las doce parejas juntas</b>: ' +
+        'ese es el momento de estudiar, no durante la partida. Míralas dos minutos, pulsa las que no reconocías para oírlas y ' +
+        '<b>juega otra ronda inmediatamente</b>. Si el tiempo de la segunda ronda no baja, es que no las has mirado.</p>'
+    }) +
     '<p class="dim small">Doce parejas. Pincha una de la izquierda y su pareja de la derecha. El reloj corre y cada fallo suma cinco segundos. Es el ejercicio que más rápido crea la asociación.</p>' +
     '<p class="dim small">Al pulsar una palabra inglesa <b>se pronuncia y aparece debajo qué significa</b>, así que oyes las doce mientras juegas y resuelves cualquier duda sin salir. Al terminar tienes las doce parejas juntas para repasarlas.</p>' +
     '<div class="row"><button class="btn" data-par="derivadas">Derivadas</button>' +
@@ -762,18 +934,70 @@ function vGimnasio(arg) {
     '<button class="btn" data-par="adjetivos">Adjetivos y contrarios</button>' +
     '<button class="btn" data-par="frases">Frases y expresiones</button></div><div id="gpar"></div></div>' +
     '<div class="card"><h2 style="margin-top:0">🧩 Ordena la frase</h2>' +
+    profe({
+      porque: '<p>El español coloca las palabras casi como quiere porque las terminaciones dicen quién hace qué. El inglés no tiene ' +
+        'esas terminaciones: <b>el orden es la gramática</b>. <i>The architect calls the client</i> y <i>The client calls the architect</i> ' +
+        'tienen las mismas palabras y significan lo contrario. Por eso este ejercicio no es un puzle: es la regla más rentable del idioma.</p>',
+      como: '<p>Antes de tocar nada, busca <b>el verbo</b> y pregúntate quién lo hace: ese es el sujeto y va delante, siempre. ' +
+        'Después el complemento. Los adjetivos, delante del sustantivo (<i>a white wall</i>, nunca <i>a wall white</i>). ' +
+        'Los adverbios de frecuencia, entre el sujeto y el verbo (<i>I always work</i>). Y el sujeto <b>no se omite jamás</b>.</p>',
+      fallo: '<p>Al fallar ya no ves solo la frase buena: ves <b>tu frase y la correcta enfrentadas</b>, con lo que sobra tachado y lo que ' +
+        'falta subrayado, y debajo el nombre del error que has cometido. Léelo, y antes de continuar <b>vuelve a construir la frase ' +
+        'mentalmente de izquierda a derecha</b>. Si el aviso dice que tenías todas las palabras, el problema no es tu vocabulario: ' +
+        'es que estás pensando en español y traduciendo el orden.</p>'
+    }) +
     '<p class="dim small">Las palabras salen desordenadas y hay que colocarlas. Entrena las cinco reglas de orden que el español coloca al revés.</p>' +
     '<div class="row">' + (GYM.orden.grupos || []).map(function (G, i) {
       return '<button class="btn sec small" data-ord="' + i + '">' + esc(G.t.split('·')[0].trim()) + '</button>';
     }).join('') + '<button class="btn small" data-ord="adj">Varios adjetivos seguidos</button></div><div id="gord"></div></div>' +
     '<div class="card"><h2 style="margin-top:0">🎯 ¿Cuál encaja?</h2>' +
     '<p class="dim small">Un hueco y tres candidatos. Al responder te dice <b>por qué</b> es ese y no el otro, que es lo que hace que la próxima vez lo aciertes.</p>' +
+    profe({
+      porque: '<p>Este es el ejercicio central del gimnasio y también el formato exacto de la primera parte del examen de Cambridge ' +
+        '(<i>multiple-choice cloze</i>). Se entrena aquí por una razón muy concreta: <b>los conectores y las preposiciones no se ' +
+        'traducen, se eligen</b>.</p>' +
+        '<p>Si intentas traducir, te bloqueas, porque «como» puede ser <i>as</i>, <i>like</i>, <i>since</i> o <i>how</i> según lo que ' +
+        'estés diciendo, y «en» puede ser <i>in</i>, <i>on</i> o <i>at</i>. Ninguna de esas parejas existe. Lo que sí existe es una ' +
+        '<b>relación entre dos ideas</b> —contraste, causa, consecuencia, tiempo, condición— y una <b>forma de ver el espacio o el ' +
+        'tiempo</b> —punto, superficie, interior—. En cuanto identificas la relación, la palabra sale sola y siempre es la misma. ' +
+        'Por eso las tres opciones que te doy nunca se distinguen por el significado: se distinguen por la relación que marcan.</p>',
+      como: '<p>Sigue siempre este orden, aunque creas que ya sabes la respuesta:</p>' +
+        '<ol class="proto-l">' +
+        '<li><b>Lee la frase entera antes de mirar las opciones</b>, incluida la parte que va detrás del hueco. La mitad de los fallos ' +
+        'vienen de contestar habiendo leído solo hasta el hueco.</li>' +
+        '<li><b>Tapa las opciones y pregúntate qué relación hay</b> entre lo de antes y lo de después. Dilo en una palabra en español: ' +
+        '«contraste», «causa», «momento». No busques todavía la palabra inglesa.</li>' +
+        '<li><b>Mira qué tipo de palabra cabe</b>: si detrás hay un sustantivo suelto (<i>the rain</i>) no cabe <i>because</i> sino ' +
+        '<i>because of</i>; si detrás hay una frase con verbo, al revés. Esta comprobación mecánica resuelve un tercio de las preguntas ' +
+        'sin pensar en el significado.</li>' +
+        '<li><b>Ahora sí, elige</b>, y antes de pulsar dedica dos segundos a descartar en voz baja las otras dos: «esta no, porque ' +
+        'marcaría contraste y aquí no lo hay».</li></ol>',
+      fallo: '<p>Aquí es donde se aprende de verdad, así que este ejercicio <b>no avanza solo cuando fallas</b>: la pantalla se queda ' +
+        'quieta hasta que tú pulses «Continuar». Aprovéchalo con este protocolo, en este orden:</p>' + PROTO_HUECOS +
+        '<p class="small dim">Y una regla de higiene: si en una tanda de doce fallas más de cuatro, no hagas otra tanda inmediatamente. ' +
+        'Repasa la tabla de conectores o de preposiciones cinco minutos y vuelve. Encadenar tandas con muchos fallos solo consolida el error.</p>',
+      error: '<p>Elegir por parecido con el español. <i>Actually</i> no es «actualmente», <i>eventually</i> no es «eventualmente» y ' +
+        '<i>since</i> casi nunca es «desde». Cuando una opción te suene bien <b>porque se parece a una palabra española</b>, ' +
+        'desconfía: en este ejercicio ese parecido está puesto a propósito.</p>'
+    }) +
     '<div class="row"><button class="btn" data-hue="conectores">Conectores</button>' +
     '<button class="btn" data-hue="prepos">Preposiciones</button>' +
     '<button class="btn" data-hue="cantidad">much / many</button>' +
     '<button class="btn" data-hue="frases">Frases · UK / US</button>' +
     '<button class="btn sec" data-hue="todo">Mezcla de todo</button></div><div id="ghue"></div></div>' +
     '<div class="card"><h2 style="margin-top:0">⚡ Velocidad · 60 segundos</h2>' +
+    profe({
+      porque: '<p>Saber una regla y poder usarla mientras hablas son dos cosas distintas. En una conversación no tienes tres segundos ' +
+        'para pensar la preposición: o sale sola o no sale. Este ejercicio mide precisamente eso, y es el <b>termómetro</b> del gimnasio: ' +
+        'te dice si lo que has estudiado ya está automatizado o todavía lo estás razonando.</p>',
+      como: '<p>Sesenta segundos, sin explicaciones y sin volver atrás. <b>Contesta con el primer impulso.</b> Si dudas más de dos ' +
+        'segundos, elige cualquiera y sigue: la duda ya es la respuesta que buscábamos. Hazlo una vez al final de cada sesión, ' +
+        'siempre en las mismas condiciones, para poder comparar.</p>',
+      fallo: '<p>Aquí los fallos no se estudian de uno en uno: se miran <b>al final, en bloque</b>. Fíjate en el número de aciertos y en ' +
+        'la precisión. Menos de doce aciertos significa que todavía vas analizando, y la solución no es repetir esta prueba, sino volver ' +
+        'a «Parejas» y a «¿Cuál encaja?», que son los que construyen. Vuelve aquí mañana: esta pantalla mide, no entrena.</p>' +
+        '<p><b>La cifra a la que apuntamos:</b> veinte aciertos con más del ochenta por ciento de precisión. Ahí ya no traduces, reconoces.</p>'
+    }) +
     '<p class="dim small">Sesenta segundos, las que puedas. Sin explicaciones y sin pensar: aquí se entrena el automatismo, no el análisis.</p>' +
     '<div class="row"><button class="btn" data-vel="1">Empezar</button></div><div id="gvel"></div></div>';
   app.innerHTML = h;
@@ -942,7 +1166,8 @@ function juegoOrden(which) {
       var ok = mia === limpio;
       if (ok) aciertos++;
       z.querySelector('#ofb').innerHTML = '<div class="fb ' + (ok ? 'ok' : 'bad') + '">' +
-        (ok ? '✔ Correcto.' : '✖ Era: <b class="en">' + esc(frase) + '</b>') + '</div>';
+        (ok ? '✔ Correcto.' : '✖ Era: <b class="en">' + esc(frase) + '</b>') + '</div>' +
+        (ok ? '' : correccion(mia, limpio));
       if (ok) speak(frase);
       rec('gram', ok, 'orden: ' + frase);
       save();
@@ -975,7 +1200,7 @@ function juegoHuecos(id) {
   var items = pick(huecosDe(id), 12);
   var host = document.getElementById('ghue');
   host.innerHTML = '';
-  runTest(host, items, { min: 75, pasoTxt: 'Bien: ya los eliges por la relación, no por la traducción' }, function (pct, pass, foot) {
+  runTest(host, items, { min: 75, pasoTxt: 'Bien: ya los eliges por la relación, no por la traducción', protocolo: PROTO_HUECOS }, function (pct, pass, foot) {
     S.ses++; save();
     var b = el('<button class="btn sec small">Otra tanda</button>');
     b.onclick = function () { juegoHuecos(id); };
@@ -1379,6 +1604,395 @@ function vOral(arg) {
       (hit.length ? '<p class="small ok-t">Usaste: ' + hit.map(esc).join(' · ') + '</p>' : '<p class="small bad-t">No has usado ninguna de las estructuras objetivo. Vuelve al bloque 4 del ' + etiquetaDia(n).toLowerCase() + ' y haz shadowing antes de repetir la prueba.</p>') +
       '<h3>Transcripción</h3><div class="live en">' + esc(texto) + '</div>' +
       '<p class="small dim">Léela buscando tus errores fosilizados: lo que ves escrito es exactamente lo que oye tu interlocutor.</p>';
+  }
+}
+
+// ---------- vista: taller de expresión oral ----------
+// La pestaña «Oral» evalúa; esta enseña. Sonidos uno a uno, repetición con
+// corrección palabra a palabra, ritmo de la frase, lectura cronometrada y
+// monólogo guiado. Todo con el micrófono como espejo: lo que transcribe el
+// reconocedor es, aproximadamente, lo que oye tu interlocutor.
+var HBL = window.HABLA || {};
+function haySR() { return !!(window.SpeechRecognition || window.webkitSpeechRecognition); }
+
+// Grabadora reutilizable: devuelve un objeto con start y stop.
+function grabadora(onParcial) {
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) return null;
+  var r = new SR();
+  r.lang = (voice && voice.lang) || 'en-GB';
+  r.continuous = true; r.interimResults = true;
+  var texto = '', vivo = false;
+  r.onresult = function (e) {
+    var interim = '';
+    for (var i = e.resultIndex; i < e.results.length; i++) {
+      if (e.results[i].isFinal) texto += e.results[i][0].transcript + ' ';
+      else interim += e.results[i][0].transcript;
+    }
+    onParcial && onParcial(texto, interim);
+  };
+  r.onend = function () { if (vivo) { try { r.start(); } catch (x) {} } };
+  return {
+    start: function () { texto = ''; vivo = true; try { r.start(); } catch (x) {} },
+    stop: function () { vivo = false; try { r.stop(); } catch (x) {} return texto; },
+    texto: function () { return texto; },
+    onerror: function (f) { r.onerror = f; }
+  };
+}
+
+// Cuánto de la frase modelo ha reconocido el ordenador, y qué palabras no.
+function parecido(mio, bueno) {
+  var A = toks(norm(mio)), B = toks(norm(bueno));
+  var d = diffPalabras(A, B);
+  var ok = d.filter(function (x) { return x.op === '='; }).length;
+  var faltan = d.filter(function (x) { return x.op === '+'; }).map(function (x) { return x.w; });
+  return { pct: B.length ? Math.round(ok / B.length * 100) : 0, faltan: faltan, ok: ok, total: B.length };
+}
+
+// Marca en negrita lo que lleva el golpe: "*I* *need* the plans" → I need
+function ritmoHtml(t) { return esc(t).replace(/\*([^*]+)\*/g, '<b class="golpe">$1</b>'); }
+function ritmoPlano(t) { return String(t).replace(/\*/g, ''); }
+
+function vHabla(arg) {
+  var h = '<h1>Taller de expresión oral</h1>' +
+    '<p class="dim">' + HBL.intro + '</p>' +
+    profe({
+      porque: '<p>La pestaña <b>Oral</b> te mide; esta te enseña. Son cosas distintas y hacen falta las dos: una prueba te dice ' +
+        'que hablas a 90 palabras por minuto, pero no te dice <b>qué</b> tienes que cambiar mañana por la mañana.</p>' +
+        '<p>Y lo que hay que cambiar es sorprendentemente poco. Un hispanohablante adulto no falla en «todo el inglés»: falla en ' +
+        '<b>nueve sonidos concretos</b> que su boca nunca ha tenido que hacer, y en una manera distinta de repartir el peso dentro ' +
+        'de la frase. Arreglado eso, el acento sigue notándose —y no pasa nada, el acento no es un defecto— pero <b>te entienden ' +
+        'a la primera</b>, que es de lo que se trata.</p>',
+      como: '<p>El método tiene cinco pasos y están en este orden por una razón:</p><ol class="proto-l">' +
+        HBL.metodo.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ol>' +
+        '<p>Baja por la página en orden: primero los sonidos, luego repetir, luego ritmo, luego leer y por último hablar solo. ' +
+        'Cada apartado prepara el siguiente.</p>',
+      fallo: '<p>Aquí «fallar» significa que el ordenador ha entendido otra palabra distinta de la que querías decir. ' +
+        'No lo tomes como una nota: <b>tómalo como un dato de laboratorio</b>. Si el reconocedor oye <i>sheep</i> cuando dices ' +
+        '<i>ship</i>, un cliente inglés también puede oírlo.</p>' +
+        '<ol class="proto-l">' +
+        '<li><b>Mira qué palabra no se ha entendido</b>, que aparece subrayada. Casi siempre repite el mismo sonido: es tu sonido flojo.</li>' +
+        '<li><b>Sube a ese sonido</b> en el apartado de arriba, léete la posición de la boca y haz sus pares mínimos.</li>' +
+        '<li><b>Vuelve a la frase y repítela tres veces seguidas</b>, despacio la primera y a velocidad normal las otras dos.</li>' +
+        '<li><b>Si a la tercera sigue sin entenderse</b>, no insistas hoy: déjala y vuelve mañana. La boca necesita dormir para ' +
+        'automatizar un movimiento nuevo, igual que un deporte.</li></ol>',
+      error: '<p>Querer «quitarse el acento». No es un objetivo, no es alcanzable de adulto y no hace falta: nadie le pide a un ' +
+        'arquitecto que suene a Oxford. El objetivo es <b>no ser ambigua</b>: que <i>bad</i> no se oiga <i>bed</i> y que ' +
+        '<i>ship</i> no se oiga <i>sheep</i>. Eso sí es alcanzable, y en seis semanas.</p>'
+    });
+
+  if (!haySR()) h += '<div class="note small"><b>Tu navegador no permite usar el micrófono.</b> Los ejercicios de escuchar, ' +
+    'los sonidos, los pares mínimos y el ritmo funcionan igual. Para los de grabarte necesitas Chrome o Edge de escritorio.</div>';
+
+  // 1 · sonidos
+  h += '<h2 class="sec">1 · Los sonidos que te delatan</h2>' +
+    '<p class="dim small">Diez fichas. En cada una: por qué falla en español, qué hace exactamente la boca, un truco para sacarlo ' +
+    'y pares mínimos para entrenar el oído antes que la lengua. Pulsa cualquier palabra para oírla.</p>';
+  h += HBL.sonidos.map(function (S2, i) {
+    return '<div class="card son" id="son-' + S2.id + '"><h3 style="margin-top:0">' + S2.t + '</h3>' +
+      '<p class="small"><b>Por qué falla en español:</b> ' + S2.problema + '</p>' +
+      '<p class="small"><b>Qué hace la boca:</b> ' + S2.boca + '</p>' +
+      '<p class="small truco"><b>Truco:</b> ' + S2.truco + '</p>' +
+      '<div class="row between" style="margin-top:8px"><b class="small">Pares mínimos</b>' +
+      '<button class="btn sec small" data-oido="' + i + '">Prueba de oído</button></div>' +
+      '<div class="pmin">' + S2.pares.map(function (l) {
+        var p2 = l.split('|');
+        return '<span class="par"><b class="en vb" data-say="' + esc(p2[0]) + '">' + esc(p2[0]) + '</b>' +
+          '<span class="dim"> · </span><b class="en vb" data-say="' + esc(p2[1]) + '">' + esc(p2[1]) + '</b></span>';
+      }).join('') + '</div>' +
+      '<div id="oido-' + i + '"></div>' +
+      '<div class="row" style="margin-top:10px"><b class="small">Frases</b></div>' +
+      '<ul class="errs">' + S2.frases.map(function (f) {
+        return '<li><span class="en vb" data-say="' + esc(f) + '">' + esc(f) + '</span>' +
+          (haySR() ? ' <button class="btn sec small" data-rep="' + esc(f) + '">Repetir y comparar</button>' : '') + '</li>';
+      }).join('') + '</ul><div class="repz"></div></div>';
+  }).join('');
+
+  // 2 · repetir
+  h += '<h2 class="sec">2 · Repite y compara</h2>' +
+    '<div class="card"><p class="dim small">Se oye el modelo, lo repites y el ordenador te enseña <b>palabra por palabra</b> qué ha ' +
+    'entendido. Empieza por el nivel 1 aunque te parezca fácil: lo que se entrena es la limpieza, no la dificultad.</p>' +
+    '<div class="row">' + HBL.repetir.map(function (G, i) {
+      return '<button class="btn' + (i ? ' sec' : '') + ' small" data-niv="' + i + '">' + esc(G.t.split('·')[0].trim()) + '</button>';
+    }).join('') + '</div><div id="repet"></div></div>';
+
+  // 3 · ritmo
+  h += '<h2 class="sec">3 · El ritmo de la frase</h2>' +
+    '<div class="card"><p class="small">' + HBL.ritmo.intro + '</p>' +
+    '<p class="small dim"><b>Cómo se practica:</b> ' + HBL.ritmo.regla + '</p>' +
+    '<ul class="errs ritmo">' + HBL.ritmo.v.map(function (t) {
+      return '<li><span class="en vb" data-say="' + esc(ritmoPlano(t)) + '">' + ritmoHtml(t) + '</span>' +
+        (haySR() ? ' <button class="btn sec small" data-rep="' + esc(ritmoPlano(t)) + '">Repetir y comparar</button>' : '') + '</li>';
+    }).join('') + '</ul><div class="repz"></div></div>';
+
+  // 4 · lectura
+  h += '<h2 class="sec">4 · Lectura en voz alta</h2>' +
+    '<div class="card"><p class="dim small">Leer en voz alta es el puente entre entender y hablar: el contenido ya está resuelto, ' +
+    'así que toda tu atención va a la boca. Se cronometra y se compara con el texto.</p>' +
+    '<div class="row">' + HBL.lectura.map(function (L2, i) {
+      return '<button class="btn' + (i ? ' sec' : '') + ' small" data-lec="' + i + '">' + esc(L2.t) + '</button>';
+    }).join('') + '</div><div id="lect"></div></div>';
+
+  // 5 · monólogo
+  h += '<h2 class="sec">5 · Monólogo guiado</h2>' +
+    '<div class="card"><p class="dim small">Noventa segundos hablando sola sobre un tema de trabajo, con tres cosas que hay que ' +
+    'incluir. Es el ejercicio más parecido a la vida real y el último de la sesión, cuando la boca ya está caliente.</p>' +
+    '<div id="mono"></div></div>';
+
+  app.innerHTML = h;
+  app.querySelectorAll('.vb').forEach(function (x) { x.onclick = function () { speak(x.dataset.say); }; });
+  app.querySelectorAll('[data-oido]').forEach(function (b) { b.onclick = function () { pruebaOido(b.dataset.oido | 0); }; });
+  app.querySelectorAll('[data-rep]').forEach(function (b) {
+    b.onclick = function () {
+      var z = b.closest('.card').querySelector('.repz');
+      repiteUna(z, b.dataset.rep);
+    };
+  });
+  app.querySelectorAll('[data-niv]').forEach(function (b) { b.onclick = function () { serieRepetir(b.dataset.niv | 0); }; });
+  app.querySelectorAll('[data-lec]').forEach(function (b) { b.onclick = function () { lecturaVoz(b.dataset.lec | 0); }; });
+  monologoUI();
+  if (arg) { var d0 = document.getElementById('son-' + arg); if (d0) d0.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+
+  // --- prueba de oído: se oye una de las dos y hay que decir cuál ---
+  function pruebaOido(i) {
+    var S2 = HBL.sonidos[i], host = document.getElementById('oido-' + i);
+    var lote = pick(S2.pares, Math.min(6, S2.pares.length)), k = 0, ac = 0;
+    paint();
+    function paint() {
+      if (k >= lote.length) {
+        var pct = Math.round(ac / lote.length * 100);
+        rec('list', pct >= 70, 'pares mínimos · ' + S2.id); S.ses++; save();
+        host.innerHTML = '<div class="card flat"><div class="metrics">' + metric(pct + '%', 'aciertos de oído') +
+          metric(ac + '/' + lote.length, 'pares') + '</div><p class="small ' + (pct >= 70 ? 'dim' : 'bad-t') + '">' +
+          (pct >= 85 ? 'Distingues el sonido con el oído. Ahora ya tiene sentido entrenarlo con la boca: baja a las frases y grábate.'
+           : pct >= 60 ? 'Lo distingues a medias. Repite esta prueba dos días seguidos antes de intentar producirlo: primero el oído.'
+           : 'Todavía no separas los dos sonidos al oírlos, y mientras no los oigas no podrás producirlos. Pulsa las parejas de arriba ' +
+             'una por una, muchas veces, y vuelve a esta prueba mañana.') + '</p></div>';
+        var b = el('<button class="btn sec small">Otra vez</button>');
+        b.onclick = function () { pruebaOido(i); };
+        host.appendChild(b); return;
+      }
+      var par = lote[k].split('|'), cual = Math.random() < 0.5 ? 0 : 1;
+      host.innerHTML = '<div class="card flat"><p class="small dim">Par ' + (k + 1) + ' de ' + lote.length + ' · escucha y di cuál es</p>' +
+        '<div class="row"><button class="btn small" id="oye">🔊 Escuchar otra vez</button></div><div class="opts" id="oo"></div><div id="ofb2"></div></div>';
+      speak(par[cual]);
+      host.querySelector('#oye').onclick = function () { speak(par[cual]); };
+      var row = host.querySelector('#oo');
+      par.forEach(function (w, j) {
+        var b = el('<button class="opt en">' + esc(w) + '</button>');
+        b.onclick = function () {
+          row.querySelectorAll('.opt').forEach(function (x) { x.disabled = true; });
+          var bien = j === cual;
+          b.classList.add(bien ? 'ok' : 'bad');
+          if (!bien) row.querySelectorAll('.opt')[cual].classList.add('ok');
+          if (bien) ac++;
+          host.querySelector('#ofb2').innerHTML = '<div class="fb ' + (bien ? 'ok' : 'bad') + '">' +
+            (bien ? '✔ Era <b class="en">' + esc(par[cual]) + '</b>.' :
+             '✖ Era <b class="en">' + esc(par[cual] || '') + '</b>, no <b class="en">' + esc(par[1 - cual] || '') + '</b>. ' +
+             'Vuelve a escucharlas seguidas y fíjate solo en la vocal.') + '</div>';
+          rec('list', bien, 'par mínimo ' + par.join('/'));
+          k++;
+          var seguir = function () { paint(); };
+          if (bien) { setTimeout(seguir, 800); return; }
+          var c = el('<button class="btn small" style="margin-top:8px">Continuar →</button>');
+          c.onclick = seguir; host.querySelector('#ofb2').appendChild(c);
+        };
+        row.appendChild(b);
+      });
+    }
+  }
+
+  // --- repetir una frase suelta ---
+  function repiteUna(host, frase) {
+    if (!haySR()) return;
+    host.innerHTML = '<div class="card flat"><div class="row"><button class="btn small" id="rp0">🔊 Oír el modelo</button>' +
+      '<button class="btn" id="rp1">● Grabar mi intento</button><span class="dim small" id="rps"></span></div>' +
+      '<p class="en" style="margin:8px 0 0">' + esc(frase) + '</p><div id="rpr"></div></div>';
+    host.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    var st = host.querySelector('#rps'), out = host.querySelector('#rpr'), btn = host.querySelector('#rp1');
+    host.querySelector('#rp0').onclick = function () { speak(frase); };
+    speak(frase);
+    var g = grabadora(function (t, i) { st.textContent = (t + i).slice(-60); }), grabando = false;
+    if (!g) return;
+    g.onerror(function (e) { st.textContent = 'Micrófono: ' + e.error; });
+    btn.onclick = function () {
+      if (!grabando) {
+        grabando = true; btn.textContent = '■ Parar'; btn.classList.add('rec'); st.textContent = 'Escuchando…';
+        out.innerHTML = ''; g.start();
+      } else {
+        grabando = false; btn.textContent = '● Grabar mi intento'; btn.classList.remove('rec');
+        var dicho = g.stop();
+        setTimeout(function () { juzga(out, g.texto() || dicho, frase, st); }, 400);
+      }
+    };
+  }
+
+  function juzga(out, dicho, frase, st) {
+    st.textContent = '';
+    if (!norm(dicho)) { out.innerHTML = '<div class="note small">No se ha captado nada. Comprueba el permiso del micrófono y acércate más.</div>'; return; }
+    var r = parecido(dicho, frase);
+    rec('prod', r.pct >= 80, 'repetición: ' + frase);
+    S.ses++; save();
+    out.innerHTML = '<div class="metrics">' + metric(r.pct + '%', 'palabras entendidas') + metric(r.ok + '/' + r.total, 'de la frase') + '</div>' +
+      correccion(dicho, frase) +
+      '<p class="small ' + (r.pct >= 90 ? 'ok-t' : r.pct >= 70 ? 'dim' : 'bad-t') + '">' +
+      (r.pct >= 90 ? 'Frase limpia: se ha entendido entera. Repítela una vez más a velocidad de conversación y pasa a la siguiente.'
+       : r.pct >= 70 ? 'Casi. Fíjate en las palabras subrayadas: son las que tu boca todavía no separa. Dilas sueltas tres veces y repite la frase completa.'
+       : 'Se ha perdido bastante. Baja el ritmo a la mitad, di la frase por trozos de tres palabras y solo después júntala. La prisa aquí no ayuda.') +
+      '</p><p class="small dim">Lo que ves arriba es lo que ha entendido el ordenador, que no es un examinador: es un espejo. ' +
+      'Un nombre propio o una palabra rara puede fallar sin que tú lo hagas mal. Lo que sí es señal fiable es <b>fallar siempre en el mismo sonido</b>.</p>';
+  }
+
+  // --- serie de repetición por niveles ---
+  function serieRepetir(i) {
+    var G = HBL.repetir[i], host = document.getElementById('repet');
+    var lote = pick(G.v, Math.min(6, G.v.length)), k = 0, suma = 0;
+    host.innerHTML = '<div class="card flat" style="margin-top:12px"><b>' + esc(G.t) + '</b><p class="small dim">' + G.nota + '</p></div><div id="rzona"></div>';
+    paso();
+    function paso() {
+      var z = document.getElementById('rzona');
+      if (k >= lote.length) {
+        var media = Math.round(suma / lote.length);
+        z.innerHTML = '<div class="card flat"><div class="metrics">' + metric(media + '%', 'media de la serie') + metric(lote.length, 'frases') + '</div>' +
+          '<p class="small ' + (media >= 85 ? 'ok-t' : media >= 65 ? 'dim' : 'bad-t') + '">' +
+          (media >= 85 ? 'Nivel superado. Sube al siguiente: si te sale fácil, ya no entrena.'
+           : media >= 65 ? 'Vas bien. Repite esta misma serie mañana antes de subir de nivel; la mejora aparece entre sesiones, no dentro de una.'
+           : 'Quédate en este nivel unos días. Bajar de nivel no es retroceder: es donde de verdad se corrige la boca.') + '</p></div>';
+        var b = el('<button class="btn sec small">Otra serie</button>');
+        b.onclick = function () { serieRepetir(i); };
+        z.appendChild(b); return;
+      }
+      var frase = lote[k];
+      z.innerHTML = '<div class="card flat"><p class="small dim">Frase ' + (k + 1) + ' de ' + lote.length + '</p>' +
+        '<p class="en big">' + esc(frase) + '</p>' +
+        '<div class="row"><button class="btn sec small" id="s0">🔊 Oír</button>' +
+        (haySR() ? '<button class="btn" id="s1">● Grabar</button>' : '') +
+        '<button class="btn sec small" id="s2">Saltar →</button><span class="dim small" id="ss"></span></div><div id="sr"></div></div>';
+      speak(frase);
+      z.querySelector('#s0').onclick = function () { speak(frase); };
+      z.querySelector('#s2').onclick = function () { k++; paso(); };
+      var btn = z.querySelector('#s1'); if (!btn) return;
+      var st = z.querySelector('#ss'), out = z.querySelector('#sr');
+      var g = grabadora(function (t, ii) { st.textContent = (t + ii).slice(-50); }), grabando = false;
+      g.onerror(function (e) { st.textContent = 'Micrófono: ' + e.error; });
+      btn.onclick = function () {
+        if (!grabando) { grabando = true; btn.textContent = '■ Parar'; btn.classList.add('rec'); st.textContent = 'Escuchando…'; out.innerHTML = ''; g.start(); }
+        else {
+          grabando = false; btn.textContent = '● Grabar'; btn.classList.remove('rec');
+          g.stop();
+          setTimeout(function () {
+            var dicho = g.texto();
+            juzga(out, dicho, frase, st);
+            suma += parecido(dicho, frase).pct;
+            var c = el('<button class="btn small" style="margin-top:10px">Siguiente frase →</button>');
+            c.onclick = function () { k++; paso(); };
+            out.appendChild(c);
+          }, 400);
+        }
+      };
+    }
+  }
+
+  // --- lectura en voz alta cronometrada ---
+  function lecturaVoz(i) {
+    var L2 = HBL.lectura[i], host = document.getElementById('lect');
+    var pal = toks(L2.txt).length;
+    host.innerHTML = '<div class="card flat" style="margin-top:12px"><b>' + esc(L2.t) + '</b>' +
+      '<p class="small dim">' + esc(L2.nota) + ' · ' + pal + ' palabras</p>' +
+      '<p class="en lectura">' + esc(L2.txt) + '</p>' +
+      '<div class="row"><button class="btn sec small" id="l0">🔊 Oír el modelo</button>' +
+      (haySR() ? '<button class="btn" id="l1">● Leer en voz alta</button>' : '') +
+      '<span class="timer" id="lt">0:00</span><span class="dim small" id="ls"></span></div><div id="lr"></div></div>';
+    host.querySelector('#l0').onclick = function () { speak(L2.txt); };
+    var btn = host.querySelector('#l1'); if (!btn) return;
+    var st = host.querySelector('#ls'), out = host.querySelector('#lr'), tm = host.querySelector('#lt');
+    var g = grabadora(function (t, ii) { st.textContent = (t + ii).slice(-50); }), grabando = false, t0 = 0, iv = null;
+    g.onerror(function (e) { st.textContent = 'Micrófono: ' + e.error; });
+    btn.onclick = function () {
+      if (!grabando) {
+        grabando = true; btn.textContent = '■ He terminado'; btn.classList.add('rec'); out.innerHTML = '';
+        t0 = Date.now(); g.start();
+        iv = setInterval(function () {
+          var sg = Math.round((Date.now() - t0) / 1000);
+          tm.textContent = Math.floor(sg / 60) + ':' + String(sg % 60).padStart(2, '0');
+        }, 500);
+      } else {
+        grabando = false; clearInterval(iv); btn.textContent = '● Leer en voz alta'; btn.classList.remove('rec');
+        var dur = Math.max(5, Math.round((Date.now() - t0) / 1000));
+        g.stop();
+        setTimeout(function () {
+          var dicho = g.texto(); st.textContent = '';
+          if (!norm(dicho)) { out.innerHTML = '<div class="note small">No se ha captado audio.</div>'; return; }
+          var r = parecido(dicho, L2.txt);
+          var wpm = Math.round(toks(norm(dicho)).length / (dur / 60));
+          rec('prod', r.pct >= 80, 'lectura en voz alta · ' + L2.t); S.ses++; save();
+          out.innerHTML = '<div class="metrics">' + metric(r.pct + '%', 'texto entendido') + metric(wpm, 'palabras/minuto') +
+            metric(Math.floor(dur / 60) + ':' + String(dur % 60).padStart(2, '0'), 'tiempo') + '</div>' +
+            '<p class="small ' + (r.pct >= 88 ? 'ok-t' : r.pct >= 70 ? 'dim' : 'bad-t') + '"><b>Lectura:</b> ' +
+            (r.pct >= 88 ? 'muy clara, se ha entendido casi todo.' : r.pct >= 70 ? 'se entiende, con tropiezos localizados.' :
+             'se pierde demasiado. Vuelve a leerla por frases sueltas antes de leerla entera.') + ' <b>Ritmo:</b> ' +
+            (wpm < 90 ? 'por debajo de 90 palabras por minuto se percibe entrecortado; no leas más rápido, lee sin pararte.' :
+             wpm > 160 ? 'demasiado rápido: a esa velocidad el ritmo acentual del inglés se pierde y todo suena plano.' :
+             'dentro del rango natural de un hablante competente (110-150).') + '</p>' +
+            (r.faltan.length ? '<p class="small"><b>No se han entendido:</b> ' + r.faltan.slice(0, 14).map(function (w) {
+              return '<span class="en vb pal2" data-say="' + esc(w) + '">' + esc(w) + '</span>';
+            }).join(' · ') + '</p><p class="small dim">Pulsa cada una para oírla bien. Si se repite el mismo sonido en varias, ' +
+              'ese es tu punto flojo: súbelo en el apartado 1.</p>' : '');
+          out.querySelectorAll('.pal2').forEach(function (x) { x.onclick = function () { speak(x.dataset.say); }; });
+        }, 500);
+      }
+    };
+  }
+
+  // --- monólogo guiado ---
+  function monologoUI() {
+    var host = document.getElementById('mono');
+    var m = HBL.monologo[Math.floor(Math.random() * HBL.monologo.length)].split('|');
+    host.innerHTML = '<div class="card flat"><b class="small">Tu tema</b><p style="margin:4px 0 8px">' + esc(m[0]) + '</p>' +
+      '<b class="small">Tienes que incluir</b><ul class="errs">' + m[1].split('·').map(function (x) {
+        return '<li>' + esc(x.trim()) + '</li>'; }).join('') + '</ul>' +
+      '<div class="row"><button class="btn sec small" id="m0">Otro tema</button>' +
+      (haySR() ? '<button class="btn" id="m1">● Empezar · 90 s</button>' : '') +
+      '<span class="timer" id="mt">1:30</span></div><div id="mlive" class="live en hidden"></div><div id="mr"></div></div>';
+    host.querySelector('#m0').onclick = monologoUI;
+    var btn = host.querySelector('#m1'); if (!btn) return;
+    var live = host.querySelector('#mlive'), tm = host.querySelector('#mt'), out = host.querySelector('#mr');
+    var g = grabadora(function (t, i) { live.innerHTML = esc(t) + '<span class="dim">' + esc(i) + '</span>'; live.scrollTop = live.scrollHeight; });
+    var grabando = false, iv = null, sg = 90, t0 = 0;
+    btn.onclick = function () {
+      if (!grabando) {
+        grabando = true; sg = 90; t0 = Date.now(); out.innerHTML = '';
+        live.classList.remove('hidden'); live.textContent = '';
+        btn.textContent = '■ Terminar'; btn.classList.add('rec'); g.start();
+        iv = setInterval(function () {
+          sg--; tm.textContent = Math.floor(sg / 60) + ':' + String(Math.max(0, sg) % 60).padStart(2, '0');
+          if (sg <= 0) btn.click();
+        }, 1000);
+      } else {
+        grabando = false; clearInterval(iv); btn.textContent = '● Empezar · 90 s'; btn.classList.remove('rec');
+        g.stop();
+        setTimeout(function () {
+          var t = g.texto(), tk = toks(norm(t));
+          if (tk.length < 10) { out.innerHTML = '<div class="note small">No se ha captado suficiente audio.</div>'; return; }
+          var dur = Math.max(15, Math.round((Date.now() - t0) / 1000));
+          var uniq = {}; tk.forEach(function (w) { uniq[w] = 1; });
+          var dist = Math.round(Object.keys(uniq).length / tk.length * 100);
+          var wpm = Math.round(tk.length / (dur / 60));
+          var pausas = (t.match(/\b(er|erm|em|eh|mmm)\b/gi) || []).length;
+          rec('prod', wpm >= 80, 'monólogo guiado'); S.ses++; save();
+          out.innerHTML = '<div class="metrics">' + metric(wpm, 'palabras/minuto') + metric(tk.length, 'palabras') +
+            metric(dist + '%', 'léxico distinto') + '</div>' +
+            '<p class="small ' + (wpm >= 100 ? 'ok-t' : wpm >= 75 ? 'dim' : 'bad-t') + '">' +
+            (wpm >= 100 ? 'Fluidez de conversación real. A partir de aquí lo que sube la nota ya no es la velocidad, es la precisión.'
+             : wpm >= 75 ? 'Ritmo aceptable con alguna parada. Vuelve a hacer el mismo tema ahora mismo: la segunda vez sube siempre, y esa subida es la que se queda.'
+             : 'Vas parándote a buscar palabras. El remedio no es estudiar más vocabulario, es <b>rebajar lo que quieres decir</b>: frases cortas y acabadas antes que frases ambiciosas a medias.') +
+            (pausas ? ' Se han contado ' + pausas + ' muletillas: cuando no encuentres la palabra, calla un segundo en vez de rellenar. Un silencio corto suena profesional; un «errr» largo, no.' : '') + '</p>' +
+            '<h3>Lo que se ha entendido</h3><div class="live en">' + esc(t) + '</div>' +
+            '<p class="small dim">Léelo buscando tres cosas: frases sin verbo, sujetos que te has comido y verbos sin la -s de tercera persona. ' +
+            'Esos tres son los errores que más se fosilizan, y verlos escritos es la única forma de cazarlos.</p>';
+        }, 500);
+      }
+    };
   }
 }
 

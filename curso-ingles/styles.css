@@ -308,3 +308,15 @@ body.foco main{max-width:760px}
 .opslist{display:flex; flex-direction:column; gap:6px; margin:10px 0}
 .opitem{background:var(--alt); border:1px solid var(--line); border-radius:8px; padding:9px 13px; font-size:14.5px}
 .opitem b{font-family:var(--mono); color:var(--accent); margin-right:8px}
+
+/* frases de trabajo · marcas de país, aviso y ficha de destreza */
+.pill.uk{background:#e8eefc; color:#2b4b8f}
+.pill.us{background:#fdeceb; color:#a5352b}
+h2.sec{margin:26px 0 10px; font-size:15px; letter-spacing:.08em; text-transform:uppercase; color:var(--dim)}
+.ojo{color:#a5352b}
+details.expl{margin-top:10px; border-top:1px solid var(--line); padding-top:10px}
+details.expl summary{cursor:pointer; font-weight:600; font-size:13px}
+details.expl[open] summary{margin-bottom:8px}
+.destreza{border-left:3px solid var(--line); padding:2px 0 2px 12px; margin:12px 0}
+.destreza h4{margin:0 0 4px; font-size:13px}
+.destreza p{margin:2px 0}

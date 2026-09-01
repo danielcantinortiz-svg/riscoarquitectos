@@ -12,6 +12,7 @@ var SIM = window.SIMULACRO || {};
 var VRB = window.VERBOS || { grupos: [] };
 var DRV = window.DERIVADAS || { familias: [] };
 var GYM = window.GIMNASIO || {};
+var FRS = window.FRASES || {};
 var DIC = window.ES || {};
 // Significado de una palabra suelta, para mostrarlo al pulsarla.
 function traduccion(t) { return DIC[String(t).trim().toLowerCase()] || null; }
@@ -111,11 +112,21 @@ function loadVoices() {
   if (idx < 0) idx = 0;
   sel.value = idx; voice = voices[idx];
 }
+// Siglas que sí queremos que se deletreen; cualquier otra palabra en
+// mayúsculas (RELAX, INFORM) el sintetizador la lee letra a letra, así que
+// se pasa a minúsculas antes de hablar. Y nunca se lee texto en español
+// con una voz inglesa: sale un galimatías.
+var SIGLAS = { UK: 1, US: 1, USA: 1, VAT: 1, CV: 1, RIBA: 1, BIM: 1, EPC: 1, HVAC: 1, PDF: 1, DWG: 1 };
+function decible(t) {
+  return String(t).replace(/\b[A-Z][A-Z'-]{1,}\b/g, function (w) {
+    return SIGLAS[w] ? w : w.toLowerCase();
+  });
+}
 function speak(text, opt) {
   if (!window.speechSynthesis) return;
   opt = opt || {};
   speechSynthesis.cancel();
-  var u = new SpeechSynthesisUtterance(String(text).replace(/_+/g, ' blank '));
+  var u = new SpeechSynthesisUtterance(decible(text).replace(/_+/g, ' blank '));
   if (voice) { u.voice = voice; u.lang = voice.lang; } else { u.lang = 'en-GB'; }
   u.rate = opt.rate || S.rate; u.pitch = 1;
   if (opt.onend) u.onend = opt.onend;
@@ -199,7 +210,7 @@ function route() {
   var p = h.split('/');
   document.querySelectorAll('.tab[data-go]').forEach(function (b) { b.classList.toggle('on', b.dataset.go === p[0]); });
   window.scrollTo(0, 0);
-  ({ home: vHome, plan: vPlan, repaso: vRepaso, progreso: vProgreso, oral: vOral, verbos: vVerbos, derivadas: vDerivadas, gimnasio: vGimnasio, examenes: vExamenes, dia: vDia, examen: vExamen, simulacro: vSimulacro }[p[0]] || vHome)(p[1]);
+  ({ home: vHome, plan: vPlan, repaso: vRepaso, progreso: vProgreso, oral: vOral, verbos: vVerbos, derivadas: vDerivadas, frases: vFrases, gimnasio: vGimnasio, examenes: vExamenes, dia: vDia, examen: vExamen, simulacro: vSimulacro }[p[0]] || vHome)(p[1]);
 }
 
 // ---------- motor de tests ----------
@@ -273,7 +284,7 @@ function runTest(host, items, opts, done) {
           b.classList.add(ok ? 'ok' : 'bad');
           if (!ok) q.querySelectorAll('.opt')[it.k].classList.add('ok');
           q.appendChild(el('<div class="fb ' + (ok ? 'ok' : 'bad') + '">' + (ok ? '✔ Correcto.' : '✖ La respuesta es: ' + esc(it.o[it.k])) + (it.exp ? ' <span class="dim">' + esc(it.exp) + '</span>' : '') + '</div>'));
-          if (it.exp) speak(it.exp);
+          if (it.say) speak(it.say);   // se oye la frase inglesa resuelta, no la explicación en español
           next(ok, it);
         };
         q.appendChild(b);
@@ -571,6 +582,32 @@ function racha() {
   for (var i = f.length - 2; i >= 0; i--) { if (diffDays(f[i], cur) === 1) { n++; cur = f[i]; } else break; }
   return n;
 }
+// Qué significa cada barra de «Aciertos por destreza» y qué hacer con ella.
+// Va dentro de la propia vista para que no haya que preguntar fuera.
+function explicaDestrezas() {
+  var D = [
+    ['Gramática', 'Las preguntas sobre cómo se construye la frase: tiempos verbales, orden de palabras, preposiciones, comparativos, condicionales. No es teoría: son los huecos donde eliges entre tres opciones que solo se diferencian en la forma.',
+     'Ve al <b>Gimnasio</b>: «Ordena la frase» para el orden y «¿Cuál encaja?» para preposiciones y conectores. Y en cada fallo lee la explicación entera: dice por qué la buena es buena y por qué la que elegiste no lo es.'],
+    ['Léxico', 'Vocabulario: reconocer una palabra, su contrario, la palabra que falta en una frase. Se alimenta del vocabulario de cada día y de las parejas contrarreloj.',
+     'Haz el <b>Repaso</b> todos los días aunque no hagas día nuevo: el sistema de repaso espaciado es lo que convierte una palabra vista en una palabra tuya. Si una palabra aparece en «se te resisten», escríbele un gancho.'],
+    ['Comprensión lectora', 'Leer un texto en inglés y responder sobre él sin traducirlo palabra por palabra: entender la idea principal, deducir por el contexto y localizar un dato concreto. Son las preguntas del bloque de lectura de cada día y las del examen.',
+     'Lee el texto <b>entero y seguido</b> antes de mirar las preguntas, sin diccionario. Luego vuelve a leerlo subrayando solo lo que responde a cada pregunta. Traducir mientras lees es lo que hunde esta destreza: entrena a adivinar por contexto.'],
+    ['Comprensión oral', 'Entender el inglés hablado: los dictados, los diálogos del día y las preguntas sobre lo que has escuchado. Es la destreza que más se resiente si solo estudias con los ojos.',
+     'Escucha primero a velocidad normal y solo después usa «Más despacio». Repite el mismo diálogo tres días seguidos: la segunda y la tercera vez oyes palabras que la primera no existían para ti. Si va muy por debajo del resto, baja la velocidad en la pestaña Audio y alarga el bloque de escucha.'],
+    ['Producción escrita', 'Lo que escribes tú: las traducciones al inglés, los huecos que se rellenan tecleando y el texto del bloque final que se evalúa. Aquí no hay opciones donde elegir, así que mide lo que de verdad sabes producir.',
+     'Escribe el texto del bloque 6 aunque tengas prisa, y pulsa «Evaluar mi texto». Fíjate en la lista de <b>errores recurrentes</b> de esta misma pantalla: corregir dos errores repetidos sube más la nota que aprender veinte palabras nuevas.'],
+    ['Uso del inglés (Cambridge)', 'El apartado <i>Use of English</i> del examen: palabras derivadas (RELAX → relaxing), huecos de una sola palabra y transformaciones con palabra clave. Es la parte más técnica y la que más se entrena aparte.',
+     'Es exactamente lo que practican las pestañas <b>Derivadas</b> y <b>Frases</b>. Veinte huecos de derivadas al día durante una semana mueven esta barra más que cualquier otra cosa del curso.']
+  ];
+  return '<p class="small dim">Cada barra sale de tus propias respuestas, no de una estimación. Con menos de ocho preguntas en una categoría el dato aún no es fiable.</p>' +
+    D.map(function (d) {
+      return '<div class="destreza"><h4>' + d[0] + '</h4>' +
+        '<p class="small"><b>Qué mide:</b> ' + d[1] + '</p>' +
+        '<p class="small"><b>Cómo subirla:</b> ' + d[2] + '</p></div>';
+    }).join('') +
+    '<p class="small dim">Regla práctica: trabaja siempre la barra más baja, no la que más te gusta. Subir del 55 % al 70 % en tu peor destreza vale más, para el nivel y para el examen, que pasar del 85 % al 90 % en la mejor.</p>';
+}
+
 function vProgreso() {
   var done = doneDays().length, hist = S.hist.slice(-24);
   var fechas = Object.keys(S.fechas).sort();
@@ -601,7 +638,8 @@ function vProgreso() {
     return { l: CATS[c], v: pctCat(c), n: s ? s.ok + '/' + s.tot : '' };
   });
   h += '<div class="card"><h3>Aciertos por destreza</h3>' + bars(rows) +
-    '<p class="small dim">La destreza más baja es la que decide tu nivel real. Si «Comprensión oral» va por debajo del resto, alarga el bloque 2 y baja la velocidad del audio antes que estudiar más gramática.</p></div>';
+    '<p class="small dim">Es el porcentaje de aciertos acumulado en cada tipo de pregunta desde que empezaste. La destreza más baja es la que decide tu nivel real: un examen de Cambridge no hace media, exige un mínimo en cada parte.</p>' +
+    '<details class="expl"><summary>Qué mide cada una y qué hacer para subirla</summary>' + explicaDestrezas() + '</details></div>';
 
   // oral
   h += '<div class="card"><div class="row between"><h3 style="margin:0">Expresión oral</h3><button class="btn small" id="goOral">Hacer una prueba oral</button></div>';
@@ -687,6 +725,11 @@ function mazoDe(id) {
     (GYM.conectores.grupos || []).forEach(function (G) { G.v.forEach(function (l) { var p = l.split('|'); c.push([p[0], p[1]]); }); });
     return { t: 'Conector y su función', v: c, izq: 'Conector', der: 'Para qué sirve', enIzq: true, enDer: false };
   }
+  if (id === 'frases') {
+    var e = [];
+    (FRS.modismos || []).forEach(function (G) { G.v.forEach(function (l) { var p = l.split('|'); e.push([p[0], p[1]]); }); });
+    return { t: 'Expresión y lo que significa de verdad', v: e, izq: 'Se dice', der: 'Significa', enIzq: true, enDer: false };
+  }
   return { t: 'Adjetivo y su contrario', v: (GYM.adjetivos.opuestos || []).map(function (l) { return l.split('|'); }),
            izq: 'Adjetivo', der: 'Su contrario', enIzq: true, enDer: true };
 }
@@ -716,7 +759,8 @@ function vGimnasio(arg) {
     '<p class="dim small">Al pulsar una palabra inglesa <b>se pronuncia y aparece debajo qué significa</b>, así que oyes las doce mientras juegas y resuelves cualquier duda sin salir. Al terminar tienes las doce parejas juntas para repasarlas.</p>' +
     '<div class="row"><button class="btn" data-par="derivadas">Derivadas</button>' +
     '<button class="btn" data-par="conectores">Conectores</button>' +
-    '<button class="btn" data-par="adjetivos">Adjetivos y contrarios</button></div><div id="gpar"></div></div>' +
+    '<button class="btn" data-par="adjetivos">Adjetivos y contrarios</button>' +
+    '<button class="btn" data-par="frases">Frases y expresiones</button></div><div id="gpar"></div></div>' +
     '<div class="card"><h2 style="margin-top:0">🧩 Ordena la frase</h2>' +
     '<p class="dim small">Las palabras salen desordenadas y hay que colocarlas. Entrena las cinco reglas de orden que el español coloca al revés.</p>' +
     '<div class="row">' + (GYM.orden.grupos || []).map(function (G, i) {
@@ -727,6 +771,7 @@ function vGimnasio(arg) {
     '<div class="row"><button class="btn" data-hue="conectores">Conectores</button>' +
     '<button class="btn" data-hue="prepos">Preposiciones</button>' +
     '<button class="btn" data-hue="cantidad">much / many</button>' +
+    '<button class="btn" data-hue="frases">Frases · UK / US</button>' +
     '<button class="btn sec" data-hue="todo">Mezcla de todo</button></div><div id="ghue"></div></div>' +
     '<div class="card"><h2 style="margin-top:0">⚡ Velocidad · 60 segundos</h2>' +
     '<p class="dim small">Sesenta segundos, las que puedas. Sin explicaciones y sin pensar: aquí se entrena el automatismo, no el análisis.</p>' +
@@ -913,13 +958,16 @@ function juegoOrden(which) {
 
 // --- juego 3: ¿cuál encaja? ---
 function huecosDe(id) {
-  var src = id === 'todo' ? [].concat(GYM.conectores.huecos, GYM.prepos.huecos, GYM.cantidad.huecos)
-                          : (GYM[id] || {}).huecos || [];
+  var src = id === 'todo' ? [].concat(GYM.conectores.huecos, GYM.prepos.huecos, GYM.cantidad.huecos, FRS.huecos || [])
+           : id === 'frases' ? (FRS.huecos || [])
+                             : (GYM[id] || {}).huecos || [];
   return src.map(function (l) {
     var p = l.split('|');
     var ops = shuffle([p[1], p[2], p[3]]);
     var q = qMC('Completa el hueco:<br>' + gapHtml(p[0]), ops, ops.indexOf(p[1]), p[4], 'gram');
-    q.part = id === 'prepos' ? 'Preposiciones' : id === 'cantidad' ? 'much / many' : 'Conectores';
+    q.say = p[0].replace(/___+/, p[1]);
+    q.part = id === 'prepos' ? 'Preposiciones' : id === 'cantidad' ? 'much / many'
+           : id === 'frases' ? 'Frases y usos UK / US' : 'Conectores';
     return q;
   });
 }
@@ -1076,6 +1124,102 @@ function vDerivadas() {
     document.getElementById('dn').textContent = total + (total === 1 ? ' palabra' : ' palabras') + ' · pulsa la palabra para oírla y ver qué significa';
     app.querySelectorAll('.vb').forEach(function (x) { x.onclick = function () { speak(x.dataset.say); }; });
     cablearPalabras(app);
+  }
+}
+
+// ---------- vista: frases de negocios y arquitectura (UK / US) ----------
+// Tres capas: frases por situación, pares británico/americano y coloquiales.
+// Todo se puede escuchar y todo se puede buscar con una sola caja.
+function marca(m) {
+  if (m === 'UK') return ' <span class="pill uk">UK</span>';
+  if (m === 'US') return ' <span class="pill us">US</span>';
+  return '';
+}
+function frase(t) { return '<span class="en vb" data-say="' + esc(t) + '" title="Pulsa para escucharla">' + esc(t) + '</span>'; }
+
+function vFrases(arg) {
+  var h = '<h1>Frases de trabajo · negocios y arquitectura</h1>' +
+    '<p class="dim">' + FRS.intro + '</p>' +
+    '<div class="note small">' + FRS.aviso + '</div>' +
+    '<div class="card"><div class="row between"><div><h3 style="margin:0">Practicar</h3>' +
+    '<p class="small dim" style="margin:4px 0 0">Doce huecos con las trampas reales entre inglés británico y americano, o parejas contrarreloj con las expresiones coloquiales.</p></div>' +
+    '<div class="row"><button class="btn" id="fhue">Huecos UK / US</button>' +
+    '<button class="btn sec" id="fpar">Parejas de expresiones</button></div></div><div id="fprac"></div></div>' +
+    '<div class="card flat"><label class="small"><b>Buscar</b> ' +
+    '<input id="fq" type="text" placeholder="una situación o una palabra: obra, fee, floor, plazo…" style="min-width:280px"></label>' +
+    '<span class="dim small" id="fn" style="margin-left:10px"></span></div><div id="flist"></div>';
+  app.innerHTML = h;
+  document.getElementById('fhue').onclick = function () {
+    var host = document.getElementById('fprac'); host.innerHTML = '';
+    runTest(host, pick(huecosDe('frases'), 12), { min: 75, pasoTxt: 'Bien: ya distingues el registro de cada país' }, function (pct, pass, foot) {
+      S.ses++; save();
+      var b = el('<button class="btn sec small">Otra tanda</button>');
+      b.onclick = function () { document.getElementById('fhue').click(); };
+      foot.appendChild(b);
+    });
+    host.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+  document.getElementById('fpar').onclick = function () {
+    document.getElementById('fprac').innerHTML = '<div id="gpar"></div>';
+    juegoParejas('frases');
+    document.getElementById('fprac').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+  var q = document.getElementById('fq');
+  q.oninput = function () { pinta(q.value); };
+  if (arg) q.value = decodeURIComponent(arg);
+  pinta(q.value);
+
+  function pinta(f) {
+    f = norm(f || '');
+    var total = 0;
+    function cabe(txt) { return !f || norm(txt).indexOf(f) >= 0; }
+
+    var sit = (FRS.bloques || []).map(function (G) {
+      var filas = G.v.map(function (l) { return l.split('|'); })
+        .filter(function (p) { return cabe(G.t + ' ' + p[0] + ' ' + p[1]); });
+      total += filas.length;
+      if (!filas.length) return '';
+      return '<div class="card"><h2 style="margin-top:0">' + esc(G.t) + '</h2>' +
+        (f ? '' : '<p class="dim small">' + G.nota + '</p>') +
+        '<div class="tablewrap"><table><tr><th>Se dice</th><th>Cuándo</th></tr>' +
+        filas.map(function (p) {
+          return '<tr><td>' + frase(p[0]) + marca(p[2]) + '</td><td class="dim small">' + p[1] + '</td></tr>';
+        }).join('') + '</table></div></div>';
+    }).join('');
+
+    var pares = (FRS.ukus || []).map(function (G) {
+      var filas = G.v.map(function (l) { return l.split('|'); })
+        .filter(function (p) { return cabe(G.t + ' ' + p[0] + ' ' + p[1] + ' ' + p[2]); });
+      total += filas.length;
+      if (!filas.length) return '';
+      return '<div class="card"><h2 style="margin-top:0">' + esc(G.t) + '</h2>' +
+        '<div class="tablewrap"><table><tr><th>Reino Unido</th><th>Estados Unidos</th><th>Qué es</th></tr>' +
+        filas.map(function (p) {
+          return '<tr><td>' + frase(p[0]) + '</td><td>' + frase(p[1]) + '</td>' +
+            '<td class="dim small">' + esc(p[2]) + (p[3] ? '<br><span class="ojo">⚠ ' + p[3] + '</span>' : '') + '</td></tr>';
+        }).join('') + '</table></div></div>';
+    }).join('');
+
+    var col = (FRS.modismos || []).map(function (G) {
+      var filas = G.v.map(function (l) { return l.split('|'); })
+        .filter(function (p) { return cabe(G.t + ' ' + p[0] + ' ' + p[1] + ' ' + p[3]); });
+      total += filas.length;
+      if (!filas.length) return '';
+      return '<div class="card"><h2 style="margin-top:0">' + esc(G.t) + '</h2>' +
+        (f || !G.nota ? '' : '<p class="dim small">' + G.nota + '</p>') +
+        '<div class="tablewrap"><table><tr><th>Expresión</th><th>Qué significa de verdad</th><th>En contexto</th></tr>' +
+        filas.map(function (p) {
+          return '<tr><td>' + frase(p[0]) + (p[2] === '—' ? '' : marca(p[2])) + '</td>' +
+            '<td class="dim small">' + esc(p[1]) + '</td><td>' + frase(p[3]) + '</td></tr>';
+        }).join('') + '</table></div></div>';
+    }).join('');
+
+    var out = (sit ? '<h2 class="sec">Por situación</h2>' + sit : '') +
+              (pares ? '<h2 class="sec">Reino Unido frente a Estados Unidos</h2>' + pares : '') +
+              (col ? '<h2 class="sec">Coloquial y autóctono</h2>' + col : '');
+    document.getElementById('flist').innerHTML = out || '<div class="card"><p>Nada coincide con esa búsqueda.</p></div>';
+    document.getElementById('fn').textContent = total + (total === 1 ? ' entrada' : ' entradas') + ' · pulsa cualquier frase para oírla';
+    app.querySelectorAll('.vb').forEach(function (x) { x.onclick = function () { speak(x.dataset.say); }; });
   }
 }
 

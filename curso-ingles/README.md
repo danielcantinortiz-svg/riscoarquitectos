@@ -83,7 +83,7 @@ función distinta:
 
 | Juego | Qué entrena | Contenido |
 |---|---|---|
-| **Parejas contrarreloj** | La asociación bruta, con presión de tiempo | Derivadas, conectores, adjetivos y sus contrarios |
+| **Parejas contrarreloj** | La asociación bruta, con presión de tiempo | Derivadas, conectores, adjetivos y sus contrarios, expresiones coloquiales |
 
 En las parejas, al pulsar una palabra inglesa **se pronuncia y aparece debajo qué significa**, sin salir de
 la aplicación: se oyen las doce mientras se juega y se resuelve cualquier duda sobre la marcha. Al terminar
@@ -97,7 +97,7 @@ cosa)» y *bored* «aburrido (la persona)»; *economic* es «de la economía» y
 Para las frases de ejemplo completas, que un diccionario de palabras sueltas no puede cubrir, se mantiene
 el enlace al traductor.
 | **Ordena la frase** | El orden rígido del inglés, que el español coloca al revés | Cinco reglas de orden + adjetivos encadenados |
-| **¿Cuál encaja?** | El criterio de elección, con el *por qué* de cada respuesta | Conectores, preposiciones, much/many |
+| **¿Cuál encaja?** | El criterio de elección, con el *por qué* de cada respuesta | Conectores, preposiciones, much/many, usos UK / US |
 | **Velocidad · 60 s** | El automatismo: reconocer sin traducir | Mezcla de todo lo anterior |
 
 El panel de arriba señala el punto más flojo **a partir de los fallos reales registrados**, no de una
@@ -121,8 +121,18 @@ adjetivo va delante), **genitivo sajón** (*my brother's office*, no *the office
   tabla en veinte huecos con el formato de la Parte 3 del examen.
 - **Verbos** — 109 verbos con pasado, participio y ejemplo, agrupados por patrón (las tres formas
   iguales, pasado y participio iguales, las tres distintas) más los regulares de arquitectura y negocios.
+- **Frases de trabajo** — 210 entradas en tres capas. (1) 115 **frases hechas por situación profesional**:
+  reunión y videollamada, correo al cliente, presentación de proyecto, visita de obra, honorarios y
+  facturas, plazos y negociación, y cómo discrepar sin romper la relación. (2) 52 **pares Reino Unido /
+  Estados Unidos** donde las dos orillas no dicen lo mismo: *ground floor* frente a *first floor*
+  —el error que manda al cliente a otra planta—, *snagging list* / *punch list*, *quantity surveyor* /
+  *cost estimator*, *tender* / *bid*, *variation* / *change order*, *render* / *stucco*,
+  *plasterboard* / *drywall*, *pavement* / *sidewalk*. (3) 43 **expresiones coloquiales** con lo que
+  significan de verdad, incluido el eufemismo británico, que es donde se producen los malentendidos
+  caros: *«that's an interesting idea»* es un no, y *«I hear what you say»* cierra la discusión.
+  Trae 30 huecos propios con las trampas UK / US y alimenta las parejas contrarreloj del gimnasio.
 
-Ambas se muestran en inglés, con audio al pulsar cualquier palabra y un enlace al traductor de Google
+Todas se muestran en inglés, con audio al pulsar cualquier palabra y un enlace al traductor de Google
 por si hace falta; en la tabla de verbos el español está detrás de un interruptor, apagado por defecto.
 
 ## Evaluación

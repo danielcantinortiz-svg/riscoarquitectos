@@ -347,3 +347,11 @@ ol.proto-l li{margin:5px 0}
 .ritmo b.golpe{font-weight:800}
 .lectura{line-height:1.9; font-size:15px}
 .en.big{font-size:18px; line-height:1.6; margin:6px 0}
+
+/* traducción al español en el taller de habla */
+.trad-es{display:block; font-size:12px; line-height:1.5; color:var(--faint); margin-top:2px}
+.sin-tr .trad-es{display:none}
+.pmin .par{display:block; min-width:150px}
+.mal-dicho{color:var(--faint); text-decoration-style:wavy}
+.lectura-es{margin:-4px 0 10px; padding-left:10px; border-left:2px solid var(--line); font-size:12.5px}
+.opt .trad-es{color:inherit; opacity:.7}

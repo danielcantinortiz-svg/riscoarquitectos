@@ -156,6 +156,15 @@ de repartir el peso dentro de la frase. Cinco apartados, en este orden por méto
 
 Todo lo que no necesita micrófono —sonidos, pares mínimos, ritmo, lecturas— funciona en cualquier navegador.
 
+**Traducción al español.** Cada palabra, cada frase de ejemplo, cada frase de repetición, cada frase de ritmo
+y los tres textos de lectura llevan debajo su equivalente en español, para no repetir nunca algo sin saber qué
+se está diciendo. Un interruptor arriba la apaga y la enciende, y la elección se guarda. Los pares vienen en
+tres formas distintas según el sonido: **pares mínimos** de verdad (`ship` / `sheep`, con las dos traducciones),
+**bien dicho frente a mal dicho** (`Spain` / *espain*, donde solo suena la buena porque la mala no existe como
+palabra) y **la inglesa frente a la española** (`architect` / *arquitecto*, para ver cuántas sílabas se pierden
+al cruzar el Canal). La prueba de oído solo aparece en los cinco sonidos con pares mínimos reales, que son los
+únicos donde tiene sentido preguntar cuál se ha oído.
+
 ## Referencias de consulta
 
 - **Palabras derivadas (word formation)** — 219 palabras en diez familias de sufijos y prefijos, con el

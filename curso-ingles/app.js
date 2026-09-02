@@ -1653,6 +1653,11 @@ function parecido(mio, bueno) {
 function ritmoHtml(t) { return esc(t).replace(/\*([^*]+)\*/g, '<b class="golpe">$1</b>'); }
 function ritmoPlano(t) { return String(t).replace(/\*/g, ''); }
 
+// Parte inglesa y parte española de una entrada "English|español".
+function enEs(l) { var p = String(l).split('|'); return { en: p[0], es: p[1] || '' }; }
+// La traducción, que se puede ocultar con el interruptor de arriba.
+function trEs(t) { return t ? '<span class="trad-es">' + esc(t) + '</span>' : ''; }
+
 function vHabla(arg) {
   var h = '<h1>Taller de expresión oral</h1>' +
     '<p class="dim">' + HBL.intro + '</p>' +
@@ -1666,7 +1671,10 @@ function vHabla(arg) {
       como: '<p>El método tiene cinco pasos y están en este orden por una razón:</p><ol class="proto-l">' +
         HBL.metodo.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ol>' +
         '<p>Baja por la página en orden: primero los sonidos, luego repetir, luego ritmo, luego leer y por último hablar solo. ' +
-        'Cada apartado prepara el siguiente.</p>',
+        'Cada apartado prepara el siguiente.</p>' +
+        '<p><b>Sobre la traducción.</b> Todo lo que hay en inglés lleva debajo su equivalente en español, para que nunca repitas ' +
+        'algo sin saber qué estás diciendo. Pero úsala como red, no como muleta: <b>lee primero el inglés y solo después baja la ' +
+        'vista</b>. Cuando una frase ya la entiendas sola, apaga las traducciones con el interruptor de arriba.</p>',
       fallo: '<p>Aquí «fallar» significa que el ordenador ha entendido otra palabra distinta de la que querías decir. ' +
         'No lo tomes como una nota: <b>tómalo como un dato de laboratorio</b>. Si el reconocedor oye <i>sheep</i> cuando dices ' +
         '<i>ship</i>, un cliente inglés también puede oírlo.</p>' +
@@ -1681,30 +1689,51 @@ function vHabla(arg) {
         '<i>ship</i> no se oiga <i>sheep</i>. Eso sí es alcanzable, y en seis semanas.</p>'
     });
 
+  h += '<div class="card flat"><label class="small"><input type="checkbox" id="verEs"' + (S.trad === false ? '' : ' checked') +
+    '> <b>Ver la traducción al español</b></label>' +
+    '<span class="dim small" style="margin-left:12px">Debajo de cada palabra y cada frase. Apágala cuando ya no la necesites: ' +
+    'ese es justo el momento en que empieza a estorbar.</span></div>';
+
   if (!haySR()) h += '<div class="note small"><b>Tu navegador no permite usar el micrófono.</b> Los ejercicios de escuchar, ' +
     'los sonidos, los pares mínimos y el ritmo funcionan igual. Para los de grabarte necesitas Chrome o Edge de escritorio.</div>';
 
   // 1 · sonidos
   h += '<h2 class="sec">1 · Los sonidos que te delatan</h2>' +
-    '<p class="dim small">Diez fichas. En cada una: por qué falla en español, qué hace exactamente la boca, un truco para sacarlo ' +
-    'y pares mínimos para entrenar el oído antes que la lengua. Pulsa cualquier palabra para oírla.</p>';
+    '<p class="dim small">Diez fichas. En cada una: por qué falla en español, qué hace exactamente la boca, un truco y pares ' +
+    'para entrenar el oído antes que la lengua. Pulsa cualquier palabra inglesa para oírla.</p>';
   h += HBL.sonidos.map(function (S2, i) {
+    var esMin = S2.tipo === 'min';
+    var titulo = esMin ? 'Pares mínimos' : S2.tipo === 'mal' ? 'Bien dicho · mal dicho' : 'La inglesa y la española';
+    var nota = S2.notaPares ? '<p class="dim small" style="margin:4px 0 0">' + S2.notaPares + '</p>'
+      : S2.tipo === 'mal' ? '<p class="dim small" style="margin:4px 0 0">A la izquierda como se dice; a la derecha, el error que hay que evitar. Solo suena la buena.</p>'
+      : '';
     return '<div class="card son" id="son-' + S2.id + '"><h3 style="margin-top:0">' + S2.t + '</h3>' +
       '<p class="small"><b>Por qué falla en español:</b> ' + S2.problema + '</p>' +
       '<p class="small"><b>Qué hace la boca:</b> ' + S2.boca + '</p>' +
       '<p class="small truco"><b>Truco:</b> ' + S2.truco + '</p>' +
-      '<div class="row between" style="margin-top:8px"><b class="small">Pares mínimos</b>' +
-      '<button class="btn sec small" data-oido="' + i + '">Prueba de oído</button></div>' +
+      '<div class="row between" style="margin-top:8px"><b class="small">' + titulo + '</b>' +
+      (esMin ? '<button class="btn sec small" data-oido="' + i + '">Prueba de oído</button>' : '') + '</div>' + nota +
       '<div class="pmin">' + S2.pares.map(function (l) {
         var p2 = l.split('|');
+        if (esMin) {
+          return '<span class="par"><b class="en vb" data-say="' + esc(p2[0]) + '">' + esc(p2[0]) + '</b>' +
+            '<span class="dim"> · </span><b class="en vb" data-say="' + esc(p2[1]) + '">' + esc(p2[1]) + '</b>' +
+            trEs(p2[2] + ' · ' + p2[3]) + '</span>';
+        }
+        if (S2.tipo === 'mal') {
+          return '<span class="par"><b class="en vb" data-say="' + esc(p2[0]) + '">' + esc(p2[0]) + '</b>' +
+            '<span class="dim"> · </span><s class="mal-dicho">' + esc(p2[1]) + '</s>' + trEs(p2[2]) + '</span>';
+        }
         return '<span class="par"><b class="en vb" data-say="' + esc(p2[0]) + '">' + esc(p2[0]) + '</b>' +
-          '<span class="dim"> · </span><b class="en vb" data-say="' + esc(p2[1]) + '">' + esc(p2[1]) + '</b></span>';
+          trEs(p2[1]) + '</span>';
       }).join('') + '</div>' +
       '<div id="oido-' + i + '"></div>' +
       '<div class="row" style="margin-top:10px"><b class="small">Frases</b></div>' +
-      '<ul class="errs">' + S2.frases.map(function (f) {
-        return '<li><span class="en vb" data-say="' + esc(f) + '">' + esc(f) + '</span>' +
-          (haySR() ? ' <button class="btn sec small" data-rep="' + esc(f) + '">Repetir y comparar</button>' : '') + '</li>';
+      '<ul class="errs">' + S2.frases.map(function (l) {
+        var f = enEs(l);
+        return '<li><span class="en vb" data-say="' + esc(f.en) + '">' + esc(f.en) + '</span>' +
+          (haySR() ? ' <button class="btn sec small" data-rep="' + esc(f.en) + '">Repetir y comparar</button>' : '') +
+          trEs(f.es) + '</li>';
       }).join('') + '</ul><div class="repz"></div></div>';
   }).join('');
 
@@ -1720,9 +1749,11 @@ function vHabla(arg) {
   h += '<h2 class="sec">3 · El ritmo de la frase</h2>' +
     '<div class="card"><p class="small">' + HBL.ritmo.intro + '</p>' +
     '<p class="small dim"><b>Cómo se practica:</b> ' + HBL.ritmo.regla + '</p>' +
-    '<ul class="errs ritmo">' + HBL.ritmo.v.map(function (t) {
-      return '<li><span class="en vb" data-say="' + esc(ritmoPlano(t)) + '">' + ritmoHtml(t) + '</span>' +
-        (haySR() ? ' <button class="btn sec small" data-rep="' + esc(ritmoPlano(t)) + '">Repetir y comparar</button>' : '') + '</li>';
+    '<ul class="errs ritmo">' + HBL.ritmo.v.map(function (l) {
+      var f = enEs(l), plano = ritmoPlano(f.en);
+      return '<li><span class="en vb" data-say="' + esc(plano) + '">' + ritmoHtml(f.en) + '</span>' +
+        (haySR() ? ' <button class="btn sec small" data-rep="' + esc(plano) + '">Repetir y comparar</button>' : '') +
+        trEs(f.es) + '</li>';
     }).join('') + '</ul><div class="repz"></div></div>';
 
   // 4 · lectura
@@ -1740,6 +1771,10 @@ function vHabla(arg) {
     '<div id="mono"></div></div>';
 
   app.innerHTML = h;
+  var chk = document.getElementById('verEs');
+  function pintaTrad() { app.classList.toggle('sin-tr', !chk.checked); }
+  chk.onchange = function () { S.trad = chk.checked; save(); pintaTrad(); };
+  pintaTrad();
   app.querySelectorAll('.vb').forEach(function (x) { x.onclick = function () { speak(x.dataset.say); }; });
   app.querySelectorAll('[data-oido]').forEach(function (b) { b.onclick = function () { pruebaOido(b.dataset.oido | 0); }; });
   app.querySelectorAll('[data-rep]').forEach(function (b) {
@@ -1753,7 +1788,7 @@ function vHabla(arg) {
   monologoUI();
   if (arg) { var d0 = document.getElementById('son-' + arg); if (d0) d0.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
 
-  // --- prueba de oído: se oye una de las dos y hay que decir cuál ---
+  // --- prueba de oído: solo con pares mínimos de verdad ---
   function pruebaOido(i) {
     var S2 = HBL.sonidos[i], host = document.getElementById('oido-' + i);
     var lote = pick(S2.pares, Math.min(6, S2.pares.length)), k = 0, ac = 0;
@@ -1778,8 +1813,8 @@ function vHabla(arg) {
       speak(par[cual]);
       host.querySelector('#oye').onclick = function () { speak(par[cual]); };
       var row = host.querySelector('#oo');
-      par.forEach(function (w, j) {
-        var b = el('<button class="opt en">' + esc(w) + '</button>');
+      [0, 1].forEach(function (j) {
+        var b = el('<button class="opt en">' + esc(par[j]) + '<span class="trad-es">' + esc(par[j + 2] || '') + '</span></button>');
         b.onclick = function () {
           row.querySelectorAll('.opt').forEach(function (x) { x.disabled = true; });
           var bien = j === cual;
@@ -1787,10 +1822,11 @@ function vHabla(arg) {
           if (!bien) row.querySelectorAll('.opt')[cual].classList.add('ok');
           if (bien) ac++;
           host.querySelector('#ofb2').innerHTML = '<div class="fb ' + (bien ? 'ok' : 'bad') + '">' +
-            (bien ? '✔ Era <b class="en">' + esc(par[cual]) + '</b>.' :
-             '✖ Era <b class="en">' + esc(par[cual] || '') + '</b>, no <b class="en">' + esc(par[1 - cual] || '') + '</b>. ' +
+            (bien ? '✔ Era <b class="en">' + esc(par[cual]) + '</b> · ' + esc(par[cual + 2] || '') + '.' :
+             '✖ Era <b class="en">' + esc(par[cual]) + '</b> (' + esc(par[cual + 2] || '') + '), no <b class="en">' +
+             esc(par[1 - cual]) + '</b> (' + esc(par[3 - cual] || '') + '). ' +
              'Vuelve a escucharlas seguidas y fíjate solo en la vocal.') + '</div>';
-          rec('list', bien, 'par mínimo ' + par.join('/'));
+          rec('list', bien, 'par mínimo ' + par[0] + '/' + par[1]);
           k++;
           var seguir = function () { paint(); };
           if (bien) { setTimeout(seguir, 800); return; }
@@ -1862,10 +1898,10 @@ function vHabla(arg) {
         b.onclick = function () { serieRepetir(i); };
         z.appendChild(b); return;
       }
-      var frase = lote[k];
+      var f = enEs(lote[k]), frase = f.en;
       z.innerHTML = '<div class="card flat"><p class="small dim">Frase ' + (k + 1) + ' de ' + lote.length + '</p>' +
-        '<p class="en big">' + esc(frase) + '</p>' +
-        '<div class="row"><button class="btn sec small" id="s0">🔊 Oír</button>' +
+        '<p class="en big">' + esc(frase) + '</p>' + trEs(f.es) +
+        '<div class="row" style="margin-top:8px"><button class="btn sec small" id="s0">🔊 Oír</button>' +
         (haySR() ? '<button class="btn" id="s1">● Grabar</button>' : '') +
         '<button class="btn sec small" id="s2">Saltar →</button><span class="dim small" id="ss"></span></div><div id="sr"></div></div>';
       speak(frase);
@@ -1900,6 +1936,7 @@ function vHabla(arg) {
     host.innerHTML = '<div class="card flat" style="margin-top:12px"><b>' + esc(L2.t) + '</b>' +
       '<p class="small dim">' + esc(L2.nota) + ' · ' + pal + ' palabras</p>' +
       '<p class="en lectura">' + esc(L2.txt) + '</p>' +
+      '<div class="trad-es lectura-es"><b>En español:</b> ' + esc(L2.es) + '</div>' +
       '<div class="row"><button class="btn sec small" id="l0">🔊 Oír el modelo</button>' +
       (haySR() ? '<button class="btn" id="l1">● Leer en voz alta</button>' : '') +
       '<span class="timer" id="lt">0:00</span><span class="dim small" id="ls"></span></div><div id="lr"></div></div>';

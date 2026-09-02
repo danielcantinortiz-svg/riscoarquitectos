@@ -165,6 +165,28 @@ palabra) y **la inglesa frente a la española** (`architect` / *arquitecto*, par
 al cruzar el Canal). La prueba de oído solo aparece en los cinco sonidos con pares mínimos reales, que son los
 únicos donde tiene sentido preguntar cuál se ha oído.
 
+### El micrófono
+
+Todo el reconocimiento de voz del curso —la prueba oral, el botón 🎤 del shadowing y los cinco ejercicios del
+taller de habla— pasa por **un único gestor**. Antes cada ejercicio creaba su propio reconocedor, y como el
+navegador solo admite uno activo a la vez, abrir un segundo ejercicio sin cerrar el primero dejaba el micrófono
+peleándose consigo mismo. Ahora hay uno solo, con estas garantías:
+
+- **Parada garantizada.** El botón vuelve siempre al reposo: al parar, al fallar y también cuando otra pantalla
+  toma el micrófono. Antes, un error dejaba el botón en «Parar» para siempre.
+- **Sin bucles.** El navegador cierra el reconocimiento en cuanto hay un silencio, así que se rearranca solo;
+  pero si se corta más de seis veces seguidas se rinde y lo explica, en vez de reintentar sin fin.
+- **Nunca se graba mientras habla el sintetizador**: al empezar a grabar se corta el audio, para que el
+  micrófono no transcriba la voz del modelo en lugar de la tuya.
+- **Se cierra al cambiar de pantalla**, así que el indicador de grabación del navegador no se queda encendido.
+- **Errores en castellano y con la solución**: permiso denegado, micrófono ocupado por otra aplicación, sin
+  micrófono conectado, sin conexión (Chrome envía el audio a un servidor: sin internet no transcribe), o voz
+  sin reconocimiento disponible.
+
+Y en las pestañas **Habla** y **Oral** hay un **comprobador**: verifica navegador, contexto seguro, conexión y
+estado del permiso, y hace una prueba de seis segundos mostrando lo que se ha entendido. Si el problema está
+fuera del curso, lo dice y explica en qué orden se arregla.
+
 ## Referencias de consulta
 
 - **Palabras derivadas (word formation)** — 219 palabras en diez familias de sufijos y prefijos, con el

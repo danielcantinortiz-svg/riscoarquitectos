@@ -367,6 +367,14 @@ ol.proto-l li{margin:5px 0}
 .lectura-es{margin:-4px 0 10px; padding-left:10px; border-left:2px solid var(--line); font-size:12.5px}
 .opt .trad-es{color:inherit; opacity:.7}
 
+/* comprobador de micrófono */
+ul.chks{list-style:none; margin:10px 0 6px; padding:0}
+ul.chks li.chk{display:flex; gap:8px; align-items:flex-start; margin:6px 0; font-size:13px; line-height:1.55}
+ul.chks li.chk > b{flex:0 0 14px; font-size:13px}
+li.chk.si > b{color:#1f7a4d}
+li.chk.no > b{color:#a5352b}
+li.chk.quiza > b{color:var(--faint)}
+
 </style>
 </head>
 <body>
@@ -8137,6 +8145,115 @@ function speak(text, opt) {
 function speakSeq(list, rate) { var i = 0; (function nx() { if (i >= list.length) return; speak(list[i++], { rate: rate, onend: nx }); })(); }
 function stopAudio() { if (window.speechSynthesis) speechSynthesis.cancel(); }
 
+// ---------- micrófono: un único gestor para todo el curso ----------
+// Antes cada ejercicio se creaba su propio reconocedor. El navegador solo
+// admite uno activo a la vez, así que al abrir un segundo ejercicio sin
+// cerrar el primero el micrófono se peleaba consigo mismo y dejaba de
+// funcionar. Aquí hay uno solo, con parada garantizada y errores en
+// castellano en vez de códigos en inglés.
+var MIC = (function () {
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  var r = null, ses = null, cortes = 0, ultimo = 0;
+
+  var MSG = {
+    'not-allowed': 'El navegador no tiene permiso para usar el micrófono. Pulsa el candado 🔒 de la barra de direcciones, pon el micrófono en «Permitir» y recarga la página.',
+    'service-not-allowed': 'El sistema está bloqueando el micrófono. En Windows: Configuración → Privacidad → Micrófono, y activa el acceso para las aplicaciones de escritorio. En Mac: Preferencias → Seguridad → Micrófono.',
+    'audio-capture': 'No se detecta ningún micrófono conectado. Comprueba que está enchufado y que es el que tiene seleccionado el sistema.',
+    'network': 'El reconocimiento de voz de Chrome envía el audio a un servidor, así que necesita conexión a internet. Compruébala y vuelve a intentarlo.',
+    'aborted': 'La grabación se ha interrumpido.',
+    'no-speech': 'No se ha oído nada. Acércate al micrófono y habla algo más alto.',
+    'bad-grammar': 'Error interno del reconocedor. Recarga la página.',
+    'language-not-supported': 'La voz elegida no tiene reconocimiento disponible. Cambia a otra voz inglesa en la pestaña Audio.'
+  };
+  var FATAL = { 'not-allowed': 1, 'service-not-allowed': 1, 'audio-capture': 1, 'network': 1, 'language-not-supported': 1 };
+
+  function cerrar(texto) {
+    var s = ses; ses = null;
+    if (s && s.onFin) s.onFin(texto);
+  }
+  function crear() {
+    r = new SR();
+    r.continuous = true; r.interimResults = true;
+    r.onresult = function (e) {
+      if (!ses) return;
+      var suelto = '';
+      for (var i = e.resultIndex; i < e.results.length; i++) {
+        if (e.results[i].isFinal) ses.texto += e.results[i][0].transcript + ' ';
+        else suelto += e.results[i][0].transcript;
+      }
+      ses.onParcial && ses.onParcial(ses.texto, suelto);
+    };
+    r.onerror = function (e) {
+      if (!ses) return;
+      var m = MSG[e.error] || ('Fallo del micrófono (' + e.error + ').');
+      if (FATAL[e.error]) {
+        ses.fatal = true;
+        ses.onError && ses.onError(m, true);
+      } else if (e.error !== 'no-speech' && e.error !== 'aborted') {
+        ses.onError && ses.onError(m, false);
+      }
+    };
+    // El navegador corta el reconocimiento en cuanto hay un silencio. Como
+    // aquí se graba durante minutos, se vuelve a arrancar solo; pero si se
+    // corta muchas veces seguidas es que algo va mal y hay que rendirse en
+    // vez de entrar en un bucle infinito, que era el fallo de antes.
+    r.onend = function () {
+      if (!ses) return;
+      if (ses.parando || ses.fatal) { cerrar(ses.texto); return; }
+      var ahora = Date.now();
+      cortes = (ahora - ultimo < 500) ? cortes + 1 : 0;
+      ultimo = ahora;
+      if (cortes > 6) {
+        ses.onError && ses.onError('El micrófono se corta nada más empezar. Suele ser el permiso del sistema o que otra aplicación lo tiene ocupado (una videollamada, por ejemplo). Ciérrala y vuelve a intentarlo.', true);
+        cerrar(ses.texto); return;
+      }
+      try { r.start(); } catch (x) { cerrar(ses.texto); }
+    };
+  }
+
+  return {
+    hay: function () { return !!SR; },
+    grabando: function () { return !!ses && !ses.parando; },
+    // o = { onParcial(textoFinal, textoSuelto), onFin(texto), onError(msg, esFatal) }
+    start: function (o) {
+      o = o || {};
+      if (!SR) { o.onError && o.onError('Este navegador no reconoce la voz. Necesitas Chrome o Edge de escritorio.', true); return false; }
+      stopAudio();                       // nunca grabar mientras habla el sintetizador
+      // Si había otra grabación en marcha se descarta, y se avisa a su pantalla
+      // para que su botón vuelva al reposo en vez de quedarse en «Parar».
+      if (ses) { var previa = ses; ses = null; try { r.abort(); } catch (x) {} previa.onCancel && previa.onCancel(); }
+      if (!r) crear();
+      r.lang = (voice && voice.lang) || 'en-GB';
+      ses = { texto: '', onParcial: o.onParcial, onFin: o.onFin, onError: o.onError, onCancel: o.onCancel, parando: false, fatal: false };
+      cortes = 0; ultimo = 0;
+      try { r.start(); }
+      catch (x) {
+        // InvalidStateError: el reconocedor anterior seguía vivo. Se aborta y
+        // se reintenta una sola vez.
+        try { r.abort(); } catch (y) {}
+        var mio = ses;
+        setTimeout(function () {
+          if (ses !== mio) return;
+          try { r.start(); } catch (z) { o.onError && o.onError('El micrófono no ha arrancado. Recarga la página y vuelve a intentarlo.', true); cerrar(''); }
+        }, 300);
+      }
+      return true;
+    },
+    stop: function () {
+      if (!ses) return;
+      ses.parando = true;
+      try { r.stop(); } catch (x) { cerrar(ses.texto); }
+    },
+    // Al cambiar de pantalla: se corta sin avisar a nadie.
+    abort: function () {
+      if (!ses) return;
+      var s2 = ses; ses = null;
+      try { r.abort(); } catch (x) {}
+      s2.onCancel && s2.onCancel();
+    }
+  };
+})();
+
 // ---------- utilidades ----------
 function el(h) { var d = document.createElement('div'); d.innerHTML = h.trim(); return d.firstChild; }
 function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]; }); }
@@ -8208,6 +8325,7 @@ var app = document.getElementById('app');
 function go(v, arg) { stopAudio(); location.hash = arg != null ? v + '/' + arg : v; }
 window.addEventListener('hashchange', route);
 function route() {
+  MIC.abort();                       // nunca dejar el micrófono abierto al cambiar de pantalla
   var h = location.hash.replace('#', '') || 'home';
   var p = h.split('/');
   document.querySelectorAll('.tab[data-go]').forEach(function (b) { b.classList.toggle('on', b.dataset.go === p[0]); });
@@ -9506,15 +9624,17 @@ function vOral(arg) {
   var n = parseInt(arg, 10);
   if (!(n >= 1 && n <= TOTAL) || !unlocked(n)) { var u = maxDone(); n = siguiente(u > 0 ? u : 1); }
   var D = dayData(n), L = lvlOf(n);
-  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  var SR = MIC.hay();
   var h = '<h1>Prueba de expresión oral</h1>' +
     '<p class="dim">Dos minutos hablando sin parar. Se mide tu <b>fluidez</b> (palabras por minuto), tu <b>densidad léxica</b> (cuántas palabras distintas usas) y cuántas <b>estructuras objetivo del ' + etiquetaDia(n).toLowerCase() + '</b> te salen sin pensarlas.</p>';
   h += selectorDia(n);
   if (!SR) {
-    app.innerHTML = h + '<div class="card"><p class="bad-t"><b>Tu navegador no permite reconocimiento de voz.</b></p><p>Necesitas Chrome o Edge de escritorio. Mientras tanto puedes hacer la prueba igual: habla dos minutos con el cronómetro y luego escribe de memoria lo que dijiste en el bloque de escritura.</p></div>';
+    app.innerHTML = h + '<div class="card"><p class="bad-t"><b>Tu navegador no permite reconocimiento de voz.</b></p><p>Necesitas Chrome o Edge de escritorio. Mientras tanto puedes hacer la prueba igual: habla dos minutos con el cronómetro y luego escribe de memoria lo que dijiste en el bloque de escritura.</p></div><div id="micPanel"></div>';
     cablearSelector();
+    panelMicro(document.getElementById('micPanel'));
     return;
   }
+  h += '<div id="micPanel"></div>';
   h += '<div class="card"><h3>Tu tarea</h3><p><b>' + esc(D.prod.habla) + '</b></p>' +
     '<p class="small dim">Estructuras que deberías intentar colocar:</p><ul class="errs">' +
     D.chunks.slice(0, 4).map(function (c) { return '<li class="en">' + esc(c) + '</li>'; }).join('') + '</ul>' +
@@ -9522,6 +9642,7 @@ function vOral(arg) {
     '<div id="live" class="live en hidden"></div><div id="ores"></div></div>';
   app.innerHTML = h;
   cablearSelector();
+  panelMicro(document.getElementById('micPanel'));
   var yaHecho = (S.dias[n] || {}).oral;
   if (yaHecho) document.getElementById('ores').innerHTML =
     '<div class="note small">Ya hiciste la prueba oral de este día el <b>' + esc(yaHecho.f.split('-').reverse().join('/')) +
@@ -9532,41 +9653,33 @@ function vOral(arg) {
     if (sel) sel.onchange = function () { go('oral', sel.value); };
   }
 
-  var r = new SR();
-  r.lang = (voice && voice.lang) || 'en-GB';
-  r.continuous = true; r.interimResults = true;
-  var texto = '', running = false, t0 = 0, iv = null, secs = 120;
+  var texto = '', t0 = 0, iv = null, secs = 120;
   var live = document.getElementById('live'), btn = document.getElementById('rec'), tm = document.getElementById('ot'), st = document.getElementById('ost');
 
-  r.onresult = function (e) {
-    var interim = '';
-    for (var i = e.resultIndex; i < e.results.length; i++) {
-      if (e.results[i].isFinal) texto += e.results[i][0].transcript + ' ';
-      else interim += e.results[i][0].transcript;
-    }
-    live.innerHTML = esc(texto) + '<span class="dim">' + esc(interim) + '</span>';
-    live.scrollTop = live.scrollHeight;
-  };
-  r.onerror = function (e) { st.textContent = 'Error de micrófono: ' + e.error; };
-  r.onend = function () { if (running) { try { r.start(); } catch (x) {} } };
-
-  btn.onclick = function () {
-    if (!running) {
+  botonGrabar(btn, '■ Terminar', '● Empezar a grabar', {
+    onInicio: function () {
       texto = ''; live.textContent = ''; live.classList.remove('hidden');
       document.getElementById('ores').innerHTML = '';
-      running = true; t0 = Date.now(); secs = 120;
-      btn.textContent = '■ Terminar'; btn.classList.add('rec'); st.textContent = 'Grabando… habla sin parar.';
-      try { r.start(); } catch (x) {}
+      t0 = Date.now(); secs = 120; st.textContent = 'Grabando… habla sin parar.';
       iv = setInterval(function () {
         secs--; tm.textContent = Math.floor(secs / 60) + ':' + String(secs % 60).padStart(2, '0');
-        if (secs <= 0) btn.click();
+        if (secs <= 0) MIC.stop();
       }, 1000);
-    } else {
-      running = false; clearInterval(iv); try { r.stop(); } catch (x) {}
-      btn.textContent = '● Empezar a grabar'; btn.classList.remove('rec'); st.textContent = '';
+    },
+    onCancel: function () { clearInterval(iv); st.textContent = ''; },
+    onParcial: function (t, suelto) {
+      texto = t;
+      live.innerHTML = esc(t) + '<span class="dim">' + esc(suelto) + '</span>';
+      live.scrollTop = live.scrollHeight;
+    },
+    onError: function (m) { st.textContent = ''; document.getElementById('ores').innerHTML = '<div class="note small">' + esc(m) + '</div>'; },
+    onFin: function (t, hubeError) {
+      clearInterval(iv); st.textContent = '';
+      texto = t;
+      if (hubeError && !norm(t)) return;
       finish(Math.max(20, Math.round((Date.now() - t0) / 1000)));
     }
-  };
+  });
 
   function finish(dur) {
     var toks = norm(texto).split(' ').filter(Boolean);
@@ -9609,36 +9722,114 @@ function vOral(arg) {
   }
 }
 
+// ---------- comprobador de micrófono ----------
+// Cuando el micrófono no va, la causa casi nunca está en el curso: es el
+// permiso, el navegador, la falta de conexión o que otra aplicación lo tiene
+// cogido. Esto lo dice claro en vez de dejar un botón que no hace nada.
+function panelMicro(host) {
+  var SR = MIC.hay();
+  var seguro = !!window.isSecureContext;
+  var proto = location.protocol;
+  var chrome = /Chrome|Chromium|Edg/.test(navigator.userAgent) && !/OPR|Firefox/.test(navigator.userAgent);
+  var movil = /Android|iPhone|iPad/i.test(navigator.userAgent);
+  function fila(ok, t, d) {
+    return '<li class="chk ' + (ok === true ? 'si' : ok === false ? 'no' : 'quiza') + '"><b>' +
+      (ok === true ? '✔' : ok === false ? '✖' : '•') + '</b> <span>' + t +
+      (d ? '<br><span class="dim small">' + d + '</span>' : '') + '</span></li>';
+  }
+  var h = '<div class="card"><div class="row between"><h3 style="margin:0">🎤 Comprobar el micrófono</h3>' +
+    '<button class="btn small" id="micTest">Probar 6 segundos</button></div>' +
+    '<ul class="chks">' +
+    fila(SR, SR ? 'Tu navegador reconoce la voz.' : 'Tu navegador no reconoce la voz.',
+      SR ? '' : 'Necesitas <b>Chrome</b> o <b>Edge</b> de escritorio. En Firefox y en Safari esta función no existe, y el resto del curso sigue funcionando igual.') +
+    fila(seguro, seguro ? 'La página se sirve de forma segura (' + proto + ').' : 'La página no es un contexto seguro (' + proto + ').',
+      seguro ? '' : 'El navegador solo da micrófono en <b>https://</b> o abriendo el archivo directamente desde tu disco. Si estás en http:// no lo dará nunca.') +
+    fila(chrome ? true : null, chrome ? 'Estás en Chrome o Edge, que es lo recomendado.' : 'No se detecta Chrome ni Edge.',
+      chrome ? '' : 'Puede funcionar, pero si falla prueba primero a abrirlo en Chrome antes de tocar nada más.') +
+    fila(navigator.onLine, navigator.onLine ? 'Hay conexión a internet.' : 'No se detecta conexión a internet.',
+      'Esto importa: Chrome <b>no reconoce la voz en tu ordenador</b>, envía el audio a un servidor. Sin conexión el micrófono se abre pero no transcribe nada.') +
+    (movil ? fila(null, 'Estás en un móvil o tableta.', 'El reconocimiento funciona, pero se corta cada pocos segundos por diseño del sistema. Para los ejercicios largos es mejor un ordenador.') : '') +
+    '<li class="chk quiza" id="micPerm"><b>•</b> <span>Permiso del micrófono: comprobando…</span></li>' +
+    '</ul><div id="micRes"></div>' +
+    '<p class="small dim">Si algo falla, el orden en que se arregla es este: <b>1)</b> el candado 🔒 de la barra de direcciones → Micrófono → Permitir, y recargar; ' +
+    '<b>2)</b> cerrar cualquier videollamada o programa que esté usando el micrófono, porque solo puede usarlo uno a la vez; ' +
+    '<b>3)</b> los ajustes de privacidad del sistema operativo; <b>4)</b> comprobar que el micrófono elegido en el sistema es el que de verdad tienes puesto.</p></div>';
+  host.insertAdjacentHTML('beforeend', h);
+
+  var li = document.getElementById('micPerm');
+  if (navigator.permissions && navigator.permissions.query) {
+    navigator.permissions.query({ name: 'microphone' }).then(function (st) {
+      var m = st.state === 'granted' ? ['si', '✔', 'Permiso concedido.', '']
+        : st.state === 'denied' ? ['no', '✖', 'Permiso <b>denegado</b> para esta página.', 'Pulsa el candado 🔒 de la barra de direcciones, pon el micrófono en «Permitir» y recarga.']
+        : ['quiza', '•', 'El permiso se pedirá al empezar a grabar.', 'Cuando salga el aviso del navegador, pulsa «Permitir».'];
+      li.className = 'chk ' + m[0];
+      li.innerHTML = '<b>' + m[1] + '</b> <span>' + m[2] + (m[3] ? '<br><span class="dim small">' + m[3] + '</span>' : '') + '</span>';
+    })['catch'](function () {
+      li.innerHTML = '<b>•</b> <span>El permiso se pedirá al empezar a grabar.</span>';
+    });
+  } else {
+    li.innerHTML = '<b>•</b> <span>El permiso se pedirá al empezar a grabar.</span>';
+  }
+
+  var btn = document.getElementById('micTest'), res = document.getElementById('micRes');
+  btn.onclick = function () {
+    if (MIC.grabando()) { MIC.stop(); return; }
+    res.innerHTML = '<div class="card flat"><p class="small dim">Habla ahora, en inglés y en voz alta. Por ejemplo: <b class="en">This is a test of my microphone.</b></p>' +
+      '<div class="live en" id="micLive">…</div></div>';
+    var live = document.getElementById('micLive'), t0 = Date.now(), fallo = false, tope;
+    btn.textContent = '■ Parar'; btn.classList.add('rec');
+    tope = setTimeout(function () { MIC.stop(); }, 6000);
+    MIC.start({
+      onCancel: function () { clearTimeout(tope); btn.textContent = 'Probar 6 segundos'; btn.classList.remove('rec'); },
+      onParcial: function (t, suelto) { live.innerHTML = esc(t) + '<span class="dim">' + esc(suelto) + '</span>'; },
+      onError: function (m) {
+        fallo = true;
+        res.innerHTML = '<div class="note small"><b>No ha funcionado.</b> ' + esc(m) + '</div>';
+      },
+      onFin: function (t) {
+        clearTimeout(tope);
+        btn.textContent = 'Probar 6 segundos'; btn.classList.remove('rec');
+        if (fallo) return;
+        var pal = toks(norm(t)).length;
+        res.innerHTML = pal >= 2
+          ? '<div class="note small ok-t"><b>El micrófono funciona.</b> Se han entendido ' + pal + ' palabras en ' +
+            Math.round((Date.now() - t0) / 1000) + ' segundos: «' + esc(t.trim()) + '». Si en un ejercicio concreto falla, ' +
+            'lo que ocurre es que no se te entiende, no que el micrófono esté mal: baja el ritmo y vocaliza.</div>'
+          : '<div class="note small"><b>El micrófono se abre, pero no ha entendido nada.</b> Las tres causas por orden de frecuencia: ' +
+            'hablaste demasiado bajo o demasiado lejos; el micrófono que usa el sistema no es el que crees; o hablaste en español, ' +
+            'y el reconocedor está puesto en inglés. Vuelve a probar diciendo claramente <b class="en">this is a test</b>.</div>';
+      }
+    });
+  };
+}
+
 // ---------- vista: taller de expresión oral ----------
 // La pestaña «Oral» evalúa; esta enseña. Sonidos uno a uno, repetición con
 // corrección palabra a palabra, ritmo de la frase, lectura cronometrada y
 // monólogo guiado. Todo con el micrófono como espejo: lo que transcribe el
 // reconocedor es, aproximadamente, lo que oye tu interlocutor.
 var HBL = window.HABLA || {};
-function haySR() { return !!(window.SpeechRecognition || window.webkitSpeechRecognition); }
+function haySR() { return MIC.hay(); }
 
-// Grabadora reutilizable: devuelve un objeto con start y stop.
-function grabadora(onParcial) {
-  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) return null;
-  var r = new SR();
-  r.lang = (voice && voice.lang) || 'en-GB';
-  r.continuous = true; r.interimResults = true;
-  var texto = '', vivo = false;
-  r.onresult = function (e) {
-    var interim = '';
-    for (var i = e.resultIndex; i < e.results.length; i++) {
-      if (e.results[i].isFinal) texto += e.results[i][0].transcript + ' ';
-      else interim += e.results[i][0].transcript;
-    }
-    onParcial && onParcial(texto, interim);
-  };
-  r.onend = function () { if (vivo) { try { r.start(); } catch (x) {} } };
-  return {
-    start: function () { texto = ''; vivo = true; try { r.start(); } catch (x) {} },
-    stop: function () { vivo = false; try { r.stop(); } catch (x) {} return texto; },
-    texto: function () { return texto; },
-    onerror: function (f) { r.onerror = f; }
+// Un botón de grabar que se encarga de todo: cambia de estado, corta si ya
+// estaba grabando y garantiza que al terminar —por parada, por error o
+// porque el navegador cierra el micrófono— se vuelve al estado de reposo.
+// Antes esto estaba repetido en cinco sitios y en ninguno se recuperaba de
+// un error: el botón se quedaba en «Parar» para siempre.
+function botonGrabar(btn, txtOn, txtOff, o) {
+  var grabando = false, hubeError = false;
+  function reposo() { grabando = false; btn.textContent = txtOff; btn.classList.remove('rec'); }
+  btn.onclick = function () {
+    if (grabando) { MIC.stop(); return; }
+    hubeError = false; grabando = true;
+    btn.textContent = txtOn; btn.classList.add('rec');
+    o.onInicio && o.onInicio();
+    MIC.start({
+      onCancel: function () { reposo(); o.onCancel && o.onCancel(); },
+      onParcial: o.onParcial,
+      onError: function (m, fatal) { hubeError = true; o.onError && o.onError(m, fatal); },
+      onFin: function (t) { reposo(); o.onFin && o.onFin(t, hubeError); }
+    });
   };
 }
 
@@ -9698,6 +9889,7 @@ function vHabla(arg) {
 
   if (!haySR()) h += '<div class="note small"><b>Tu navegador no permite usar el micrófono.</b> Los ejercicios de escuchar, ' +
     'los sonidos, los pares mínimos y el ritmo funcionan igual. Para los de grabarte necesitas Chrome o Edge de escritorio.</div>';
+  h += '<div id="micPanel"></div>';
 
   // 1 · sonidos
   h += '<h2 class="sec">1 · Los sonidos que te delatan</h2>' +
@@ -9773,6 +9965,7 @@ function vHabla(arg) {
     '<div id="mono"></div></div>';
 
   app.innerHTML = h;
+  panelMicro(document.getElementById('micPanel'));
   var chk = document.getElementById('verEs');
   function pintaTrad() { app.classList.toggle('sin-tr', !chk.checked); }
   chk.onchange = function () { S.trad = chk.checked; save(); pintaTrad(); };
@@ -9850,19 +10043,12 @@ function vHabla(arg) {
     var st = host.querySelector('#rps'), out = host.querySelector('#rpr'), btn = host.querySelector('#rp1');
     host.querySelector('#rp0').onclick = function () { speak(frase); };
     speak(frase);
-    var g = grabadora(function (t, i) { st.textContent = (t + i).slice(-60); }), grabando = false;
-    if (!g) return;
-    g.onerror(function (e) { st.textContent = 'Micrófono: ' + e.error; });
-    btn.onclick = function () {
-      if (!grabando) {
-        grabando = true; btn.textContent = '■ Parar'; btn.classList.add('rec'); st.textContent = 'Escuchando…';
-        out.innerHTML = ''; g.start();
-      } else {
-        grabando = false; btn.textContent = '● Grabar mi intento'; btn.classList.remove('rec');
-        var dicho = g.stop();
-        setTimeout(function () { juzga(out, g.texto() || dicho, frase, st); }, 400);
-      }
-    };
+    botonGrabar(btn, '■ Parar', '● Grabar mi intento', {
+      onInicio: function () { st.textContent = 'Escuchando…'; out.innerHTML = ''; },
+      onParcial: function (t, i) { st.textContent = (t + i).slice(-60); },
+      onError: function (m) { st.textContent = ''; out.innerHTML = '<div class="note small">' + esc(m) + '</div>'; },
+      onFin: function (t, hubeError) { if (!hubeError || norm(t)) juzga(out, t, frase, st); else st.textContent = ''; }
+    });
   }
 
   function juzga(out, dicho, frase, st) {
@@ -9911,23 +10097,19 @@ function vHabla(arg) {
       z.querySelector('#s2').onclick = function () { k++; paso(); };
       var btn = z.querySelector('#s1'); if (!btn) return;
       var st = z.querySelector('#ss'), out = z.querySelector('#sr');
-      var g = grabadora(function (t, ii) { st.textContent = (t + ii).slice(-50); }), grabando = false;
-      g.onerror(function (e) { st.textContent = 'Micrófono: ' + e.error; });
-      btn.onclick = function () {
-        if (!grabando) { grabando = true; btn.textContent = '■ Parar'; btn.classList.add('rec'); st.textContent = 'Escuchando…'; out.innerHTML = ''; g.start(); }
-        else {
-          grabando = false; btn.textContent = '● Grabar'; btn.classList.remove('rec');
-          g.stop();
-          setTimeout(function () {
-            var dicho = g.texto();
-            juzga(out, dicho, frase, st);
-            suma += parecido(dicho, frase).pct;
-            var c = el('<button class="btn small" style="margin-top:10px">Siguiente frase →</button>');
-            c.onclick = function () { k++; paso(); };
-            out.appendChild(c);
-          }, 400);
+      botonGrabar(btn, '■ Parar', '● Grabar', {
+        onInicio: function () { st.textContent = 'Escuchando…'; out.innerHTML = ''; },
+        onParcial: function (t, ii) { st.textContent = (t + ii).slice(-50); },
+        onError: function (m) { st.textContent = ''; out.innerHTML = '<div class="note small">' + esc(m) + '</div>'; },
+        onFin: function (dicho, hubeError) {
+          if (hubeError && !norm(dicho)) { st.textContent = ''; return; }
+          juzga(out, dicho, frase, st);
+          suma += parecido(dicho, frase).pct;
+          var c = el('<button class="btn small" style="margin-top:10px">Siguiente frase →</button>');
+          c.onclick = function () { k++; paso(); };
+          out.appendChild(c);
         }
-      };
+      });
     }
   }
 
@@ -9945,23 +10127,24 @@ function vHabla(arg) {
     host.querySelector('#l0').onclick = function () { speak(L2.txt); };
     var btn = host.querySelector('#l1'); if (!btn) return;
     var st = host.querySelector('#ls'), out = host.querySelector('#lr'), tm = host.querySelector('#lt');
-    var g = grabadora(function (t, ii) { st.textContent = (t + ii).slice(-50); }), grabando = false, t0 = 0, iv = null;
-    g.onerror(function (e) { st.textContent = 'Micrófono: ' + e.error; });
-    btn.onclick = function () {
-      if (!grabando) {
-        grabando = true; btn.textContent = '■ He terminado'; btn.classList.add('rec'); out.innerHTML = '';
-        t0 = Date.now(); g.start();
+    var t0 = 0, iv = null;
+    botonGrabar(btn, '■ He terminado', '● Leer en voz alta', {
+      onInicio: function () {
+        out.innerHTML = ''; t0 = Date.now();
         iv = setInterval(function () {
           var sg = Math.round((Date.now() - t0) / 1000);
           tm.textContent = Math.floor(sg / 60) + ':' + String(sg % 60).padStart(2, '0');
         }, 500);
-      } else {
-        grabando = false; clearInterval(iv); btn.textContent = '● Leer en voz alta'; btn.classList.remove('rec');
+      },
+      onCancel: function () { clearInterval(iv); },
+      onParcial: function (t, ii) { st.textContent = (t + ii).slice(-50); },
+      onError: function (m) { st.textContent = ''; out.innerHTML = '<div class="note small">' + esc(m) + '</div>'; },
+      onFin: function (dicho, hubeError) {
+        clearInterval(iv);
         var dur = Math.max(5, Math.round((Date.now() - t0) / 1000));
-        g.stop();
-        setTimeout(function () {
-          var dicho = g.texto(); st.textContent = '';
-          if (!norm(dicho)) { out.innerHTML = '<div class="note small">No se ha captado audio.</div>'; return; }
+        (function () {
+          st.textContent = '';
+          if (!norm(dicho)) { if (!hubeError) out.innerHTML = '<div class="note small">No se ha captado audio. Comprueba el permiso del micrófono y vuelve a intentarlo.</div>'; return; }
           var r = parecido(dicho, L2.txt);
           var wpm = Math.round(toks(norm(dicho)).length / (dur / 60));
           rec('prod', r.pct >= 80, 'lectura en voz alta · ' + L2.t); S.ses++; save();
@@ -9978,9 +10161,9 @@ function vHabla(arg) {
             }).join(' · ') + '</p><p class="small dim">Pulsa cada una para oírla bien. Si se repite el mismo sonido en varias, ' +
               'ese es tu punto flojo: súbelo en el apartado 1.</p>' : '');
           out.querySelectorAll('.pal2').forEach(function (x) { x.onclick = function () { speak(x.dataset.say); }; });
-        }, 500);
+        })();
       }
-    };
+    });
   }
 
   // --- monólogo guiado ---
@@ -9996,23 +10179,24 @@ function vHabla(arg) {
     host.querySelector('#m0').onclick = monologoUI;
     var btn = host.querySelector('#m1'); if (!btn) return;
     var live = host.querySelector('#mlive'), tm = host.querySelector('#mt'), out = host.querySelector('#mr');
-    var g = grabadora(function (t, i) { live.innerHTML = esc(t) + '<span class="dim">' + esc(i) + '</span>'; live.scrollTop = live.scrollHeight; });
-    var grabando = false, iv = null, sg = 90, t0 = 0;
-    btn.onclick = function () {
-      if (!grabando) {
-        grabando = true; sg = 90; t0 = Date.now(); out.innerHTML = '';
+    var iv = null, sg = 90, t0 = 0;
+    botonGrabar(btn, '■ Terminar', '● Empezar · 90 s', {
+      onInicio: function () {
+        sg = 90; t0 = Date.now(); out.innerHTML = '';
         live.classList.remove('hidden'); live.textContent = '';
-        btn.textContent = '■ Terminar'; btn.classList.add('rec'); g.start();
         iv = setInterval(function () {
           sg--; tm.textContent = Math.floor(sg / 60) + ':' + String(Math.max(0, sg) % 60).padStart(2, '0');
-          if (sg <= 0) btn.click();
+          if (sg <= 0) MIC.stop();
         }, 1000);
-      } else {
-        grabando = false; clearInterval(iv); btn.textContent = '● Empezar · 90 s'; btn.classList.remove('rec');
-        g.stop();
-        setTimeout(function () {
-          var t = g.texto(), tk = toks(norm(t));
-          if (tk.length < 10) { out.innerHTML = '<div class="note small">No se ha captado suficiente audio.</div>'; return; }
+      },
+      onCancel: function () { clearInterval(iv); },
+      onParcial: function (t, i) { live.innerHTML = esc(t) + '<span class="dim">' + esc(i) + '</span>'; live.scrollTop = live.scrollHeight; },
+      onError: function (m) { out.innerHTML = '<div class="note small">' + esc(m) + '</div>'; },
+      onFin: function (t, hubeError) {
+        clearInterval(iv);
+        (function () {
+          var tk = toks(norm(t));
+          if (tk.length < 10) { if (!hubeError) out.innerHTML = '<div class="note small">No se ha captado suficiente audio. Habla al menos diez palabras seguidas.</div>'; return; }
           var dur = Math.max(15, Math.round((Date.now() - t0) / 1000));
           var uniq = {}; tk.forEach(function (w) { uniq[w] = 1; });
           var dist = Math.round(Object.keys(uniq).length / tk.length * 100);
@@ -10029,9 +10213,9 @@ function vHabla(arg) {
             '<h3>Lo que se ha entendido</h3><div class="live en">' + esc(t) + '</div>' +
             '<p class="small dim">Léelo buscando tres cosas: frases sin verbo, sujetos que te has comido y verbos sin la -s de tercera persona. ' +
             'Esos tres son los errores que más se fosilizan, y verlos escritos es la única forma de cazarlos.</p>';
-        }, 500);
+        })();
       }
-    };
+    });
   }
 }
 
@@ -10632,22 +10816,27 @@ function vDia(nStr) {
   }
 }
 
+// Botón 🎤 del shadowing: si ya está grabando, corta; si no, escucha una vez.
 function listen(target, row, btn) {
-  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) { if (!row.querySelector('.nosr')) row.appendChild(el('<span class="small dim nosr">Reconocimiento de voz no disponible (usa Chrome o Edge).</span>')); return; }
-  var r = new SR(); r.lang = (voice && voice.lang) || 'en-GB'; r.interimResults = false; r.maxAlternatives = 1;
-  btn.textContent = '●'; btn.disabled = true;
-  r.onresult = function (e) {
-    var said = e.results[0][0].transcript;
-    var a = norm(said).split(' '), b = norm(target).split(' ');
-    var hit = b.filter(function (w) { return a.indexOf(w) >= 0; }).length;
-    var pct = Math.round(hit / b.length * 100);
-    var old = row.querySelector('.fb'); if (old) old.remove();
-    row.appendChild(el('<div class="fb ' + (pct >= 75 ? 'ok' : 'bad') + '" style="width:100%">Te he oído: “' + esc(said) + '” · ' + pct + '% de coincidencia</div>'));
-  };
-  r.onerror = function () { btn.textContent = '🎤'; btn.disabled = false; };
-  r.onend = function () { btn.textContent = '🎤'; btn.disabled = false; };
-  r.start();
+  if (!MIC.hay()) { if (!row.querySelector('.nosr')) row.appendChild(el('<span class="small dim nosr">Reconocimiento de voz no disponible (usa Chrome o Edge).</span>')); return; }
+  if (MIC.grabando()) { MIC.stop(); return; }
+  var viejo = row.querySelector('.fb'); if (viejo) viejo.remove();
+  btn.textContent = '■'; btn.title = 'Pulsa cuando termines';
+  MIC.start({
+    onError: function (m) {
+      var v = row.querySelector('.fb'); if (v) v.remove();
+      row.appendChild(el('<div class="fb bad" style="width:100%">' + esc(m) + '</div>'));
+    },
+    onFin: function (said) {
+      btn.textContent = '🎤'; btn.title = 'Grabar y comparar';
+      if (!norm(said)) return;
+      var a = norm(said).split(' '), b = norm(target).split(' ');
+      var hit = b.filter(function (w) { return a.indexOf(w) >= 0; }).length;
+      var pct = Math.round(hit / b.length * 100);
+      var v = row.querySelector('.fb'); if (v) v.remove();
+      row.appendChild(el('<div class="fb ' + (pct >= 75 ? 'ok' : 'bad') + '" style="width:100%">Te he oído: “' + esc(said.trim()) + '” · ' + pct + '% de coincidencia</div>'));
+    }
+  });
 }
 
 var clockIv = null;

@@ -8330,6 +8330,7 @@ function route() {
   var p = h.split('/');
   document.querySelectorAll('.tab[data-go]').forEach(function (b) { b.classList.toggle('on', b.dataset.go === p[0]); });
   window.scrollTo(0, 0);
+  app.classList.toggle('sin-tr', S.trad === false);   // la traducción al español, encendida o apagada, en toda la aplicación
   ({ home: vHome, plan: vPlan, repaso: vRepaso, progreso: vProgreso, oral: vOral, habla: vHabla, verbos: vVerbos, derivadas: vDerivadas, frases: vFrases, gimnasio: vGimnasio, examenes: vExamenes, dia: vDia, examen: vExamen, simulacro: vSimulacro }[p[0]] || vHome)(p[1]);
 }
 
@@ -9035,7 +9036,9 @@ function vGimnasio(arg) {
       error: '<p>Estudiar listas. Una lista de treinta conectores leída del tirón se olvida entera en dos días. ' +
         'Doce elegidos bajo presión, con su corrección, se quedan. El material de este gimnasio es el mismo; lo que cambia es que aquí ' +
         '<b>lo tienes que producir tú</b>.</p>'
-    }) + panelFlojo() +
+    }) +
+    interruptorTraduccion('En las tablas de repaso de este gimnasio y en el resto del curso. Dentro de las partidas la traducción sigue apareciendo solo al pulsar la palabra: si estuviera a la vista, emparejar dejaría de tener mérito.') +
+    panelFlojo() +
     '<div class="card"><h2 style="margin-top:0">⏱ Parejas contrarreloj</h2>' +
     profe({
       porque: '<p>Emparejar es la forma más rápida de crear una <b>asociación</b>. No estás memorizando una definición: estás ' +
@@ -9121,6 +9124,7 @@ function vGimnasio(arg) {
     '<p class="dim small">Sesenta segundos, las que puedas. Sin explicaciones y sin pensar: aquí se entrena el automatismo, no el análisis.</p>' +
     '<div class="row"><button class="btn" data-vel="1">Empezar</button></div><div id="gvel"></div></div>';
   app.innerHTML = h;
+  cablearInterruptor();
   app.querySelectorAll('[data-par]').forEach(function (b) { b.onclick = function () { juegoParejas(b.dataset.par); }; });
   app.querySelectorAll('[data-ord]').forEach(function (b) { b.onclick = function () { juegoOrden(b.dataset.ord); }; });
   app.querySelectorAll('[data-hue]').forEach(function (b) { b.onclick = function () { juegoHuecos(b.dataset.hue); }; });
@@ -9158,6 +9162,7 @@ function juegoParejas(id) {
   var t0 = Date.now(), penal = 0, fallos = 0, quedan = pares.length, elegida = null, iv = null;
   host.innerHTML = '<div class="row between" style="margin:14px 0 8px"><b>' + esc(M.t) + '</b>' +
     '<span class="timer" id="ptm">0:00</span></div>' +
+    '<p class="small dim" style="margin:0 0 8px">Pulsa una palabra inglesa y <b>se pronuncia y aparece debajo qué significa</b>. Al terminar tienes las doce parejas juntas, con su traducción a la vista.</p>' +
     '<div class="pares"><div id="pA"></div><div id="pB"></div></div><div id="pfin"></div>';
   var A = host.querySelector('#pA'), B = host.querySelector('#pB'), tm = host.querySelector('#ptm');
   A.innerHTML = '<h3>' + esc(M.izq) + '</h3>'; B.innerHTML = '<h3>' + esc(M.der) + '</h3>';
@@ -9222,7 +9227,7 @@ function juegoParejas(id) {
       pares.map(function (p) {
         return '<tr><td>' + celda(p[0], M.enIzq) + '</td><td>' + celda(p[1], M.enDer) + '</td></tr>';
       }).join('') + '</table></div>' +
-      '<p class="small dim">Pulsa cualquier palabra para oírla otra vez y ver qué significa.</p></div>';
+      '<p class="small dim">Pulsa cualquier palabra para oírla otra vez. La traducción se apaga con el interruptor de arriba.</p></div>';
     cablearPalabras(f);
     var r = el('<div class="row"></div>');
     var b1 = el('<button class="btn small">Otra ronda</button>'); b1.onclick = function () { juegoParejas(id); };
@@ -9386,17 +9391,29 @@ function juegoVelocidad() {
 // Palabra en inglés que se oye y muestra su significado al pulsarla.
 function palabraES(w) {
   var es = traduccion(w);
-  return '<b class="en vb pal" data-say="' + esc(w) + '"' + (es ? ' data-es="' + esc(es) + '"' : '') +
-    ' title="' + (es ? 'Pulsa para oírla y ver qué significa' : 'Pulsa para oírla') + '">' + esc(w) + '</b>' +
-    (es ? '' : ' ' + trad(w));
+  return '<b class="en vb pal" data-say="' + esc(w) + '" title="Pulsa para oírla">' + esc(w) + '</b>' +
+    (es ? '<span class="trad-es">' + esc(es) + '</span>' : ' ' + trad(w));
 }
 function cablearPalabras(raiz) {
   raiz.querySelectorAll('.pal').forEach(function (x) {
-    x.onclick = function () {
-      speak(x.dataset.say);
-      if (x.dataset.es && !x.nextElementSibling) {
-        x.insertAdjacentHTML('afterend', ' <span class="sig">' + esc(x.dataset.es) + '</span>');
-      }
+    x.onclick = function () { speak(x.dataset.say); };
+  });
+}
+
+// El interruptor de «ver la traducción», idéntico en todas las pestañas.
+function interruptorTraduccion(nota) {
+  return '<div class="card flat"><label class="small"><input type="checkbox" class="verEs"' +
+    (S.trad === false ? '' : ' checked') + '> <b>Ver la traducción al español</b></label>' +
+    '<span class="dim small" style="margin-left:12px">' +
+    (nota || 'Debajo de cada palabra inglesa. Apágala cuando ya no la necesites: ese es justo el momento en que empieza a estorbar.') +
+    '</span></div>';
+}
+function cablearInterruptor() {
+  app.querySelectorAll('.verEs').forEach(function (chk) {
+    chk.onchange = function () {
+      S.trad = chk.checked; save();
+      app.classList.toggle('sin-tr', !chk.checked);
+      app.querySelectorAll('.verEs').forEach(function (o) { o.checked = chk.checked; });
     };
   });
 }
@@ -9410,10 +9427,12 @@ function vDerivadas() {
     '<p class="small dim" style="margin:4px 0 0">Veinte huecos con el mismo formato del examen. Se corrigen al momento y te dice por qué.</p></div>' +
     '<div class="row"><button class="btn sec small" data-prac="familia">Solo -ing / -ed</button>' +
     '<button class="btn" data-prac="todo">Empezar práctica</button></div></div><div id="prac"></div></div>' +
+    interruptorTraduccion('Debajo de cada raíz y de cada palabra derivada. Las frases de ejemplo, al ser frases enteras, siguen llevando el enlace al traductor.') +
     '<div class="card flat"><label class="small"><b>Buscar</b> ' +
     '<input id="dq" type="text" placeholder="una raíz o una terminación: RELAX, -ness, im-…" style="min-width:260px"></label>' +
     '<span class="dim small" id="dn" style="margin-left:10px"></span></div><div id="dlist"></div>';
   app.innerHTML = h;
+  cablearInterruptor();
   app.querySelectorAll('[data-prac]').forEach(function (b) {
     b.onclick = function () { practicar(b.dataset.prac === 'familia'); };
   });
@@ -9459,14 +9478,14 @@ function vDerivadas() {
         (f ? '' : '<p class="dim small">' + G.nota + '</p>') +
         '<div class="tablewrap"><table><tr><th>Raíz</th><th>Palabra derivada</th><th>Qué es</th><th>Ejemplo</th></tr>' +
         filas.map(function (p) {
-          return '<tr><td><span class="mono">' + esc(p[0]) + '</span></td>' +
+          return '<tr><td><span class="mono">' + esc(p[0]) + '</span>' + trEs(traduccion(p[0])) + '</td>' +
             '<td>' + palabraES(p[1]) + '</td>' +
             '<td class="dim small">' + esc(p[2]) + '</td>' +
             '<td><span class="en vb" data-say="' + esc(p[3]) + '" title="Escuchar la frase">' + esc(p[3]) + '</span> ' + trad(p[3]) + '</td></tr>';
         }).join('') + '</table></div></div>';
     }).join('');
     document.getElementById('dlist').innerHTML = out || '<div class="card"><p>Nada coincide con esa búsqueda.</p></div>';
-    document.getElementById('dn').textContent = total + (total === 1 ? ' palabra' : ' palabras') + ' · pulsa la palabra para oírla y ver qué significa';
+    document.getElementById('dn').textContent = total + (total === 1 ? ' palabra' : ' palabras') + ' · pulsa cualquier palabra para oírla';
     app.querySelectorAll('.vb').forEach(function (x) { x.onclick = function () { speak(x.dataset.say); }; });
     cablearPalabras(app);
   }
@@ -9490,10 +9509,12 @@ function vFrases(arg) {
     '<p class="small dim" style="margin:4px 0 0">Doce huecos con las trampas reales entre inglés británico y americano, o parejas contrarreloj con las expresiones coloquiales.</p></div>' +
     '<div class="row"><button class="btn" id="fhue">Huecos UK / US</button>' +
     '<button class="btn sec" id="fpar">Parejas de expresiones</button></div></div><div id="fprac"></div></div>' +
+    interruptorTraduccion('Aquí el «cuándo se dice» de cada frase está siempre a la vista; el interruptor afecta a las palabras sueltas del resto del curso.') +
     '<div class="card flat"><label class="small"><b>Buscar</b> ' +
     '<input id="fq" type="text" placeholder="una situación o una palabra: obra, fee, floor, plazo…" style="min-width:280px"></label>' +
     '<span class="dim small" id="fn" style="margin-left:10px"></span></div><div id="flist"></div>';
   app.innerHTML = h;
+  cablearInterruptor();
   document.getElementById('fhue').onclick = function () {
     var host = document.getElementById('fprac'); host.innerHTML = '';
     runTest(host, pick(huecosDe('frases'), 12), { min: 75, pasoTxt: 'Bien: ya distingues el registro de cada país' }, function (pct, pass, foot) {
@@ -9882,10 +9903,7 @@ function vHabla(arg) {
         '<i>ship</i> no se oiga <i>sheep</i>. Eso sí es alcanzable, y en seis semanas.</p>'
     });
 
-  h += '<div class="card flat"><label class="small"><input type="checkbox" id="verEs"' + (S.trad === false ? '' : ' checked') +
-    '> <b>Ver la traducción al español</b></label>' +
-    '<span class="dim small" style="margin-left:12px">Debajo de cada palabra y cada frase. Apágala cuando ya no la necesites: ' +
-    'ese es justo el momento en que empieza a estorbar.</span></div>';
+  h += interruptorTraduccion('Debajo de cada palabra y cada frase, aquí y en el resto del curso. Apágala cuando ya no la necesites: ese es justo el momento en que empieza a estorbar.');
 
   if (!haySR()) h += '<div class="note small"><b>Tu navegador no permite usar el micrófono.</b> Los ejercicios de escuchar, ' +
     'los sonidos, los pares mínimos y el ritmo funcionan igual. Para los de grabarte necesitas Chrome o Edge de escritorio.</div>';
@@ -9966,10 +9984,7 @@ function vHabla(arg) {
 
   app.innerHTML = h;
   panelMicro(document.getElementById('micPanel'));
-  var chk = document.getElementById('verEs');
-  function pintaTrad() { app.classList.toggle('sin-tr', !chk.checked); }
-  chk.onchange = function () { S.trad = chk.checked; save(); pintaTrad(); };
-  pintaTrad();
+  cablearInterruptor();
   app.querySelectorAll('.vb').forEach(function (x) { x.onclick = function () { speak(x.dataset.say); }; });
   app.querySelectorAll('[data-oido]').forEach(function (b) { b.onclick = function () { pruebaOido(b.dataset.oido | 0); }; });
   app.querySelectorAll('[data-rep]').forEach(function (b) {

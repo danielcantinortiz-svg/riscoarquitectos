@@ -90,6 +90,13 @@ la aplicación: se oyen las doce mientras se juega y se resuelve cualquier duda 
 la ronda se listan las doce parejas juntas, con el mismo comportamiento, que es el momento natural de
 repasarlas. La misma pulsación funciona en la tabla de palabras derivadas.
 
+**La traducción, a la vista y con interruptor.** Antes había que pulsar cada palabra, de una en una, para ver
+qué significaba, y nada lo indicaba: en la práctica la traducción no aparecía. Ahora la lleva debajo **cada
+palabra inglesa de las tablas** —derivadas, raíces, el resumen de las doce parejas— y el interruptor «Ver la
+traducción al español» la enciende y la apaga **en todo el curso** a la vez, guardando la elección. Dentro de
+las partidas de emparejar sigue apareciendo solo al pulsar: si estuviera a la vista, emparejar dejaría de tener
+mérito.
+
 El diccionario de apoyo (`data/es.js`) tiene 457 entradas y cubre por completo el vocabulario del gimnasio
 y de la tabla de derivadas —raíces, derivadas, adjetivos y conectores—, comprobado con un test que falla si
 aparece una palabra sin traducción. Distingue los pares que más se confunden: *boring* es «aburrido (la

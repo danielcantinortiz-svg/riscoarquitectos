@@ -363,3 +363,9 @@ ul.chks li.chk > b{flex:0 0 14px; font-size:13px}
 li.chk.si > b{color:#1f7a4d}
 li.chk.no > b{color:#a5352b}
 li.chk.quiza > b{color:var(--faint)}
+
+/* familias de palabras */
+.card.fam h3 .en{font-size:17px}
+h4.sub{margin:14px 0 4px; font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--faint)}
+.card.fam .errs li{margin:7px 0}
+.card.fam .pmin .par{min-width:200px}

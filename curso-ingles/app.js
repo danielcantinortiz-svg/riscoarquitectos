@@ -321,7 +321,7 @@ function route() {
   document.querySelectorAll('.tab[data-go]').forEach(function (b) { b.classList.toggle('on', b.dataset.go === p[0]); });
   window.scrollTo(0, 0);
   app.classList.toggle('sin-tr', S.trad === false);   // la traducción al español, encendida o apagada, en toda la aplicación
-  ({ home: vHome, plan: vPlan, repaso: vRepaso, progreso: vProgreso, oral: vOral, habla: vHabla, verbos: vVerbos, derivadas: vDerivadas, frases: vFrases, gimnasio: vGimnasio, examenes: vExamenes, dia: vDia, examen: vExamen, simulacro: vSimulacro }[p[0]] || vHome)(p[1]);
+  ({ home: vHome, plan: vPlan, repaso: vRepaso, progreso: vProgreso, oral: vOral, habla: vHabla, verbos: vVerbos, derivadas: vDerivadas, familias: vFamilias, frases: vFrases, gimnasio: vGimnasio, examenes: vExamenes, dia: vDia, examen: vExamen, simulacro: vSimulacro }[p[0]] || vHome)(p[1]);
 }
 
 // ---------- motor de tests ----------
@@ -1576,6 +1576,214 @@ function vFrases(arg) {
     document.getElementById('flist').innerHTML = out || '<div class="card"><p>Nada coincide con esa búsqueda.</p></div>';
     document.getElementById('fn').textContent = total + (total === 1 ? ' entrada' : ' entradas') + ' · pulsa cualquier frase para oírla';
     app.querySelectorAll('.vb').forEach(function (x) { x.onclick = function () { speak(x.dataset.say); }; });
+  }
+}
+
+// ---------- vista: familias de palabras ----------
+// Las palabras más usadas del inglés, cada una con su familia completa,
+// sus phrasal verbs y sus combinaciones fijas. Cuatro ejercicios que obligan
+// a producir la forma, no solo a reconocerla.
+var FAM = window.FAMILIAS || { grupos: [] };
+
+function todasLasFamilias() {
+  var v = [];
+  FAM.grupos.forEach(function (G) { G.v.forEach(function (x) { v.push(x); }); });
+  return v;
+}
+
+function vFamilias(arg) {
+  var h = '<h1>Familias de palabras</h1>' +
+    '<p class="dim">' + FAM.intro + '</p>' +
+    profe({
+      porque: '<p>' + FAM.teoria.map(function (x) { return x; }).join('</p><p>') + '</p>',
+      como: '<p>Cinco pasos, y el quinto es el que de verdad fija:</p><ol class="proto-l">' +
+        FAM.metodo.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ol>' +
+        '<p>No intentes abarcar las cincuenta y una familias. <b>Dos por sesión, bien exprimidas</b>, y vuelta a ellas al día siguiente.</p>',
+      fallo: '<p>Aquí fallar significa casi siempre una de estas tres cosas, y cada una se corrige distinto:</p>' +
+        '<ol class="proto-l">' +
+        '<li><b>Has puesto el verbo donde iba el sustantivo</b> (<i>we need a decide</i>). Es el fallo más común y el más fácil: mira qué hay delante del hueco. Si hay <i>a</i>, <i>the</i>, <i>this</i> o un adjetivo, va un <b>sustantivo</b>; si hay un sujeto, va un <b>verbo</b>.</li>' +
+        '<li><b>Has acertado la categoría pero no el sufijo</b> (<i>decidement</i> en vez de <i>decision</i>). Eso no se razona, se memoriza: vuelve a la tabla de esa familia y léela en voz alta tres veces.</li>' +
+        '<li><b>Has confundido la cosa con la persona</b> (<i>the build</i> por <i>the builder</i>, <i>the manage</i> por <i>the manager</i>). Regla práctica: <b>-er</b> y <b>-or</b> son casi siempre <b>quien lo hace</b>; <b>-ion</b>, <b>-ment</b> y <b>-ance</b> son <b>la cosa o el proceso</b>.</li></ol>' +
+        '<p>Y en las combinaciones fijas no hay nada que razonar: <i>make a decision</i> es correcto y <i>take a decision</i> no, aunque en español digamos «tomar». Cuando falles una, escríbela entera —verbo y sustantivo juntos— como si fuera una sola palabra.</p>',
+      error: '<p>Estudiar la lista de las mil palabras más frecuentes. Es el consejo más repetido y el menos útil: reconocerás las mil, pero no podrás <b>producir</b> ninguna, porque una palabra suelta no se usa nunca sola. Cincuenta familias exprimidas valen más que mil palabras vistas.</p>'
+    }) +
+    interruptorTraduccion('Debajo de cada palabra inglesa. Es el mismo interruptor de todo el curso.') +
+    '<div class="card"><h3 style="margin-top:0">Practicar</h3>' +
+    '<p class="small dim">Cuatro ejercicios, de menos a más difícil. Los dos primeros trabajan la derivación; los dos últimos, las combinaciones, que es donde se nota el nivel.</p>' +
+    '<div class="row"><button class="btn" data-ej="forma">Completa la familia</button>' +
+    '<button class="btn" data-ej="falta">¿Qué falta?</button>' +
+    '<button class="btn sec" data-ej="phrasal">Phrasal verbs</button>' +
+    '<button class="btn sec" data-ej="colo">Combinaciones fijas</button></div><div id="fmprac"></div></div>' +
+    '<div class="card flat"><label class="small"><b>Buscar</b> ' +
+    '<input id="fmq" type="text" placeholder="una palabra o su familia: decide, decision, gestionar…" style="min-width:280px"></label>' +
+    '<span class="dim small" id="fmn" style="margin-left:10px"></span></div><div id="fmlist"></div>';
+  app.innerHTML = h;
+  cablearInterruptor();
+  app.querySelectorAll('[data-ej]').forEach(function (b) {
+    b.onclick = function () { ejercicio(b.dataset.ej); };
+  });
+  var q = document.getElementById('fmq');
+  q.oninput = function () { pinta(q.value); };
+  if (arg) q.value = decodeURIComponent(arg);
+  pinta(q.value);
+
+  // ---- las tablas ----
+  function pinta(f) {
+    f = norm(f || '');
+    var total = 0;
+    var out = FAM.grupos.map(function (G) {
+      var fams = G.v.filter(function (x) {
+        if (!f) return true;
+        var t = x.w + ' ' + x.es + ' ' + x.f.join(' ') + ' ' + (x.ph || []).join(' ') + ' ' + (x.col || []).join(' ');
+        return norm(t).indexOf(f) >= 0;
+      });
+      total += fams.length;
+      if (!fams.length) return '';
+      return '<h2 class="sec">' + esc(G.t) + '</h2>' +
+        (f ? '' : '<p class="dim small">' + G.nota + '</p>') +
+        fams.map(ficha).join('');
+    }).join('');
+    document.getElementById('fmlist').innerHTML = out || '<div class="card"><p>Nada coincide con esa búsqueda.</p></div>';
+    document.getElementById('fmn').textContent = total + (total === 1 ? ' familia' : ' familias') + ' · pulsa cualquier palabra para oírla';
+    app.querySelectorAll('.vb').forEach(function (x) { x.onclick = function () { speak(x.dataset.say); }; });
+    cablearPalabras(app);
+  }
+
+  function ficha(x) {
+    var h2 = '<div class="card fam" id="fam-' + esc(x.w) + '">' +
+      '<div class="row between"><h3 style="margin:0"><span class="en vb" data-say="' + esc(x.w) + '">' + esc(x.w) + '</span>' +
+      ' <span class="dim">·</span> <span class="dim">' + esc(x.es) + '</span></h3>' +
+      (x.tipo ? '<span class="tagp">' + esc(x.tipo) + '</span>' : '') + '</div>' +
+      '<div class="tablewrap"><table><tr><th>La familia</th><th>Qué es</th><th>En una frase</th></tr>' +
+      x.f.map(function (l) {
+        var p = l.split('|');
+        return '<tr><td>' + palabraES(p[0]) + '</td>' +
+          '<td class="dim small">' + esc(p[1]) + trEs(p[2]) + '</td>' +
+          '<td><span class="en vb" data-say="' + esc(p[3]) + '" title="Escuchar la frase">' + esc(p[3]) + '</span> ' + trad(p[3]) + '</td></tr>';
+      }).join('') + '</table></div>';
+    if (x.ph && x.ph.length) {
+      h2 += '<h4 class="sub">Phrasal verbs</h4><ul class="errs">' + x.ph.map(function (l) {
+        var p = l.split('|');
+        return '<li><b class="en vb" data-say="' + esc(p[0]) + '">' + esc(p[0]) + '</b>' + trEs(p[1]) +
+          '<br><span class="en vb small" data-say="' + esc(p[2]) + '">' + esc(p[2]) + '</span></li>';
+      }).join('') + '</ul>';
+    }
+    if (x.col && x.col.length) {
+      h2 += '<h4 class="sub">Combinaciones fijas</h4><div class="pmin">' + x.col.map(function (l) {
+        var p = l.split('|');
+        return '<span class="par"><b class="en vb" data-say="' + esc(p[0]) + '">' + esc(p[0]) + '</b>' + trEs(p[1]) + '</span>';
+      }).join('') + '</div>';
+    }
+    return h2 + '</div>';
+  }
+
+  // ---- los cuatro ejercicios ----
+  function ejercicio(id) {
+    var host = document.getElementById('fmprac');
+    var items = id === 'forma' ? itemsForma() : id === 'falta' ? itemsFalta()
+              : id === 'phrasal' ? itemsPhrasal() : itemsColo();
+    if (!items.length) { host.innerHTML = '<div class="note small">No hay material suficiente para este ejercicio.</div>'; return; }
+    host.innerHTML = '';
+    var opts = id === 'forma'
+      ? { min: 70, pasoTxt: 'Bien: ya produces la forma, no solo la reconoces',
+          protocolo: '<ol class="proto-l"><li>Mira <b>qué hay delante del hueco</b>: si hay <i>a</i>, <i>the</i> o un adjetivo, iba un sustantivo; si hay un sujeto, iba un verbo.</li>' +
+            '<li>Sube a la familia de esa raíz y <b>léela entera en voz alta</b>, con sus frases.</li>' +
+            '<li>Vuelve a este ejercicio antes de irte: la misma raíz suele repetir.</li></ol>' }
+      : { min: 70, pasoTxt: 'Bien: las combinaciones ya te salen solas',
+          protocolo: '<ol class="proto-l"><li><b>No la razones.</b> Estas combinaciones no siguen ninguna regla y no se traducen desde el español.</li>' +
+            '<li><b>Escríbela entera</b>, verbo y sustantivo juntos, como si fuera una sola palabra larga.</li>' +
+            '<li>Dila en voz alta tres veces dentro de una frase tuya, no suelta.</li></ol>' };
+    runTest(host, items, opts, function (pct, pass, foot) {
+      rec('cam', pass, 'familias · ' + id); S.ses++; save();
+      var b = el('<button class="btn sec small">Otra tanda</button>');
+      b.onclick = function () { ejercicio(id); };
+      foot.appendChild(b);
+    });
+    host.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // 1 · completa la familia: se tapa el miembro dentro de su propia frase
+  function itemsForma() {
+    var pool = [];
+    todasLasFamilias().forEach(function (x) {
+      x.f.forEach(function (l) {
+        var p = l.split('|');
+        var re = new RegExp('\\b' + p[0].replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i');
+        if (!re.test(p[3])) return;
+        if (norm(p[0]) === norm(x.w)) return;          // la raíz sin cambiar no enseña nada
+        pool.push({ t: 'wf', root: x.w.toUpperCase(), a: p[0], q: p[3].replace(re, '___'),
+                    cat: 'cam', part: 'Familia de ' + x.w + ' · ' + p[1] });
+      });
+    });
+    return pick(pool, Math.min(15, pool.length));
+  }
+
+  // 2 · qué falta: se da la definición y tres candidatos de la MISMA familia
+  function itemsFalta() {
+    var pool = [];
+    todasLasFamilias().forEach(function (x) {
+      if (x.f.length < 3) return;
+      x.f.forEach(function (l) {
+        var p = l.split('|');
+        var otras = x.f.filter(function (o) { return o !== l; }).map(function (o) { return o.split('|')[0]; });
+        otras = otras.filter(function (w, i) { return otras.indexOf(w) === i && w !== p[0]; });
+        if (otras.length < 2) return;
+        var ops = shuffle([p[0]].concat(pick(otras, 2)));
+        var q = qMC('En la familia de <b class="en">' + esc(x.w) + '</b>, ¿cuál es <b>' + esc(p[1]) + '</b> que significa «' + esc(p[2]) + '»?',
+          ops, ops.indexOf(p[0]),
+          'Se ve en la frase: ' + p[3], 'cam');
+        q.part = 'Familia de ' + x.w;
+        q.say = p[3];
+        pool.push(q);
+      });
+    });
+    return pick(pool, Math.min(15, pool.length));
+  }
+
+  // 3 · phrasal verbs: se tapa la partícula dentro de la frase
+  function itemsPhrasal() {
+    var todos = [];
+    todasLasFamilias().forEach(function (x) {
+      (x.ph || []).forEach(function (l) { var p = l.split('|'); todos.push({ v: x.w, ph: p[0], es: p[1], ej: p[2] }); });
+    });
+    var pool = [];
+    todos.forEach(function (o) {
+      var re = new RegExp(o.ph.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '\\w*\\s+'), 'i');
+      if (!re.test(o.ej)) return;
+      var malas = pick(todos.filter(function (z) { return z.ph !== o.ph; }), 2).map(function (z) { return z.ph; });
+      var ops = shuffle([o.ph].concat(malas));
+      var q = qMC('¿Qué phrasal verb encaja aquí? Se da en infinitivo; en la frase iría conjugado.<br>' + gapHtml(o.ej.replace(re, '___')),
+        ops, ops.indexOf(o.ph),
+        '«' + o.ph + '» significa ' + o.es + '. Un phrasal verb no se deduce del verbo: la partícula cambia el significado entero.', 'lex');
+      q.part = 'Phrasal verbs · ' + o.v;
+      q.say = o.ej;
+      pool.push(q);
+    });
+    return pick(pool, Math.min(12, pool.length));
+  }
+
+  // 4 · combinaciones fijas: el verbo que acompaña al sustantivo
+  function itemsColo() {
+    var VERB = ['make', 'do', 'take', 'have', 'give', 'get'];
+    var pool = [];
+    todasLasFamilias().forEach(function (x) {
+      (x.col || []).forEach(function (l) {
+        var p = l.split('|');
+        if (p[1].charAt(0) === '(') return;                 // avisos, no combinaciones
+        var trozos = p[0].split(' ');
+        if (VERB.indexOf(trozos[0].toLowerCase()) < 0) return;
+        var bueno = trozos[0].toLowerCase(), resto = trozos.slice(1).join(' ');
+        var ops = shuffle([bueno].concat(pick(VERB.filter(function (v) { return v !== bueno; }), 2)));
+        var q = qMC('¿Qué verbo acompaña a esta expresión?<br><b class="gap">_______</b> <b class="en">' + esc(resto) + '</b>' +
+          '<br><span class="dim small">' + esc(p[1]) + '</span>',
+          ops, ops.indexOf(bueno),
+          'Se dice «' + p[0] + '». No hay regla y no se traduce desde el español: se aprende el bloque entero de memoria.', 'lex');
+        q.part = 'Combinaciones fijas';
+        q.say = p[0];
+        pool.push(q);
+      });
+    });
+    return pick(pool, Math.min(12, pool.length));
   }
 }
 

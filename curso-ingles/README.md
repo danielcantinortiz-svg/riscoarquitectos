@@ -139,6 +139,37 @@ artículo que falta o que sobra, auxiliar ausente, `-s` de tercera persona, prep
 palabras, y el caso de «solo era una mayúscula o el punto final», que se dice tal cual en vez de fingir que
 el fallo era gramatical.
 
+## Familias de palabras · pestaña «Familias»
+
+Parte de una idea sencilla: las cien palabras más frecuentes del inglés cubren casi la mitad de todo lo que se
+dice, y las mil primeras más del ochenta por ciento. Aprender la palabra número tres mil rinde poquísimo;
+exprimir del todo la número doce, muchísimo. Y exprimirla significa **no aprender palabras sino familias**: al
+encontrarse *decide* no se ha aprendido una palabra, se han aprendido cinco —*decide, decision, decisive,
+decisively, undecided*—.
+
+**51 familias en seis grupos**, con 220 formas derivadas, 44 phrasal verbs y 118 combinaciones fijas:
+
+1. **Los ocho motores** (*be, have, do, make, get, take, give, go*) — las más frecuentes y las que menos
+   derivan. Su dificultad no está en el sufijo sino en la combinación, así que aquí se estudian sus phrasal
+   verbs y sus colocaciones.
+2. **Pensar, decir y decidir** — donde manda la derivación en `-ion`, `-ment`, `-ance`, `-ive` y `-able`.
+3. **Trabajar y hacer cosas** — el vocabulario del oficio, con la distinción entre **la persona** que lo hace
+   (`-er`, `-or`) y **la cosa o el proceso** (`-ion`, `-ment`), que es media prueba de word formation.
+4. **Cambiar y mejorar** — verbos de proceso, muchos de ellos verbo y sustantivo sin cambiar nada
+   (*a change*, *an increase*), cosa que el español no hace y despista.
+5. **Querer, necesitar y poder** — los verbos con los que se negocia, con la preposición o la estructura fija
+   que rigen: *apply for*, *allow someone to*.
+6. **Salir bien o salir mal** — con su pareja opuesta al lado.
+
+Cuatro ejercicios generados de la propia tabla: **Completa la familia** (se tapa un miembro dentro de su
+frase y se da la raíz, formato de la Parte 3 del examen), **¿Qué falta?** (tres candidatos de la misma
+familia, para no confundir la cosa con la persona), **Phrasal verbs** y **Combinaciones fijas** — este último
+sobre el error clásico de *take a decision* por *make a decision*.
+
+El modo profesor de la pestaña nombra los tres fallos típicos y cómo se corrige cada uno: haber puesto el
+verbo donde iba el sustantivo, haber acertado la categoría pero no el sufijo, y haber confundido la cosa con
+la persona.
+
 ## Taller de expresión oral · pestaña «Habla»
 
 La pestaña **Oral** mide; la pestaña **Habla** enseña. La premisa: un hispanohablante adulto no falla en

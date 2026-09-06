@@ -120,6 +120,28 @@ adjetivo va delante), **genitivo sajón** (*my brother's office*, no *the office
 **posición de los adverbios de frecuencia** (*I always work*, no *I work always*) y el contraste
 **much / many**.
 
+### Comprensión lectora
+
+Seis herramientas, una por cada destreza que compone la comprensión lectora, sobre **ocho textos graduados de
+A2 a C1** con su traducción completa plegada —un anuncio de alquiler, un correo de cliente, un informe de
+visita de obra, dos artículos, dos ensayos y un texto científico divulgativo—. La premisa: leer para hacerse
+una idea y leer para encontrar un dato son operaciones **opuestas**, y entrenarlas juntas produce lo peor de
+las dos, que es leer entero y despacio sin quedarse con nada.
+
+| Herramienta | Qué entrena | Cómo funciona |
+|---|---|---|
+| **Idea principal** | *Skimming* | Se cronometra la lectura y después **se tapa el texto**. Si hay que volver a mirarlo, no era skimming |
+| **Buscar el dato** | *Scanning* | La pregunta va primero y el texto queda delante; mide segundos por dato |
+| **Deducir** | Inferencia | Cada explicación señala la línea concreta que sostiene la respuesta |
+| **Palabra por contexto** | Vocabulario sin diccionario | La explicación nombra la pista del texto que la define |
+| **¿A qué se refiere?** | Referencia pronominal | *it*, *this*, *they*, *which* — incluidos los *this* que recogen la idea entera de la frase anterior |
+| **Velocidad lectora** | Palabras por minuto **con control de comprensión** | Tras leer, tres preguntas con el texto tapado: la velocidad sin comprensión no puntúa |
+
+La traducción de cada texto va **plegada a propósito**, con un aviso: abrirla antes de responder no es
+entrenar comprensión lectora, es leer en español. Todos los resultados se registran en la destreza
+«Comprensión lectora» de la pantalla de Progreso, y cuando esa es la barra más baja el panel del gimnasio
+manda directamente aquí. En el itinerario, un día de cada cinco propone abrir la lectura antes de empezar.
+
 ### Modo profesor
 
 Cada juego del gimnasio lleva desplegado un bloque **«Modo profesor»** con tres apartados: *por qué existe

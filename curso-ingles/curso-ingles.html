@@ -381,6 +381,15 @@ h4.sub{margin:14px 0 4px; font-size:12px; letter-spacing:.06em; text-transform:u
 .card.fam .errs li{margin:7px 0}
 .card.fam .pmin .par{min-width:200px}
 
+/* comprensión lectora */
+.card.lecc .lect p{margin:0 0 10px; line-height:1.75}
+.card.lecc .lect.en p{font-size:15px}
+.card.lecc.tapado .lect.en{filter:blur(4px); user-select:none}
+details.trad-txt{margin-top:10px; border-top:1px solid var(--line); padding-top:8px}
+details.trad-txt summary{cursor:pointer; font-size:12.5px; color:var(--dim)}
+details.trad-txt .lect p{font-size:13px; color:var(--dim)}
+#lecSel{max-width:100%}
+
 </style>
 </head>
 <body>
@@ -8165,6 +8174,219 @@ grupos: [
 ]
 };
 
+/* LECTURA · entrenador de comprensión lectora.
+   Ocho textos graduados con su traducción completa y, en cada uno, material
+   para las seis destrezas que de verdad componen la comprensión lectora:
+   idea principal, buscar un dato, deducir, adivinar vocabulario por contexto,
+   saber a qué se refiere un pronombre y leer a velocidad.
+   Formatos:
+     idea    ["la correcta","distractor","distractor","por qué"]
+     datos   "pregunta|respuesta exacta|dónde está"
+     infer   "pregunta|correcta|mala|mala|por qué"
+     vocab   "palabra|significado|mala|mala|la pista que lo dice"
+     ref     "palabra|a qué se refiere|mala|mala|por qué" */
+window.LECTURA = {
+
+intro: "Leer en inglés no es traducir rápido: es <b>dejar de traducir</b>. Mientras conviertas cada frase al español antes de entenderla irás a un tercio de tu velocidad y perderás el hilo de los textos largos. La comprensión lectora no es una destreza, son <b>seis</b>, y cada una se entrena aparte.",
+
+teoria: [
+ "<b>Idea principal (skimming).</b> Recorrer un texto en veinte segundos y saber de qué va. Se hace leyendo el título, la primera frase de cada párrafo y la última del texto. No se lee todo: se lee el esqueleto.",
+ "<b>Buscar un dato (scanning).</b> Encontrar una cifra, una fecha o un nombre sin leer el resto. Se hace al revés que lo anterior: primero se lee la pregunta, y después se barre el texto buscando solo la forma de esa palabra.",
+ "<b>Deducir.</b> La mitad de las preguntas de un examen no están escritas en el texto: se deducen. La respuesta correcta siempre se apoya en algo concreto del texto; si tienes que suponer, es la equivocada.",
+ "<b>Vocabulario por contexto.</b> No puedes parar en cada palabra que no conoces, y no hace falta: la propia frase te dice qué es. Es la técnica que más velocidad te devuelve.",
+ "<b>Referencia.</b> Saber a qué se refiere <i>it</i>, <i>this</i>, <i>they</i> o <i>which</i>. El inglés repite mucho menos que el español y encadena frases con pronombres; perder el hilo del <i>it</i> es perder el párrafo entero.",
+ "<b>Velocidad.</b> Un lector competente en su lengua va a 250 palabras por minuto; en una lengua extranjera, entre 120 y 180. Por debajo de 90 no se comprende bien: no da tiempo a sostener el sentido de la frase en la cabeza mientras se llega al final."
+],
+
+metodo: [
+ "<b>Lee el texto entero y seguido antes de mirar ninguna pregunta.</b> Sin diccionario y sin parar. Es contraintuitivo y es lo que más sube la nota.",
+ "<b>No traduzcas.</b> Si te descubres diciendo la frase en español por dentro, sigue adelante a propósito: la comprensión aparece unas líneas después.",
+ "<b>Las palabras que no sepas, deducidas.</b> Solo si una palabra te impide entender la frase entera merece la pena pararse, y aun así primero se intenta deducir.",
+ "<b>Después, y solo después, las preguntas.</b> Y cada respuesta se justifica señalando la línea exacta del texto que la sostiene. Si no puedes señalarla, no es la respuesta.",
+ "<b>Relee al final lo que fallaste</b>, buscando la línea que lo decía. Casi siempre estaba escrito."
+],
+
+textos: [
+
+{ id: 'flat', nivel: 'A2', t: "A flat to rent", tipo: "Anuncio de alquiler",
+  txt: "Bright two-bedroom flat in the centre of Zaragoza, on the third floor of a building with a lift. The flat is 78 square metres and faces south, so it gets sun all afternoon. The kitchen was renovated last year and has a new oven and a dishwasher.\n\nThe rent is 780 euros a month. Water and community fees are included, but electricity and internet are not. A deposit of two months is required before the keys are handed over.\n\nThe building is quiet and there are no shops on the ground floor. The metro is a seven-minute walk away. Pets are allowed, but the owner asks tenants not to smoke inside. Available from the first of October.",
+  es: "Piso luminoso de dos dormitorios en el centro de Zaragoza, en la tercera planta de un edificio con ascensor. El piso tiene 78 metros cuadrados y está orientado al sur, así que recibe sol toda la tarde. La cocina se reformó el año pasado y tiene horno nuevo y lavavajillas.\n\nEl alquiler es de 780 euros al mes. El agua y los gastos de comunidad están incluidos, pero la luz e internet no. Se exige una fianza de dos meses antes de entregar las llaves.\n\nEl edificio es tranquilo y no hay comercios en la planta baja. El metro está a siete minutos andando. Se admiten mascotas, pero el propietario pide a los inquilinos que no fumen dentro. Disponible a partir del uno de octubre.",
+  idea: ["Un anuncio con las condiciones de alquiler de un piso.", "Una queja de un inquilino sobre su piso.", "Un informe sobre el mercado de alquiler en Zaragoza.",
+         "El texto solo describe el piso y sus condiciones: precio, fianza y normas. No opina ni analiza nada."],
+  datos: ["¿Cuánto cuesta el alquiler al mes?|780|Segundo párrafo, primera frase.",
+          "¿Cuántos metros cuadrados tiene?|78|Primer párrafo.",
+          "¿De cuántos meses es la fianza?|two|Segundo párrafo, última frase.",
+          "¿A cuántos minutos andando está el metro?|seven|Tercer párrafo."],
+  infer: ["Si alquilas este piso, ¿qué tendrás que pagar aparte?|La luz y el internet|El agua|La comunidad|El texto dice que el agua y la comunidad van incluidas, «but electricity and internet are not»: lo que queda fuera es lo que pagas aparte.",
+          "¿Por qué dice el anuncio que el piso «gets sun all afternoon»?|Porque está orientado al sur|Porque está en una planta alta|Porque tiene ventanas grandes|La frase lo une con «so»: faces south, SO it gets sun. Ese «so» marca la causa.",
+          "¿Puede vivir aquí alguien con un perro?|Sí, se admiten mascotas|No, están prohibidas|Solo con permiso escrito|«Pets are allowed» lo dice directamente. Lo prohibido es fumar."],
+  vocab: ["rent|el alquiler que se paga cada mes|la reforma|el contrato|Va con «is 780 euros a month»: si se paga cada mes y son euros, es el alquiler.",
+          "deposit|la fianza que se deja como garantía|el primer pago del alquiler|la comisión de la agencia|Se pide «before the keys are handed over», antes de entrar: eso es una fianza.",
+          "tenants|los inquilinos, los que viven de alquiler|los propietarios|los vecinos del edificio|«The owner asks tenants…»: si el propietario les pide algo, los tenants son los otros, los que alquilan.",
+          "renovated|reformada, puesta a nuevo|alquilada|ampliada|Lo dice lo que viene detrás: «has a new oven and a dishwasher». Si hay cosas nuevas, se reformó."],
+  ref: ["it (línea 2: «so it gets sun»)|el piso|el edificio|el ascensor|Lo que está orientado al sur y recibe el sol es el piso, que es de lo que habla toda la frase.",
+        "they (segundo párrafo: «are not» referido a electricity and internet)|la luz e internet|el agua y la comunidad|los gastos totales|La frase contrapone con «but»: lo incluido va antes, lo no incluido después."] },
+
+{ id: 'email', nivel: 'A2', t: "An email from a client", tipo: "Correo de cliente",
+  txt: "Dear Patricia,\n\nThank you for the drawings you sent on Monday. My wife and I looked at them over the weekend and we like the general idea very much, especially the big window in the living room.\n\nHowever, we have two doubts. The first one is the kitchen: it looks smaller than we expected, and we cook a lot. Is it possible to take one metre from the corridor? The second one is the budget. You mentioned 90,000 euros in our first meeting, but the document you attached says 104,000. Could you explain where the difference comes from?\n\nWe are away until the 15th, so we cannot meet before then. Could you send us a short note by email in the meantime? We would rather understand the numbers before we decide anything.\n\nBest regards,\nJavier",
+  es: "Estimada Patricia:\n\nGracias por los planos que enviaste el lunes. Mi mujer y yo los miramos durante el fin de semana y nos gusta mucho la idea general, sobre todo el ventanal del salón.\n\nSin embargo, tenemos dos dudas. La primera es la cocina: parece más pequeña de lo que esperábamos, y cocinamos mucho. ¿Sería posible quitarle un metro al pasillo? La segunda es el presupuesto. Mencionaste 90.000 euros en nuestra primera reunión, pero el documento que adjuntaste dice 104.000. ¿Podrías explicar de dónde viene la diferencia?\n\nEstamos fuera hasta el 15, así que no podemos vernos antes. ¿Podrías enviarnos una nota breve por correo mientras tanto? Preferiríamos entender los números antes de decidir nada.\n\nUn saludo,\nJavier",
+  idea: ["Un cliente que aprueba la idea pero pide aclarar dos cosas antes de decidir.", "Un cliente que cancela el proyecto por el precio.", "Un cliente que pide una reunión urgente esta semana.",
+         "Dice claramente que le gusta la idea («we like the general idea very much») y plantea dos dudas concretas. Ni cancela ni pide reunión: dice que no puede verse hasta el 15."],
+  datos: ["¿Qué cifra se mencionó en la primera reunión?|90,000|Segundo párrafo.",
+          "¿Qué cifra aparece en el documento adjunto?|104,000|Segundo párrafo.",
+          "¿Hasta qué día está fuera el cliente?|15|Tercer párrafo.",
+          "¿De dónde propone quitar un metro?|the corridor|Segundo párrafo."],
+  infer: ["¿Qué es lo que más preocupa al cliente?|Entender la diferencia de precio|El color de la cocina|La fecha de entrega|Lo dice en la última frase: «We would rather understand the numbers before we decide anything». Esa es su prioridad declarada.",
+          "¿Qué respuesta espera recibir antes del día 15?|Una nota breve por correo|Unos planos nuevos|Una llamada de teléfono|«Could you send us a short note by email in the meantime?»: pide correo, no planos ni llamada.",
+          "¿Cuál es el tono del correo?|Cordial pero firme: agradece y a la vez exige explicaciones|Enfadado y amenazante|Indiferente|Empieza dando las gracias y elogiando, y pide explicaciones con condicionales («could you»): esa mezcla es cortesía con firmeza."],
+  vocab: ["doubts|dudas, cosas que no quedan claras|quejas formales|errores del plano|Detrás enumera dos cosas que no entiende y pregunta por ellas: son dudas, no quejas.",
+          "attached|adjuntado a un correo|firmado|impreso|«the document you attached says 104,000»: los documentos de un correo van adjuntos.",
+          "in the meantime|mientras tanto, hasta entonces|inmediatamente|por si acaso|Va justo después de decir que no pueden verse hasta el 15: se refiere a ese hueco de tiempo.",
+          "would rather|preferir|deber|poder|«We would rather understand the numbers before we decide»: expresa preferencia, no obligación."],
+  ref: ["them (primer párrafo: «looked at them»)|los planos|los fines de semana|las ventanas|Lo que miraron el fin de semana son los drawings que ella envió, el objeto del agradecimiento.",
+        "it (segundo párrafo: «it looks smaller»)|la cocina|el salón|el pasillo|La frase empieza «The first one is the kitchen: it looks smaller…». El it recoge lo último nombrado.",
+        "then (tercer párrafo: «before then»)|el día 15|el lunes|el fin de semana|«We are away until the 15th, so we cannot meet before then»: el «then» es ese día 15."] },
+
+{ id: 'obra', nivel: 'B1', t: "Site visit report", tipo: "Informe de obra",
+  txt: "Site visit of 14 March. Present: the architect, the site manager and the structural engineer.\n\nThe ground floor slab was poured last Thursday and has cured well. The formwork was struck on Tuesday without incident. However, the openings on the north wall are 1.00 m wide instead of the 1.20 m shown on drawing A-12. The site manager confirmed that his team worked from an earlier version of the drawing, which had not been withdrawn from the site office.\n\nThe error affects four openings. Widening them now, before the lintels are fitted, would take three days and cost around 2,400 euros. Leaving them as they are would reduce the daylight in the two north bedrooms by roughly a quarter, which the client is unlikely to accept.\n\nIt was agreed that the architect will inform the client today and that no lintels will be fitted until a written instruction is issued. All superseded drawings are to be removed from the site office before the next visit.",
+  es: "Visita de obra del 14 de marzo. Presentes: la arquitecta, el jefe de obra y el ingeniero de estructuras.\n\nLa losa de planta baja se hormigonó el jueves pasado y ha fraguado bien. Se desencofró el martes sin incidencias. Sin embargo, los huecos del muro norte tienen 1,00 m de ancho en vez de los 1,20 m que figuran en el plano A-12. El jefe de obra confirmó que su equipo trabajó con una versión anterior del plano, que no se había retirado de la caseta de obra.\n\nEl error afecta a cuatro huecos. Ampliarlos ahora, antes de colocar los dinteles, llevaría tres días y costaría unos 2.400 euros. Dejarlos como están reduciría la luz natural de los dos dormitorios norte en aproximadamente una cuarta parte, algo que es poco probable que el cliente acepte.\n\nSe acordó que la arquitecta informará hoy al cliente y que no se colocará ningún dintel hasta que se emita una instrucción por escrito. Todos los planos superados deben retirarse de la caseta antes de la próxima visita.",
+  idea: ["Un error de ejecución en unos huecos, su coste y qué se ha acordado hacer.", "Un informe rutinario sobre el avance normal de la obra.", "Una reclamación económica contra el contratista.",
+         "El párrafo dos plantea el problema, el tres lo cuantifica y el cuatro dice qué se decidió. Ese es el esqueleto del texto."],
+  datos: ["¿Qué anchura tienen los huecos ejecutados?|1.00|Segundo párrafo.",
+          "¿Qué anchura marcaba el plano A-12?|1.20|Segundo párrafo.",
+          "¿Cuántos huecos están afectados?|four|Tercer párrafo, primera frase.",
+          "¿Cuánto costaría corregirlo?|2,400|Tercer párrafo.",
+          "¿Cuántos días llevaría la corrección?|three|Tercer párrafo."],
+  infer: ["¿De quién fue la causa del error?|De la obra, que usó un plano antiguo que nadie había retirado|De la arquitecta, que dibujó mal el plano|Del ingeniero de estructuras|«his team worked from an earlier version of the drawing, which had not been withdrawn»: el fallo está en usar un plano superado que seguía en la caseta.",
+          "¿Por qué es importante actuar antes de colocar los dinteles?|Porque después de colocarlos corregir sería mucho más caro y difícil|Porque los dinteles llegan tarde|Porque el cliente lo ha pedido así|El texto da el coste «now, before the lintels are fitted» y ordena no colocar ninguno: implica que ese es el momento en que aún es asumible.",
+          "¿Qué se puede deducir de «which the client is unlikely to accept»?|Que lo más probable es que haya que corregir los huecos|Que el cliente ya ha dicho que no|Que el cliente no se enterará|Es una predicción de la arquitecta, no un hecho consumado; y anticipa que la opción de dejarlo no prosperará.",
+          "¿Qué pasará si el cliente no contesta hoy?|La obra seguirá parada en esa parte, porque no se colocan dinteles sin instrucción escrita|Se colocarán los dinteles igualmente|Se ampliarán los huecos automáticamente|«no lintels will be fitted until a written instruction is issued»: sin papel, no se avanza."],
+  vocab: ["cured|fraguado, endurecido|secado al sol|agrietado|Se dice del hormigón recién vertido y con resultado positivo («has cured well»): es el proceso de endurecimiento.",
+          "struck|desencofrado, retirado el encofrado|golpeado|reforzado|Va con «formwork» y «without incident»: lo que se le hace al encofrado después de fraguar es quitarlo.",
+          "withdrawn|retirado de circulación|dibujado de nuevo|aprobado|«had not been withdrawn from the site office»: si seguía allí y por eso se usó, es que no se había retirado.",
+          "superseded|sustituido por una versión más nueva|urgente|provisional|Se ordena retirarlos de la caseta, y todo el problema vino de usar «an earlier version»: son los planos que ya no valen.",
+          "roughly|aproximadamente|exactamente|como mucho|Acompaña a «a quarter» en una estimación de pérdida de luz: matiza que la cifra no es exacta."],
+  ref: ["which (segundo párrafo: «which had not been withdrawn»)|la versión anterior del plano|el equipo del jefe de obra|el muro norte|El «which» se refiere a lo inmediatamente anterior: an earlier version of the drawing.",
+        "them (tercer párrafo: «Widening them now»)|los cuatro huecos|los dinteles|los dormitorios|La frase anterior dice «The error affects four openings»: eso es lo que se ampliaría.",
+        "they (tercer párrafo: «Leaving them as they are»)|los huecos|los planos|los días|Sigue hablando de la misma opción: dejar los huecos con la anchura que tienen."] },
+
+{ id: 'ciudad', nivel: 'B1', t: "Why cities are getting hotter", tipo: "Artículo divulgativo",
+  txt: "On a summer night, the centre of a large city can be up to seven degrees warmer than the fields around it. Scientists call this the urban heat island effect, and it has little to do with air conditioning or traffic.\n\nThe main cause is the material of the city itself. Asphalt and dark concrete absorb heat all day and release it slowly during the night, so the streets never cool down completely. Buildings also block the wind and trap warm air between them.\n\nThe consequences are not only a matter of comfort. Hot nights prevent the body from resting, and in heat waves the number of deaths rises sharply among older people. Energy consumption goes up too, because everybody switches on the air conditioning at the same time.\n\nThe solutions are known and surprisingly cheap. Painting roofs white reflects sunlight instead of absorbing it. Planting trees along streets can lower the temperature underneath by four or five degrees. What is difficult is not the technique: it is convincing a city to do it street by street, over years, when the benefit is invisible on the day the work is finished.",
+  es: "En una noche de verano, el centro de una ciudad grande puede estar hasta siete grados más caliente que los campos que la rodean. Los científicos llaman a esto el efecto isla de calor urbana, y tiene poco que ver con el aire acondicionado o el tráfico.\n\nLa causa principal es el material de la propia ciudad. El asfalto y el hormigón oscuro absorben calor todo el día y lo liberan lentamente por la noche, así que las calles no llegan a enfriarse del todo. Los edificios además cortan el viento y atrapan el aire caliente entre ellos.\n\nLas consecuencias no son solo una cuestión de confort. Las noches calurosas impiden que el cuerpo descanse, y en las olas de calor el número de muertes sube mucho entre las personas mayores. El consumo de energía también aumenta, porque todo el mundo enciende el aire acondicionado a la vez.\n\nLas soluciones son conocidas y sorprendentemente baratas. Pintar las cubiertas de blanco refleja la luz del sol en vez de absorberla. Plantar árboles en las calles puede bajar la temperatura debajo de ellos cuatro o cinco grados. Lo difícil no es la técnica: es convencer a una ciudad de hacerlo calle por calle, durante años, cuando el beneficio es invisible el día en que se termina la obra.",
+  idea: ["Por qué las ciudades se calientan, qué consecuencias tiene y por qué cuesta resolverlo.", "Cómo funciona el aire acondicionado en las ciudades modernas.", "Una crítica a los arquitectos que usan hormigón.",
+         "Cada párrafo hace una cosa: causa, consecuencias, soluciones y el obstáculo real. Ese recorrido completo es la idea principal, no ninguna de sus partes."],
+  datos: ["¿Cuántos grados más caliente puede estar el centro de la ciudad?|seven|Primera frase.",
+          "¿Cuántos grados puede bajar la temperatura plantando árboles?|four|Último párrafo.",
+          "¿Cómo llaman los científicos a este fenómeno?|urban heat island|Primer párrafo, segunda frase.",
+          "¿De qué color se propone pintar las cubiertas?|white|Último párrafo."],
+  infer: ["Según el texto, ¿cuál NO es una causa importante del calor urbano?|El tráfico|Los materiales oscuros|La forma en que los edificios cortan el viento|La primera frase lo descarta expresamente: «it has little to do with air conditioning or traffic».",
+          "¿Por qué sube el consumo de energía en una ola de calor?|Porque todos encienden el aire acondicionado a la vez|Porque las fábricas trabajan más|Porque hay más luz encendida|«because everybody switches on the air conditioning at the same time»: la causa está escrita con «because».",
+          "¿Cuál es, según el autor, el verdadero obstáculo?|La dificultad política y de constancia, no la técnica|El precio de las obras|La falta de soluciones técnicas|La última frase lo dice con un contraste: «What is difficult is not the technique: it is convincing a city…».",
+          "¿Qué quiere decir «the benefit is invisible on the day the work is finished»?|Que la mejora tarda años en notarse y por eso nadie se lleva el mérito|Que las obras quedan feas|Que no se puede medir la temperatura|Explica por qué cuesta convencer: el resultado no se ve el día de la inauguración, que es cuando se recogen los réditos."],
+  vocab: ["absorb|retener, chupar el calor|reflejar|producir|Se opone en el texto a «release it slowly» y, más abajo, a «reflects sunlight instead of absorbing it». El contraste lo define.",
+          "trap|atrapar, dejar encerrado|calentar|expulsar|«Buildings also block the wind and trap warm air between them»: si bloquean el viento, el aire se queda encerrado.",
+          "heat waves|olas de calor|calefacciones|corrientes de aire|Va con «the number of deaths rises sharply among older people»: son los episodios de calor extremo.",
+          "sharply|bruscamente, mucho|ligeramente|lentamente|Acompaña a «rises» en un contexto de alarma; y contrasta con el «slowly» del párrafo anterior."],
+  ref: ["this (primer párrafo: «Scientists call this»)|el hecho de que el centro esté mucho más caliente que el campo|el verano|el aire acondicionado|El «this» recoge toda la idea de la frase anterior, no una palabra suelta. Es el uso más difícil y el más frecuente.",
+        "it (segundo párrafo: «release it slowly»)|el calor absorbido durante el día|el asfalto|la noche|Lo que se libera lentamente es lo que se absorbió antes: el calor.",
+        "them (segundo párrafo: «between them»)|los edificios|los vientos|los materiales|El sujeto de la frase es «Buildings»: el aire caliente queda atrapado entre ellos.",
+        "it (último párrafo: «instead of absorbing it»)|la luz del sol|la cubierta|la pintura blanca|La frase contrapone reflejar y absorber lo mismo: sunlight."] },
+
+{ id: 'rehab', nivel: 'B2', t: "Retrofit or demolish?", tipo: "Artículo profesional",
+  txt: "For decades the answer was obvious. If a building no longer worked, you knocked it down and built a better one. That logic is now under pressure, and the reason is not sentimental: it is arithmetic.\n\nRoughly half the carbon emissions of a new building are released before anyone sets foot in it, in the manufacture of the concrete, steel and glass it is made of. This is what the industry calls embodied carbon, and unlike the energy a building consumes in use, it cannot be reduced later. It is spent the day the material is produced.\n\nA deep retrofit of an existing structure typically emits between a third and a half of the carbon of an equivalent new build, because the frame and the foundations — by far the heaviest elements — are already there. The saving is greatest in buildings from the mid twentieth century, which tend to be over-engineered by today's standards and are therefore easier to adapt.\n\nNone of this makes demolition indefensible. A building with a failing structure, contaminated materials or a floor-to-ceiling height that cannot accommodate modern services may genuinely be beyond saving. But the burden of proof has shifted. Where the default was once demolition, the professional now has to explain why the existing building could not be kept.",
+  es: "Durante décadas la respuesta era obvia. Si un edificio ya no funcionaba, se derribaba y se construía uno mejor. Esa lógica está hoy en entredicho, y la razón no es sentimental: es aritmética.\n\nAproximadamente la mitad de las emisiones de carbono de un edificio nuevo se liberan antes de que nadie ponga un pie en él, en la fabricación del hormigón, el acero y el vidrio de los que está hecho. Es lo que el sector llama carbono incorporado y, a diferencia de la energía que un edificio consume en uso, no se puede reducir después. Se gasta el día en que se produce el material.\n\nUna rehabilitación profunda de una estructura existente emite normalmente entre un tercio y la mitad del carbono de una obra nueva equivalente, porque la estructura y la cimentación —con diferencia los elementos más pesados— ya están ahí. El ahorro es mayor en los edificios de mediados del siglo XX, que tienden a estar sobredimensionados para los criterios actuales y por eso son más fáciles de adaptar.\n\nNada de esto convierte el derribo en indefendible. Un edificio con una estructura que falla, materiales contaminados o una altura libre que no admite las instalaciones modernas puede estar de verdad más allá de toda salvación. Pero la carga de la prueba ha cambiado de lado. Donde antes lo normal era derribar, ahora es el profesional quien tiene que explicar por qué no se pudo conservar el edificio existente.",
+  idea: ["Que el argumento del carbono ha invertido quién tiene que justificarse: ahora, el que quiere derribar.", "Que derribar siempre es peor que rehabilitar.", "Que los edificios del siglo XX son los más bonitos.",
+         "El texto reconoce casos en que el derribo es legítimo, así que no dice «siempre». Su tesis está en la última frase: ha cambiado la carga de la prueba."],
+  datos: ["¿Qué proporción de las emisiones se libera antes de ocupar el edificio?|half|Segundo párrafo, primera frase.",
+          "¿Cómo llama el sector a esas emisiones?|embodied carbon|Segundo párrafo.",
+          "¿De qué época son los edificios donde más se ahorra?|mid twentieth century|Tercer párrafo.",
+          "¿Qué dos elementos son los más pesados de un edificio?|frame and the foundations|Tercer párrafo."],
+  infer: ["¿Por qué el carbono incorporado es más grave que el de uso?|Porque ya está gastado y no se puede reducir después|Porque es una cantidad mayor|Porque no se puede medir|«unlike the energy a building consumes in use, it cannot be reduced later. It is spent the day the material is produced». Es irreversible.",
+          "¿Por qué es más fácil rehabilitar edificios de mediados del siglo XX?|Porque están sobredimensionados y admiten cambios|Porque son más pequeños|Porque no tienen instalaciones|«they tend to be over-engineered by today's standards and are therefore easier to adapt»: el «therefore» encadena la causa.",
+          "¿Cuál de estas situaciones justificaría un derribo según el texto?|Una altura libre insuficiente para las instalaciones modernas|Que el edificio sea feo|Que rehabilitar cueste algo más|El párrafo final da tres casos legítimos y ese es uno; los otros dos no aparecen en el texto.",
+          "«The burden of proof has shifted» significa que…|ahora es quien derriba quien debe justificarse|derribar es ilegal|hay más inspecciones|La frase siguiente lo explica: antes lo normal era derribar, ahora hay que explicar por qué no se conservó."],
+  vocab: ["under pressure|puesta en cuestión, discutida|bajo presión física|urgente|Se dice de una lógica, no de un objeto, y le sigue una razón que la desmonta: está siendo cuestionada.",
+          "embodied|incorporado, ya contenido en el material|corporal|prohibido|El propio texto lo define: las emisiones que ya se han liberado al fabricar el material.",
+          "over-engineered|sobredimensionado, calculado con más margen del necesario|mal calculado|demasiado caro|Se explica solo: «by today's standards and are therefore easier to adapt». Si sobra capacidad, se puede cambiar el uso.",
+          "beyond saving|irrecuperable, imposible de salvar|muy caro de salvar|pendiente de salvar|Cierra una lista de defectos graves; «beyond» marca que se ha pasado el punto de retorno.",
+          "default|la opción por defecto, lo que se hacía sin pensar|el impago|el defecto de construcción|«Where the default was once demolition»: lo que se hacía por costumbre cuando nadie decidía otra cosa."],
+  ref: ["it (primer párrafo: «it is arithmetic»)|la razón por la que esa lógica está en cuestión|el edificio|el sentimiento|La frase contrapone dos explicaciones de lo mismo: «the reason is not sentimental: it is arithmetic».",
+        "it (segundo párrafo: «before anyone sets foot in it»)|el edificio nuevo|el material|el carbono|Se pone el pie en un edificio; es el sujeto del que habla toda la frase.",
+        "This (segundo párrafo: «This is what the industry calls…»)|el hecho de que la mitad de las emisiones se liberen al fabricar los materiales|el edificio|la industria|Como antes, el «this» recoge la idea completa de la frase anterior: eso es lo que se llama embodied carbon.",
+        "None of this (último párrafo)|todo el argumento del carbono expuesto hasta aquí|el derribo|la rehabilitación|Abre la concesión: nada de lo dicho antes convierte el derribo en indefendible."] },
+
+{ id: 'oficina', nivel: 'B2', t: "What is an office for?", tipo: "Artículo de opinión",
+  txt: "When millions of people started working from home, many predicted the end of the office. Five years later the office is still here, but its job description has changed beyond recognition.\n\nThe old office existed to give people a desk, a chair and a connection. All three are now available at home, and often better ones. What is not available at home is the thing offices were never designed for and yet did best by accident: the unplanned conversation. The overheard remark, the two-minute question in a corridor, the colleague who happens to see your screen and says that will not work.\n\nThis has practical consequences for anyone laying out a building. Rows of identical desks are the least valuable square metres a company can now pay for, because that is precisely the work that has moved home. Meeting rooms designed for eight people sitting in silence around a table are little better. What earns its space is everything in between: wide circulation, places to stand, small rooms for two, a kitchen big enough that people linger.\n\nThe irony is not lost on architects. For a century the profession was asked to make offices efficient, which mostly meant fitting more desks per floor. The brief now is almost the opposite: to design the space that the efficiency drive spent a hundred years removing.",
+  es: "Cuando millones de personas empezaron a trabajar desde casa, muchos predijeron el fin de la oficina. Cinco años después la oficina sigue aquí, pero su descripción de funciones ha cambiado hasta hacerse irreconocible.\n\nLa oficina antigua existía para dar a la gente una mesa, una silla y una conexión. Las tres cosas están hoy disponibles en casa, y a menudo mejores. Lo que no está disponible en casa es aquello para lo que las oficinas nunca se diseñaron y que sin embargo hacían mejor, por accidente: la conversación no planificada. El comentario oído de pasada, la pregunta de dos minutos en un pasillo, el compañero que por casualidad ve tu pantalla y dice que eso no va a funcionar.\n\nEsto tiene consecuencias prácticas para cualquiera que distribuya un edificio. Las filas de mesas idénticas son los metros cuadrados menos valiosos que una empresa puede pagar hoy, porque ese es justamente el trabajo que se ha ido a casa. Las salas de reuniones pensadas para ocho personas sentadas en silencio alrededor de una mesa no son mucho mejores. Lo que se gana su espacio es todo lo que hay en medio: circulaciones amplias, sitios donde estar de pie, salas pequeñas para dos, una cocina lo bastante grande como para que la gente se entretenga.\n\nLa ironía no se les escapa a los arquitectos. Durante un siglo se le pidió a la profesión que hiciera las oficinas eficientes, lo que casi siempre significó meter más mesas por planta. El encargo ahora es casi el contrario: diseñar el espacio que ese afán de eficiencia se pasó cien años eliminando.",
+  idea: ["Que la oficina ya no vale para concentrarse sino para lo imprevisto, y eso cambia cómo se distribuye.", "Que el teletrabajo ha fracasado y todos vuelven a la oficina.", "Que las salas de reuniones deben ser más grandes.",
+         "El segundo párrafo identifica lo insustituible (la conversación no planificada) y el tercero saca la consecuencia espacial. Los dos juntos son la idea."],
+  datos: ["¿Cuántos años han pasado según el texto?|Five|Primer párrafo.",
+          "¿Para cuántas personas son las salas de reuniones que critica?|eight|Tercer párrafo.",
+          "¿Cuánto dura la pregunta de pasillo que menciona?|two-minute|Segundo párrafo.",
+          "¿Cuánto tiempo llevó el afán de eficiencia?|a century|Último párrafo."],
+  infer: ["¿Por qué las filas de mesas son ahora los metros menos valiosos?|Porque el trabajo que se hacía en ellas se puede hacer en casa|Porque ocupan demasiado|Porque son incómodas|«because that is precisely the work that has moved home»: la causa está enunciada con «because».",
+          "¿Qué tienen en común las cosas que el autor sí valora?|Que favorecen encuentros breves y casuales|Que son baratas|Que son grandes|Circulación ancha, sitios para estar de pie, salas para dos, una cocina donde la gente se entretiene: todas propician el encuentro no planificado.",
+          "«did best by accident» quiere decir que la oficina…|conseguía algo valioso sin habérselo propuesto|funcionaba mal|solo funcionaba a veces|Va precedido de «offices were never designed for»: no era el objetivo, y aun así era lo que mejor salía.",
+          "¿Cuál es la ironía del último párrafo?|Que ahora hay que devolver el espacio que un siglo de eficiencia eliminó|Que los arquitectos ganan más dinero|Que las oficinas van a desaparecer|«The brief now is almost the opposite: to design the space that the efficiency drive spent a hundred years removing»."],
+  vocab: ["beyond recognition|hasta hacerse irreconocible|de forma reconocible|sin reconocimiento|Acompaña a «has changed»: marca que el cambio es tan grande que ya no se parece a lo anterior.",
+          "unplanned|no planificado, casual|no permitido|no pagado|Se explica con los tres ejemplos que siguen: un comentario oído, una pregunta de pasillo, un compañero que pasa por ahí.",
+          "linger|entretenerse, quedarse más de la cuenta|comer|trabajar de pie|«a kitchen big enough that people linger»: si la cocina es grande, la gente se queda; ese es el objetivo del autor.",
+          "brief|el encargo, lo que se pide al proyectar|el resumen|el informe breve|Es el término del oficio: «The brief now is almost the opposite», lo que se le pide hoy al arquitecto.",
+          "drive|el afán, el impulso sostenido|el paseo en coche|la unidad de disco|«the efficiency drive spent a hundred years removing»: algo que dura un siglo y persigue un fin es un impulso, no un trayecto."],
+  ref: ["All three (segundo párrafo)|la mesa, la silla y la conexión|las oficinas, las casas y los despachos|los tres párrafos anteriores|La frase anterior enumera exactamente esas tres cosas.",
+        "that (tercer párrafo: «that is precisely the work»)|el trabajo individual y concentrado que se hacía en las mesas|la oficina|el metro cuadrado|Explica por qué las filas de mesas ya no valen: ese trabajo se ha ido a casa.",
+        "everything in between (tercer párrafo)|el espacio que no es ni mesa individual ni sala de reuniones|los pasillos y nada más|el mobiliario|Se opone a las dos cosas que acaba de descartar, y lo que sigue son ejemplos de ese espacio intermedio."] },
+
+{ id: 'patrimonio', nivel: 'C1', t: "The uses of the past", tipo: "Ensayo",
+  txt: "Conservation has always been an argument about the future disguised as an argument about the past. What a society chooses to protect says less about the buildings themselves than about the version of itself it wishes to hand on.\n\nThe nineteenth century, faced with the same question, answered it with a confidence we have lost. Viollet-le-Duc restored buildings not to the state in which he found them, but to the state in which their original builders, in his view, would have wished them to be. Ruskin thought this a species of forgery and argued that a building's scars were its biography. Neither position survives intact today, yet almost every modern conservation dispute is a rerun of that quarrel in contemporary dress.\n\nWhat has changed is the arrival of a third consideration that neither man could have anticipated. A building that is protected but empty deteriorates faster than one that is used and imperfectly maintained, and it emits, over its life, the carbon of the replacement it made unnecessary. Use has become an argument for conservation rather than a threat to it — which means that the adaptations once regarded as compromises are now, on occasion, the strongest case a building has.\n\nThis is less a resolution of the old quarrel than a relocation of it. The question is no longer whether to intervene, which is settled, but how much of the evidence of the past a working building is obliged to carry.",
+  es: "La conservación ha sido siempre una discusión sobre el futuro disfrazada de discusión sobre el pasado. Lo que una sociedad elige proteger dice menos de los edificios en sí que de la versión de sí misma que desea transmitir.\n\nEl siglo XIX, ante la misma pregunta, la respondió con una seguridad que hemos perdido. Viollet-le-Duc restauraba los edificios no al estado en que los encontraba, sino a aquel en el que, a su juicio, sus constructores originales habrían querido verlos. Ruskin consideraba eso una forma de falsificación y sostenía que las cicatrices de un edificio eran su biografía. Ninguna de las dos posturas sobrevive intacta hoy, y sin embargo casi toda disputa moderna sobre conservación es una reposición de aquella pelea con ropa contemporánea.\n\nLo que ha cambiado es la aparición de una tercera consideración que ninguno de los dos pudo prever. Un edificio protegido pero vacío se deteriora más deprisa que uno usado y mantenido de forma imperfecta, y emite, a lo largo de su vida, el carbono del sustituto que ha hecho innecesario. El uso se ha convertido en un argumento a favor de la conservación en vez de en una amenaza para ella, lo que significa que las adaptaciones que antes se veían como concesiones son hoy, a veces, el mejor argumento que un edificio tiene.\n\nEsto no es tanto una resolución de la vieja pelea como un cambio de sitio. La pregunta ya no es si intervenir, que está zanjado, sino cuánta evidencia del pasado está obligado a llevar encima un edificio en uso.",
+  idea: ["Que el viejo debate sobre restaurar no se ha resuelto: se ha desplazado a cuánto pasado debe conservar un edificio en uso.", "Que Viollet-le-Duc tenía razón y Ruskin se equivocaba.", "Que los edificios protegidos deberían quedarse vacíos.",
+         "La última frase lo enuncia: «less a resolution of the old quarrel than a relocation of it», y a continuación reformula la pregunta."],
+  datos: ["¿Quién consideraba la restauración una falsificación?|Ruskin|Segundo párrafo.",
+          "¿Quién restauraba los edificios al estado que sus constructores habrían deseado?|Viollet-le-Duc|Segundo párrafo.",
+          "¿Qué siglo respondió con una seguridad hoy perdida?|nineteenth|Segundo párrafo, primera frase.",
+          "Según Ruskin, ¿qué eran las cicatrices de un edificio?|its biography|Segundo párrafo."],
+  infer: ["¿Cuál es la tesis de la primera frase?|Que al decidir qué se protege una sociedad se está retratando a sí misma|Que el pasado importa más que el futuro|Que la conservación es un asunto técnico|«says less about the buildings themselves than about the version of itself it wishes to hand on».",
+          "¿Por qué el uso ha pasado de amenaza a argumento?|Porque un edificio vacío se degrada antes y obliga a construir un sustituto|Porque los usuarios lo cuidan mejor|Porque genera dinero|El texto da las dos razones juntas: se deteriora más deprisa y evita el carbono del edificio que habría hecho falta construir.",
+          "¿Qué significa que «neither position survives intact»?|Que hoy se toma algo de las dos, pero ninguna se sostiene entera|Que las dos fueron abandonadas|Que las dos siguen vigentes|El «yet» que sigue lo confirma: la pelea se reproduce, luego ambas siguen presentes, pero modificadas.",
+          "¿Qué da por zanjado el autor?|Que hay que intervenir en los edificios|Cuánto pasado hay que conservar|Que Ruskin tenía razón|«The question is no longer whether to intervene, which is settled»."],
+  vocab: ["disguised as|disfrazada de, con la apariencia de|acompañada de|opuesta a|«an argument about the future disguised as an argument about the past»: aparenta ser una cosa y es otra.",
+          "hand on|transmitir a la generación siguiente|entregar en mano|abandonar|Va con «the version of itself it wishes to…»: lo que una sociedad quiere dejar a quienes vengan.",
+          "forgery|falsificación|reforma|reconstrucción legítima|Es la acusación de Ruskin contra devolver un edificio a un estado que nunca tuvo: hacerlo pasar por auténtico.",
+          "a rerun|una reposición, lo mismo otra vez|un ensayo|una carrera|«a rerun of that quarrel in contemporary dress»: la misma discusión repetida con otro vestuario.",
+          "settled|zanjado, resuelto y fuera de discusión|instalado|pagado|«which is settled» cierra la cuestión de si intervenir para poder abrir la siguiente.",
+          "obliged to carry|obligado a llevar encima|autorizado a mostrar|capaz de soportar|La pregunta final es cuánta huella del pasado tiene que conservar un edificio que sigue en uso."],
+  ref: ["it (primera frase del segundo párrafo: «answered it»)|la pregunta de qué proteger y por qué|el siglo XIX|la conservación|«faced with the same question, answered it»: el it recoge esa misma pregunta.",
+        "this (segundo párrafo: «Ruskin thought this a species of forgery»)|el método de Viollet-le-Duc de restaurar a un estado ideal|la restauración en general|la biografía del edificio|Lo que Ruskin llama falsificación es lo que acaba de describirse en la frase anterior.",
+        "one (tercer párrafo: «than one that is used»)|un edificio|el carbono|el uso|Sustituye a «a building» para no repetirlo: es el uso de «one» como sustituto del sustantivo contable.",
+        "it (tercer párrafo: «rather than a threat to it»)|la conservación|el uso|el edificio|El uso era antes una amenaza para la conservación; ahora es un argumento a su favor."] },
+
+{ id: 'luz', nivel: 'C1', t: "Daylight and the working body", tipo: "Artículo científico divulgativo",
+  txt: "The case for daylight in buildings used to rest on aesthetics and on the electricity bill. Both arguments were sound and both, it turns out, were beside the point.\n\nIn the late 1990s researchers identified a third type of photoreceptor in the human retina, distinct from the rods and cones that produce vision. These cells do not contribute to sight at all. They are most sensitive to blue light of the kind that dominates the sky in the morning, and their signal runs not to the visual cortex but to the region of the brain that governs the body clock. Light, in other words, is not merely something we see. It is something we are dosed with, and the dose has consequences.\n\nThe practical implications for design are considerable and are only now being absorbed. The relevant quantity is not the illuminance on the desk, which lighting standards have measured for a century, but the light arriving vertically at the eye, at the right time of day, from a large bright surface such as a window or a sky. An office can be perfectly compliant with every lighting standard in force and still, in this sense, be dark.\n\nWhat makes the finding awkward is that it cannot be met with a better lamp. Electric light can be tuned to imitate the spectrum, but not the intensity: an overcast sky delivers more than ten times what an office ceiling does. The only reliable source is the one architects have been quietly reducing for decades, in the name of thermal performance — the window.",
+  es: "El argumento a favor de la luz natural en los edificios se apoyaba en la estética y en la factura de la luz. Los dos eran válidos y los dos, resulta, no iban al fondo del asunto.\n\nA finales de los noventa unos investigadores identificaron un tercer tipo de fotorreceptor en la retina humana, distinto de los bastones y los conos que producen la visión. Estas células no contribuyen en absoluto a ver. Son más sensibles a la luz azul, la que domina el cielo por la mañana, y su señal no va a la corteza visual sino a la región del cerebro que gobierna el reloj biológico. La luz, dicho de otro modo, no es solo algo que vemos. Es algo que se nos administra en dosis, y la dosis tiene consecuencias.\n\nLas implicaciones prácticas para el proyecto son considerables y solo ahora se están asimilando. La magnitud relevante no es la iluminancia sobre la mesa, que las normas llevan un siglo midiendo, sino la luz que llega verticalmente al ojo, a la hora adecuada del día, desde una superficie grande y luminosa como una ventana o el cielo. Una oficina puede cumplir a la perfección todas las normas de iluminación vigentes y seguir siendo, en este sentido, oscura.\n\nLo incómodo del hallazgo es que no se resuelve con una lámpara mejor. La luz eléctrica se puede ajustar para imitar el espectro, pero no la intensidad: un cielo cubierto entrega más de diez veces lo que da el techo de una oficina. La única fuente fiable es la que los arquitectos llevan décadas reduciendo discretamente, en nombre del comportamiento térmico: la ventana.",
+  idea: ["Que la luz natural importa por razones biológicas que ninguna norma ni lámpara actual resuelve.", "Que las lámparas modernas ya sustituyen bien a la luz del sol.", "Que las oficinas deberían tener menos ventanas por el calor.",
+         "El texto descarta expresamente la lámpara como solución y termina reivindicando la ventana. La razón que sostiene todo es el descubrimiento del tercer fotorreceptor."],
+  datos: ["¿En qué década se identificó el tercer fotorreceptor?|1990s|Segundo párrafo, primera frase.",
+          "¿A qué color de luz son más sensibles esas células?|blue|Segundo párrafo.",
+          "¿Cuántas veces más luz da un cielo cubierto que el techo de una oficina?|ten|Último párrafo.",
+          "¿En nombre de qué se han ido reduciendo las ventanas?|thermal performance|Última frase."],
+  infer: ["¿Por qué dice que los argumentos antiguos «were beside the point»?|Porque eran ciertos pero no tocaban la razón de fondo|Porque eran falsos|Porque ya no se aplican|«Both arguments were sound», es decir válidos; lo que les faltaba era dar con lo esencial, que llega después.",
+          "¿Qué se puede deducir sobre las normas de iluminación vigentes?|Que miden lo que no es determinante para el reloj biológico|Que son demasiado exigentes|Que están a punto de desaparecer|Miden la iluminancia sobre la mesa, mientras que lo relevante es la luz vertical al ojo: por eso una oficina puede cumplirlas y seguir siendo «oscura».",
+          "¿Por qué es «awkward» el hallazgo para el sector?|Porque obliga a más ventana justo cuando se estaba reduciendo|Porque es difícil de medir|Porque nadie lo cree|El último párrafo lo cierra: la única fuente fiable es la que se venía reduciendo por razones térmicas.",
+          "¿Qué diferencia establece entre espectro e intensidad?|Que la luz eléctrica puede imitar el color pero no la cantidad|Que la intensidad no importa|Que el espectro es imposible de reproducir|«Electric light can be tuned to imitate the spectrum, but not the intensity»."],
+  vocab: ["beside the point|que no va al fondo del asunto|equivocado|de poca importancia|Se dice de dos argumentos que el propio texto llama «sound», válidos: no son falsos, es que no tocan lo esencial.",
+          "distinct from|diferente de|distinguido por|junto a|«a third type of photoreceptor, distinct from the rods and cones»: introduce en qué se diferencia de los ya conocidos.",
+          "dosed with|administrado en dosis|iluminado|medido|La frase juega con el lenguaje médico: si la luz llega en dosis y tiene consecuencias, se comporta como un medicamento.",
+          "compliant|que cumple la normativa|complaciente|completo|«perfectly compliant with every lighting standard in force»: cumplir con lo que exige la norma.",
+          "tuned|ajustado, afinado|apagado|encarecido|Se dice de la luz eléctrica y va con «to imitate the spectrum»: se puede regular para parecerse.",
+          "quietly|discretamente, sin hacer ruido|silenciosamente en sentido acústico|rápidamente|Califica a «reducing for decades»: no es un ruido, es que se ha hecho sin debate público."],
+  ref: ["Both (primer párrafo)|la estética y la factura de la luz|los arquitectos y los investigadores|las ventanas y las lámparas|La frase anterior nombra exactamente esos dos apoyos del argumento antiguo.",
+        "These cells (segundo párrafo)|el tercer tipo de fotorreceptor|los bastones y los conos|las células de la corteza visual|Se acaba de identificar «a third type of photoreceptor»: son esas, y por eso «do not contribute to sight».",
+        "which (tercer párrafo: «which lighting standards have measured»)|la iluminancia sobre la mesa|la luz vertical al ojo|el proyecto|El «which» va pegado a lo que acaba de nombrarse: the illuminance on the desk.",
+        "the one (último párrafo: «the one architects have been quietly reducing»)|la ventana|la lámpara|la norma|La propia frase lo revela al final tras el guion: the window."] }
+]
+};
+
 /* GIMNASIO · ejercicios rápidos de asociación
    Cubre lo que el curso solo toca de pasada y lo que más se atasca:
    conectores, adjetivos, preposiciones, orden de palabras, genitivo,
@@ -8795,6 +9017,7 @@ function go(v, arg) { stopAudio(); location.hash = arg != null ? v + '/' + arg :
 window.addEventListener('hashchange', route);
 function route() {
   MIC.abort();                       // nunca dejar el micrófono abierto al cambiar de pantalla
+  pararCrono();                      // ni un cronómetro corriendo contra una pantalla que ya no está
   var h = location.hash.replace('#', '') || 'home';
   var p = h.split('/');
   document.querySelectorAll('.tab[data-go]').forEach(function (b) { b.classList.toggle('on', b.dataset.go === p[0]); });
@@ -9303,8 +9526,8 @@ function explicaDestrezas() {
      'Ve al <b>Gimnasio</b>: «Ordena la frase» para el orden y «¿Cuál encaja?» para preposiciones y conectores. Y en cada fallo lee la explicación entera: dice por qué la buena es buena y por qué la que elegiste no lo es.'],
     ['Léxico', 'Vocabulario: reconocer una palabra, su contrario, la palabra que falta en una frase. Se alimenta del vocabulario de cada día y de las parejas contrarreloj.',
      'Haz el <b>Repaso</b> todos los días aunque no hagas día nuevo: el sistema de repaso espaciado es lo que convierte una palabra vista en una palabra tuya. Si una palabra aparece en «se te resisten», escríbele un gancho.'],
-    ['Comprensión lectora', 'Leer un texto en inglés y responder sobre él sin traducirlo palabra por palabra: entender la idea principal, deducir por el contexto y localizar un dato concreto. Son las preguntas del bloque de lectura de cada día y las del examen.',
-     'Lee el texto <b>entero y seguido</b> antes de mirar las preguntas, sin diccionario. Luego vuelve a leerlo subrayando solo lo que responde a cada pregunta. Traducir mientras lees es lo que hunde esta destreza: entrena a adivinar por contexto.'],
+    ['Comprensión lectora', 'Leer un texto en inglés y responder sobre él sin traducirlo palabra por palabra. En realidad son seis destrezas distintas: idea principal, buscar un dato, deducir, adivinar vocabulario por contexto, saber a qué se refiere un pronombre y leer a velocidad.',
+     'El <b>Gimnasio</b> tiene ahora una herramienta para cada una de esas seis, con ocho textos graduados de A2 a C1. Si esta barra es tu punto flojo, empieza por «Idea principal» y «Deducir». Y la regla de fondo: traducir mientras lees es lo que hunde esta destreza, así que lee el texto entero y seguido, sin diccionario, antes de mirar ninguna pregunta.'],
     ['Comprensión oral', 'Entender el inglés hablado: los dictados, los diálogos del día y las preguntas sobre lo que has escuchado. Es la destreza que más se resiente si solo estudias con los ojos.',
      'Escucha primero a velocidad normal y solo después usa «Más despacio». Repite el mismo diálogo tres días seguidos: la segunda y la tercera vez oyes palabras que la primera no existían para ti. Si va muy por debajo del resto, baja la velocidad en la pestaña Audio y alarga el bloque de escucha.'],
     ['Producción escrita', 'Lo que escribes tú: las traducciones al inglés, los huecos que se rellenan tecleando y el texto del bloque final que se evalúa. Aquí no hay opciones donde elegir, así que mide lo que de verdad sabes producir.',
@@ -9479,6 +9702,7 @@ function gymDe(n) {
     if (k === 4 || k === 5 || k === 9) return { id: 'ord-1', t: 'orden de palabras', txt: 'El orden del inglés es más rígido que el del español. Dos minutos ordenando frases valen por media hora de teoría.' };
   }
   if (k % 7 === 0 || k === 30) return { id: 'vel', t: 'velocidad', txt: 'Día de repaso: sesenta segundos para ver qué tienes ya automatizado y qué no.' };
+  if (k % 5 === 0) return { id: 'lec-idea', t: 'comprensión lectora', txt: 'Cinco minutos de lectura antes de empezar: un texto y su idea principal, cronometrado. Es lo que más rápido sube la velocidad de lectura.' };
   return null;
 }
 
@@ -9577,6 +9801,28 @@ function vGimnasio(arg) {
     '<button class="btn" data-hue="cantidad">much / many</button>' +
     '<button class="btn" data-hue="frases">Frases · UK / US</button>' +
     '<button class="btn sec" data-hue="todo">Mezcla de todo</button></div><div id="ghue"></div></div>' +
+    '<div class="card"><h2 style="margin-top:0">📖 Comprensión lectora</h2>' +
+    '<p class="dim small">Ocho textos graduados de A2 a C1 —un anuncio, un correo de cliente, un informe de obra, artículos y ensayos— con seis herramientas, una por cada destreza que compone la comprensión lectora. Cada texto trae su traducción, plegada, para comprobar <b>después</b> de responder.</p>' +
+    profe({
+      porque: '<p>' + LEC.intro + '</p>' +
+        '<p>Y no es una destreza, son <b>seis</b>, que se estropean si se entrenan juntas: leer para hacerse una idea y leer para encontrar un dato son operaciones <b>opuestas</b>. La primera exige saltarse cosas; la segunda, ignorar el sentido y buscar una forma. Quien las mezcla acaba haciendo lo peor de las dos: leer entero y despacio sin quedarse con nada. Por eso aquí hay un botón para cada una.</p>' +
+        '<ol class="proto-l">' + LEC.teoria.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ol>',
+      como: '<p>El orden que funciona con cualquier texto, dentro y fuera del examen:</p><ol class="proto-l">' +
+        LEC.metodo.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ol>' +
+        '<p><b>Empieza por textos fáciles.</b> Es contraintuitivo, pero la comprensión lectora se construye leyendo mucho de lo que ya entiendes casi todo, no poco de lo que no entiendes. Si tienes que parar más de una vez cada dos líneas, ese texto es demasiado difícil <b>para entrenar</b>, aunque puedas descifrarlo.</p>',
+      fallo: '<p>Cada herramienta te dice al fallar en qué línea estaba la respuesta, porque casi siempre estaba escrita. Pero los tres fallos de fondo son estos, y ninguno se arregla estudiando más vocabulario:</p>' +
+        '<ol class="proto-l">' +
+        '<li><b>Traducir mientras lees.</b> Es la causa número uno de ir lento y perder el hilo. Se corrige a la fuerza: leer sin permitirse decir la frase en español, aunque al principio se entienda menos. La comprensión vuelve en unos días y ya sin la muleta.</li>' +
+        '<li><b>Volver atrás continuamente.</b> Cada regresión rompe el sentido de la frase. Tapa con el dedo, o con una hoja, lo que ya has leído.</li>' +
+        '<li><b>Parar en cada palabra desconocida.</b> No hace falta entenderlas todas para entender el texto: en el ejercicio de vocabulario por contexto verás que la propia frase te la define.</li></ol>',
+      error: '<p>Medir el progreso en «palabras que sé». La comprensión lectora no crece por vocabulario, crece por <b>kilómetros</b>: cantidad de texto leído a una velocidad cómoda. Veinte minutos diarios de algo fácil rinden más que una hora semanal peleándose con un texto de C1.</p>'
+    }) +
+    '<div class="row"><button class="btn" data-lec="idea">Idea principal</button>' +
+    '<button class="btn" data-lec="dato">Buscar el dato</button>' +
+    '<button class="btn" data-lec="infer">Deducir</button>' +
+    '<button class="btn sec" data-lec="vocab">Palabra por contexto</button>' +
+    '<button class="btn sec" data-lec="ref">¿A qué se refiere?</button>' +
+    '<button class="btn sec" data-lec="vel">Velocidad lectora</button></div><div id="glec"></div></div>' +
     '<div class="card"><h2 style="margin-top:0">⚡ Velocidad · 60 segundos</h2>' +
     profe({
       porque: '<p>Saber una regla y poder usarla mientras hablas son dos cosas distintas. En una conversación no tienes tres segundos ' +
@@ -9598,12 +9844,14 @@ function vGimnasio(arg) {
   app.querySelectorAll('[data-ord]').forEach(function (b) { b.onclick = function () { juegoOrden(b.dataset.ord); }; });
   app.querySelectorAll('[data-hue]').forEach(function (b) { b.onclick = function () { juegoHuecos(b.dataset.hue); }; });
   app.querySelectorAll('[data-vel]').forEach(function (b) { b.onclick = function () { juegoVelocidad(); }; });
+  app.querySelectorAll('[data-lec]').forEach(function (b) { b.onclick = function () { juegoLectura(b.dataset.lec, (LEC.textos[0] || {}).id); }; });
   if (arg) {
     var pa = String(arg).split('-'), resto = pa.slice(1).join('-');
     if (pa[0] === 'par') juegoParejas(resto);
     else if (pa[0] === 'hue') juegoHuecos(resto);
     else if (pa[0] === 'ord') juegoOrden(resto);
     else if (pa[0] === 'vel') juegoVelocidad();
+    else if (pa[0] === 'lec') juegoLectura(resto || 'idea', (LEC.textos[0] || {}).id);
   }
 }
 
@@ -9618,6 +9866,7 @@ function panelFlojo() {
   var reco = peor.c === 'cam' ? 'las <b>derivadas</b> y los <b>conectores</b>' :
              peor.c === 'gram' ? 'el <b>orden de palabras</b> y las <b>preposiciones</b>' :
              peor.c === 'lex' ? 'los <b>adjetivos y sus contrarios</b>' :
+             peor.c === 'read' ? 'la <b>comprensión lectora</b> de aquí abajo, empezando por «Idea principal» y «Deducir»' :
              'las <b>parejas contrarreloj</b>, que fijan vocabulario rápido';
   return '<div class="note small"><b>Tu punto más flojo ahora mismo:</b> ' + CATS[peor.c] +
     ' (' + peor.s.ok + ' de ' + peor.s.tot + ' · ' + Math.round(peor.p * 100) + ' %). Empieza por ' + reco + '.</div>';
@@ -9853,6 +10102,238 @@ function juegoVelocidad() {
     var b = el('<button class="btn small">Otra vez</button>');
     b.onclick = function () { juegoVelocidad(); };
     document.getElementById('vzona').appendChild(b);
+  }
+}
+
+// ---------- gimnasio · comprensión lectora ----------
+// Seis herramientas, una por cada destreza que compone la comprensión lectora.
+// No se entrenan juntas: leer para hacerse una idea y leer para encontrar un
+// dato son operaciones opuestas, y mezclarlas es lo que deja a la gente
+// leyendo despacio y sin entender.
+var LEC = window.LECTURA || { textos: [] };
+
+function textoDe(id) {
+  for (var i = 0; i < LEC.textos.length; i++) if (LEC.textos[i].id === id) return LEC.textos[i];
+  return LEC.textos[0];
+}
+function parrafos(t) {
+  return String(t).split(/\n\n+/).map(function (p) { return '<p>' + esc(p) + '</p>'; }).join('');
+}
+function palabrasDe(t) { return String(t).trim().split(/\s+/).length; }
+
+// Un solo cronómetro para toda la sección. Antes cada ejercicio abría el suyo
+// y no lo cerraba: al cambiar de herramienta el reloj viejo seguía corriendo
+// contra un elemento que ya no existía y reventaba cada medio segundo.
+var lecIv = null;
+function pararCrono() { if (lecIv) { clearInterval(lecIv); lecIv = null; } }
+function crono(id, t0) {
+  pararCrono();
+  lecIv = setInterval(function () {
+    var e = document.getElementById(id);
+    if (!e) { pararCrono(); return; }
+    var s2 = Math.round((Date.now() - t0) / 1000);
+    e.textContent = Math.floor(s2 / 60) + ':' + String(s2 % 60).padStart(2, '0');
+  }, 500);
+}
+
+// El texto, con su traducción plegada. Va plegada a propósito: si la tienes
+// delante mientras lees, no estás entrenando comprensión lectora.
+function panelTexto(T, oculto) {
+  return '<div class="card lecc' + (oculto ? ' tapado' : '') + '" id="lectxt">' +
+    '<div class="row between"><h3 style="margin:0">' + esc(T.t) + '</h3>' +
+    '<span class="tagp">' + esc(T.nivel) + ' · ' + esc(T.tipo) + ' · ' + palabrasDe(T.txt) + ' palabras</span></div>' +
+    '<div class="lect en">' + parrafos(T.txt) + '</div>' +
+    '<details class="trad-txt"><summary>Ver el texto en español</summary>' +
+    '<p class="small dim">Ábrelo <b>después</b> de responder, para comprobar. Si lo lees antes no estás entrenando comprensión lectora: estás leyendo en español.</p>' +
+    '<div class="lect">' + parrafos(T.es) + '</div></details></div>';
+}
+
+function juegoLectura(modo, id) {
+  pararCrono();
+  var T = textoDe(id), host = document.getElementById('glec');
+  var sel = '<div class="card flat"><label class="small"><b>Texto</b> <select id="lecSel">' +
+    LEC.textos.map(function (x) {
+      return '<option value="' + x.id + '"' + (x.id === T.id ? ' selected' : '') + '>' +
+        esc(x.nivel) + ' · ' + esc(x.t) + '</option>';
+    }).join('') + '</select></label>' +
+    '<span class="dim small" style="margin-left:12px">Empieza por un nivel en el que entiendas casi todo: la comprensión lectora se entrena con textos fáciles leídos deprisa, no con textos difíciles leídos despacio.</span></div>';
+  host.innerHTML = sel + '<div id="leczona"></div>';
+  document.getElementById('lecSel').onchange = function () { juegoLectura(modo, this.value); };
+  var z = document.getElementById('leczona');
+
+  if (modo === 'idea') return modoIdea(z, T);
+  if (modo === 'dato') return modoDato(z, T);
+  if (modo === 'vel') return modoVelocidad(z, T);
+  return modoPreguntas(z, T, modo);
+
+  // --- 1 · idea principal: se lee contra reloj y luego se tapa el texto ---
+  function modoIdea(z, T) {
+    z.innerHTML = '<div class="note small"><b>Skimming.</b> No leas entero: lee el título, la <b>primera frase de cada párrafo</b> y la última del texto. ' +
+      'En cuanto sepas de qué va, pulsa el botón. Se cronometra a propósito: aquí la velocidad es la destreza.</div>' +
+      '<div class="row"><button class="btn" id="li0">Empezar a leer</button><span class="timer" id="lit">0:00</span></div><div id="lizona"></div>';
+    var t0 = 0;
+    document.getElementById('li0').onclick = function () {
+      var b = this;
+      if (!t0) {
+        t0 = Date.now(); b.textContent = 'Ya sé de qué va →';
+        document.getElementById('lizona').innerHTML = panelTexto(T);
+        crono('lit', t0);
+        return;
+      }
+      pararCrono();
+      var segs = Math.max(1, Math.round((Date.now() - t0) / 1000));
+      b.disabled = true;
+      var ops = shuffle([T.idea[0], T.idea[1], T.idea[2]]);
+      var it = qMC('¿De qué trata el texto?', ops, ops.indexOf(T.idea[0]), T.idea[3], 'read');
+      it.part = 'Idea principal · ' + T.t;
+      var zona = document.getElementById('lizona');
+      zona.innerHTML = '<div class="note small">El texto se ha tapado a propósito. Si necesitas volver a mirarlo para responder, es que no has hecho skimming: has hecho lectura lenta.</div><div id="lipreg"></div>';
+      runTest(zona.querySelector('#lipreg'), [it], { min: 100, pasoTxt: 'Acertaste la idea en ' + segs + ' segundos' }, function (pct, pass, foot) {
+        S.ses++; save();
+        var vel = Math.round(palabrasDe(T.txt) / (segs / 60));
+        foot.insertAdjacentHTML('beforebegin', '<div class="metrics">' + metric(segs + ' s', 'tiempo de lectura') +
+          metric(vel, 'palabras/minuto') + '</div><p class="small ' + (pass && segs <= 45 ? 'ok-t' : 'dim') + '">' +
+          (!pass ? 'Fallar la idea principal casi siempre significa que te has quedado atascada en un párrafo. Vuelve a intentarlo con otro texto leyendo <b>solo</b> las primeras frases: da vértigo y funciona.'
+            : segs <= 30 ? 'Eso es skimming de verdad: has captado el sentido sin leerlo todo. Es exactamente lo que hay que hacer en la primera pasada de un examen.'
+            : segs <= 60 ? 'Bien, aunque todavía estás leyendo demasiado. Prueba a hacerlo en menos de treinta segundos: verás que sigues acertando.'
+            : 'Has acertado, pero leyéndolo entero. El objetivo de este ejercicio no es acertar: es acertar deprisa.') + '</p>');
+        var b2 = el('<button class="btn sec small">Otro texto</button>');
+        b2.onclick = function () { juegoLectura('idea', LEC.textos[Math.floor(Math.random() * LEC.textos.length)].id); };
+        foot.appendChild(b2);
+      });
+    };
+  }
+
+  // --- 2 · buscar el dato: la pregunta primero, el texto delante, contra reloj ---
+  function modoDato(z, T) {
+    var lote = pick(T.datos, Math.min(4, T.datos.length)), k = 0, ac = 0, t0 = Date.now();
+    z.innerHTML = '<div class="note small"><b>Scanning.</b> Al revés que lo anterior: <b>lee primero la pregunta</b> y después barre el texto ' +
+      'buscando solo la forma de esa palabra o de esa cifra. No leas las frases: búscalas con la vista.</div>' +
+      '<div class="row between"><span class="dim small" id="ldn"></span><span class="timer" id="ldt">0:00</span></div>' +
+      '<div id="ldpreg"></div>' + panelTexto(T);
+    crono('ldt', t0);
+    paso();
+    function paso() {
+      // Si ya no estamos en este ejercicio —se ha cambiado de herramienta o de
+      // texto mientras corría el temporizador— no hay nada que pintar.
+      var zz = document.getElementById('ldpreg'), cont = document.getElementById('ldn');
+      if (!zz || !cont) { pararCrono(); return; }
+      cont.textContent = 'Dato ' + Math.min(k + 1, lote.length) + ' de ' + lote.length;
+      if (k >= lote.length) {
+        pararCrono();
+        var segs = Math.round((Date.now() - t0) / 1000), pct = Math.round(ac / lote.length * 100);
+        rec('read', pct >= 75, 'scanning · ' + T.t); S.ses++; save();
+        zz.innerHTML = '<div class="card flat"><div class="metrics">' + metric(pct + '%', 'aciertos') +
+          metric(ac + '/' + lote.length, 'datos') + metric(segs + ' s', 'tiempo total') +
+          metric(Math.round(segs / lote.length) + ' s', 'por dato') + '</div><p class="small ' + (pct >= 75 ? 'dim' : 'bad-t') + '">' +
+          (segs / lote.length <= 15 && pct >= 75 ? 'Ese es el ritmo: menos de quince segundos por dato. En el examen esta parte no debe consumirte tiempo de pensar.'
+            : pct >= 75 ? 'Los encuentras, pero tardando. Truco: fíjate en la <b>forma</b> de la palabra —una cifra, una mayúscula, una palabra larga— en vez de leer las frases.'
+            : 'Se te escapan. Casi siempre es porque estás leyendo el texto en vez de barrerlo. Vuelve a intentarlo tapando mentalmente todo salvo lo que se parece a la respuesta.') + '</p></div>';
+        var b = el('<button class="btn sec small">Otra tanda</button>');
+        b.onclick = function () { juegoLectura('dato', T.id); };
+        zz.appendChild(b); return;
+      }
+      var p = lote[k].split('|');
+      zz.innerHTML = '<div class="card"><div class="qt">' + esc(p[0]) + '</div>' +
+        '<input type="text" id="ldin" autocomplete="off" spellcheck="false" placeholder="Copia el dato tal y como aparece en el texto…">' +
+        '<button class="btn small" id="ldok" style="margin-top:10px">Comprobar</button><div id="ldfb"></div></div>';
+      var inp = zz.querySelector('#ldin');
+      zz.querySelector('#ldok').onclick = function () {
+        var mia = norm(inp.value), sol = norm(p[1]);
+        var ok = mia === sol || (mia.length > 1 && sol.indexOf(mia) >= 0 && mia.length >= sol.length - 2);
+        if (ok) ac++;
+        inp.disabled = true; this.disabled = true;
+        rec('read', ok, 'dato: ' + p[0]);
+        zz.querySelector('#ldfb').innerHTML = '<div class="fb ' + (ok ? 'ok' : 'bad') + '">' +
+          (ok ? '✔ Correcto.' : '✖ Era <b class="en">' + esc(p[1]) + '</b>.') +
+          ' <span class="dim">' + esc(p[2]) + '</span></div>';
+        var c = el('<button class="btn small" style="margin-top:10px">Siguiente →</button>');
+        c.onclick = function () { k++; paso(); };
+        zz.querySelector('#ldfb').appendChild(c);
+        if (ok) { k++; setTimeout(paso, 900); }
+      };
+      inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') zz.querySelector('#ldok').click(); });
+      inp.focus();
+    }
+  }
+
+  // --- 3, 4 y 5 · deducir, vocabulario por contexto y referencia ---
+  function modoPreguntas(z, T, modo) {
+    var fuente = modo === 'infer' ? T.infer : modo === 'vocab' ? T.vocab : T.ref;
+    var titulo = modo === 'infer' ? 'Deducir' : modo === 'vocab' ? 'Vocabulario por contexto' : '¿A qué se refiere?';
+    var aviso = modo === 'infer'
+      ? '<b>Deducir.</b> La respuesta no está escrita con esas palabras, pero <b>siempre se apoya en una línea concreta</b> del texto. Antes de contestar, busca esa línea. Si no la encuentras, no es la respuesta.'
+      : modo === 'vocab'
+      ? '<b>Vocabulario por contexto.</b> Sin diccionario y sin traductor: eso es justo lo que hay que dejar de hacer. Mira lo que va <b>antes y después</b> de la palabra; el contexto casi siempre la define.'
+      : '<b>Referencia.</b> Cada pregunta es un <i>it</i>, un <i>this</i> o un <i>they</i>. Regla: casi siempre se refieren a lo <b>último nombrado</b>, y cuando es <i>this</i> suele recoger <b>la idea entera</b> de la frase anterior, no una palabra.';
+    var items = fuente.map(function (l) {
+      var p = l.split('|');
+      var ops = shuffle([p[1], p[2], p[3]]);
+      var q = qMC(modo === 'vocab' ? '¿Qué significa <b class="en">' + esc(p[0]) + '</b> en este texto?'
+                : modo === 'ref' ? '¿A qué se refiere <b class="en">' + esc(p[0]) + '</b>?'
+                : esc(p[0]),
+        ops, ops.indexOf(p[1]), p[4], 'read');
+      q.part = titulo + ' · ' + T.t;
+      return q;
+    });
+    z.innerHTML = '<div class="note small">' + aviso + '</div>' + panelTexto(T) + '<div id="lqz"></div>';
+    runTest(document.getElementById('lqz'), shuffle(items), {
+      min: 70, pasoTxt: 'Bien: te apoyas en el texto, no en la intuición',
+      protocolo: '<ol class="proto-l"><li><b>Vuelve al texto y busca la línea</b> que sostiene la respuesta correcta. Está ahí; la explicación te dice dónde.</li>' +
+        '<li><b>Pregúntate por qué te convenció la mala.</b> Casi siempre es porque suena verosímil pero el texto no lo dice: eso es exactamente lo que mide el examen.</li>' +
+        '<li><b>Subraya mentalmente esa línea</b> antes de seguir. La próxima vez la reconocerás.</li></ol>'
+    }, function (pct, pass, foot) {
+      rec('read', pass, 'lectura · ' + modo); S.ses++; save();
+      var b = el('<button class="btn sec small">Otro texto</button>');
+      b.onclick = function () { juegoLectura(modo, LEC.textos[Math.floor(Math.random() * LEC.textos.length)].id); };
+      foot.appendChild(b);
+    });
+  }
+
+  // --- 6 · velocidad lectora con control de comprensión ---
+  function modoVelocidad(z, T) {
+    var pal = palabrasDe(T.txt);
+    z.innerHTML = '<div class="note small"><b>Velocidad.</b> Lee el texto entero, de un tirón, <b>sin volver atrás y sin traducir</b>. ' +
+      'Al terminar hay tres preguntas: la velocidad sin comprensión no cuenta. Referencia en lengua extranjera: 120-180 palabras por minuto.</div>' +
+      '<div class="row"><button class="btn" id="lv0">Empezar</button><span class="timer" id="lvt">0:00</span>' +
+      '<span class="dim small">' + pal + ' palabras</span></div><div id="lvzona"></div>';
+    var t0 = 0;
+    document.getElementById('lv0').onclick = function () {
+      var b = this;
+      if (!t0) {
+        t0 = Date.now(); b.textContent = 'He terminado →';
+        document.getElementById('lvzona').innerHTML = panelTexto(T);
+        crono('lvt', t0);
+        return;
+      }
+      pararCrono(); b.disabled = true;
+      var segs = Math.max(1, Math.round((Date.now() - t0) / 1000));
+      var wpm = Math.round(pal / (segs / 60));
+      var ops = shuffle([T.idea[0], T.idea[1], T.idea[2]]);
+      var items = [qMC('¿De qué trata el texto?', ops, ops.indexOf(T.idea[0]), T.idea[3], 'read')];
+      pick(T.infer, Math.min(2, T.infer.length)).forEach(function (l) {
+        var p = l.split('|'), o2 = shuffle([p[1], p[2], p[3]]);
+        items.push(qMC(esc(p[0]), o2, o2.indexOf(p[1]), p[4], 'read'));
+      });
+      items.forEach(function (x) { x.part = 'Control de comprensión'; });
+      var zona = document.getElementById('lvzona');
+      zona.innerHTML = '<div class="metrics">' + metric(wpm, 'palabras/minuto') + metric(segs + ' s', 'tiempo') + metric(pal, 'palabras') + '</div>' +
+        '<p class="small ' + (wpm >= 120 ? 'ok-t' : wpm >= 90 ? 'dim' : 'bad-t') + '">' +
+        (wpm >= 180 ? 'Muy rápido. Comprueba con las preguntas que no has ido tan deprisa como para perder el sentido.'
+          : wpm >= 120 ? 'Velocidad de lector competente en lengua extranjera. A partir de aquí lo que hay que cuidar es la comprensión, no el ritmo.'
+          : wpm >= 90 ? 'Por debajo de lo cómodo. Casi siempre es traducción mental: prueba a leer el mismo texto otra vez sin permitirte decirlo en español.'
+          : 'Muy despacio para comprender bien: a este ritmo no da tiempo a sostener el sentido de la frase mientras llegas al final. La causa casi siempre es volver atrás. Léelo otra vez tapando con el dedo lo ya leído.') + '</p>' +
+        '<div class="note small">Ahora las preguntas, <b>con el texto tapado</b>. Velocidad sin comprensión no vale de nada.</div><div id="lvpreg"></div>';
+      runTest(zona.querySelector('#lvpreg'), items, { min: 67, pasoTxt: 'Comprensión confirmada a ' + wpm + ' palabras por minuto' }, function (pct, pass, foot) {
+        rec('read', pass, 'velocidad lectora'); S.ses++; save();
+        foot.insertAdjacentHTML('beforebegin', '<p class="small ' + (pass ? 'ok-t' : 'bad-t') + '">' +
+          (pass ? 'Velocidad <b>y</b> comprensión. Esa es la marca que hay que repetir en textos cada vez más largos.'
+            : 'Has leído deprisa pero se ha perdido el sentido. Baja el ritmo un veinte por ciento y repite: la velocidad útil es la máxima a la que sigues entendiendo, no la máxima.') + '</p>');
+        var b2 = el('<button class="btn sec small">Otro texto</button>');
+        b2.onclick = function () { juegoLectura('vel', LEC.textos[Math.floor(Math.random() * LEC.textos.length)].id); };
+        foot.appendChild(b2);
+      });
+    };
   }
 }
 

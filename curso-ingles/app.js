@@ -316,6 +316,7 @@ function go(v, arg) { stopAudio(); location.hash = arg != null ? v + '/' + arg :
 window.addEventListener('hashchange', route);
 function route() {
   MIC.abort();                       // nunca dejar el micrófono abierto al cambiar de pantalla
+  pararCrono();                      // ni un cronómetro corriendo contra una pantalla que ya no está
   var h = location.hash.replace('#', '') || 'home';
   var p = h.split('/');
   document.querySelectorAll('.tab[data-go]').forEach(function (b) { b.classList.toggle('on', b.dataset.go === p[0]); });
@@ -824,8 +825,8 @@ function explicaDestrezas() {
      'Ve al <b>Gimnasio</b>: «Ordena la frase» para el orden y «¿Cuál encaja?» para preposiciones y conectores. Y en cada fallo lee la explicación entera: dice por qué la buena es buena y por qué la que elegiste no lo es.'],
     ['Léxico', 'Vocabulario: reconocer una palabra, su contrario, la palabra que falta en una frase. Se alimenta del vocabulario de cada día y de las parejas contrarreloj.',
      'Haz el <b>Repaso</b> todos los días aunque no hagas día nuevo: el sistema de repaso espaciado es lo que convierte una palabra vista en una palabra tuya. Si una palabra aparece en «se te resisten», escríbele un gancho.'],
-    ['Comprensión lectora', 'Leer un texto en inglés y responder sobre él sin traducirlo palabra por palabra: entender la idea principal, deducir por el contexto y localizar un dato concreto. Son las preguntas del bloque de lectura de cada día y las del examen.',
-     'Lee el texto <b>entero y seguido</b> antes de mirar las preguntas, sin diccionario. Luego vuelve a leerlo subrayando solo lo que responde a cada pregunta. Traducir mientras lees es lo que hunde esta destreza: entrena a adivinar por contexto.'],
+    ['Comprensión lectora', 'Leer un texto en inglés y responder sobre él sin traducirlo palabra por palabra. En realidad son seis destrezas distintas: idea principal, buscar un dato, deducir, adivinar vocabulario por contexto, saber a qué se refiere un pronombre y leer a velocidad.',
+     'El <b>Gimnasio</b> tiene ahora una herramienta para cada una de esas seis, con ocho textos graduados de A2 a C1. Si esta barra es tu punto flojo, empieza por «Idea principal» y «Deducir». Y la regla de fondo: traducir mientras lees es lo que hunde esta destreza, así que lee el texto entero y seguido, sin diccionario, antes de mirar ninguna pregunta.'],
     ['Comprensión oral', 'Entender el inglés hablado: los dictados, los diálogos del día y las preguntas sobre lo que has escuchado. Es la destreza que más se resiente si solo estudias con los ojos.',
      'Escucha primero a velocidad normal y solo después usa «Más despacio». Repite el mismo diálogo tres días seguidos: la segunda y la tercera vez oyes palabras que la primera no existían para ti. Si va muy por debajo del resto, baja la velocidad en la pestaña Audio y alarga el bloque de escucha.'],
     ['Producción escrita', 'Lo que escribes tú: las traducciones al inglés, los huecos que se rellenan tecleando y el texto del bloque final que se evalúa. Aquí no hay opciones donde elegir, así que mide lo que de verdad sabes producir.',
@@ -1000,6 +1001,7 @@ function gymDe(n) {
     if (k === 4 || k === 5 || k === 9) return { id: 'ord-1', t: 'orden de palabras', txt: 'El orden del inglés es más rígido que el del español. Dos minutos ordenando frases valen por media hora de teoría.' };
   }
   if (k % 7 === 0 || k === 30) return { id: 'vel', t: 'velocidad', txt: 'Día de repaso: sesenta segundos para ver qué tienes ya automatizado y qué no.' };
+  if (k % 5 === 0) return { id: 'lec-idea', t: 'comprensión lectora', txt: 'Cinco minutos de lectura antes de empezar: un texto y su idea principal, cronometrado. Es lo que más rápido sube la velocidad de lectura.' };
   return null;
 }
 
@@ -1098,6 +1100,28 @@ function vGimnasio(arg) {
     '<button class="btn" data-hue="cantidad">much / many</button>' +
     '<button class="btn" data-hue="frases">Frases · UK / US</button>' +
     '<button class="btn sec" data-hue="todo">Mezcla de todo</button></div><div id="ghue"></div></div>' +
+    '<div class="card"><h2 style="margin-top:0">📖 Comprensión lectora</h2>' +
+    '<p class="dim small">Ocho textos graduados de A2 a C1 —un anuncio, un correo de cliente, un informe de obra, artículos y ensayos— con seis herramientas, una por cada destreza que compone la comprensión lectora. Cada texto trae su traducción, plegada, para comprobar <b>después</b> de responder.</p>' +
+    profe({
+      porque: '<p>' + LEC.intro + '</p>' +
+        '<p>Y no es una destreza, son <b>seis</b>, que se estropean si se entrenan juntas: leer para hacerse una idea y leer para encontrar un dato son operaciones <b>opuestas</b>. La primera exige saltarse cosas; la segunda, ignorar el sentido y buscar una forma. Quien las mezcla acaba haciendo lo peor de las dos: leer entero y despacio sin quedarse con nada. Por eso aquí hay un botón para cada una.</p>' +
+        '<ol class="proto-l">' + LEC.teoria.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ol>',
+      como: '<p>El orden que funciona con cualquier texto, dentro y fuera del examen:</p><ol class="proto-l">' +
+        LEC.metodo.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ol>' +
+        '<p><b>Empieza por textos fáciles.</b> Es contraintuitivo, pero la comprensión lectora se construye leyendo mucho de lo que ya entiendes casi todo, no poco de lo que no entiendes. Si tienes que parar más de una vez cada dos líneas, ese texto es demasiado difícil <b>para entrenar</b>, aunque puedas descifrarlo.</p>',
+      fallo: '<p>Cada herramienta te dice al fallar en qué línea estaba la respuesta, porque casi siempre estaba escrita. Pero los tres fallos de fondo son estos, y ninguno se arregla estudiando más vocabulario:</p>' +
+        '<ol class="proto-l">' +
+        '<li><b>Traducir mientras lees.</b> Es la causa número uno de ir lento y perder el hilo. Se corrige a la fuerza: leer sin permitirse decir la frase en español, aunque al principio se entienda menos. La comprensión vuelve en unos días y ya sin la muleta.</li>' +
+        '<li><b>Volver atrás continuamente.</b> Cada regresión rompe el sentido de la frase. Tapa con el dedo, o con una hoja, lo que ya has leído.</li>' +
+        '<li><b>Parar en cada palabra desconocida.</b> No hace falta entenderlas todas para entender el texto: en el ejercicio de vocabulario por contexto verás que la propia frase te la define.</li></ol>',
+      error: '<p>Medir el progreso en «palabras que sé». La comprensión lectora no crece por vocabulario, crece por <b>kilómetros</b>: cantidad de texto leído a una velocidad cómoda. Veinte minutos diarios de algo fácil rinden más que una hora semanal peleándose con un texto de C1.</p>'
+    }) +
+    '<div class="row"><button class="btn" data-lec="idea">Idea principal</button>' +
+    '<button class="btn" data-lec="dato">Buscar el dato</button>' +
+    '<button class="btn" data-lec="infer">Deducir</button>' +
+    '<button class="btn sec" data-lec="vocab">Palabra por contexto</button>' +
+    '<button class="btn sec" data-lec="ref">¿A qué se refiere?</button>' +
+    '<button class="btn sec" data-lec="vel">Velocidad lectora</button></div><div id="glec"></div></div>' +
     '<div class="card"><h2 style="margin-top:0">⚡ Velocidad · 60 segundos</h2>' +
     profe({
       porque: '<p>Saber una regla y poder usarla mientras hablas son dos cosas distintas. En una conversación no tienes tres segundos ' +
@@ -1119,12 +1143,14 @@ function vGimnasio(arg) {
   app.querySelectorAll('[data-ord]').forEach(function (b) { b.onclick = function () { juegoOrden(b.dataset.ord); }; });
   app.querySelectorAll('[data-hue]').forEach(function (b) { b.onclick = function () { juegoHuecos(b.dataset.hue); }; });
   app.querySelectorAll('[data-vel]').forEach(function (b) { b.onclick = function () { juegoVelocidad(); }; });
+  app.querySelectorAll('[data-lec]').forEach(function (b) { b.onclick = function () { juegoLectura(b.dataset.lec, (LEC.textos[0] || {}).id); }; });
   if (arg) {
     var pa = String(arg).split('-'), resto = pa.slice(1).join('-');
     if (pa[0] === 'par') juegoParejas(resto);
     else if (pa[0] === 'hue') juegoHuecos(resto);
     else if (pa[0] === 'ord') juegoOrden(resto);
     else if (pa[0] === 'vel') juegoVelocidad();
+    else if (pa[0] === 'lec') juegoLectura(resto || 'idea', (LEC.textos[0] || {}).id);
   }
 }
 
@@ -1139,6 +1165,7 @@ function panelFlojo() {
   var reco = peor.c === 'cam' ? 'las <b>derivadas</b> y los <b>conectores</b>' :
              peor.c === 'gram' ? 'el <b>orden de palabras</b> y las <b>preposiciones</b>' :
              peor.c === 'lex' ? 'los <b>adjetivos y sus contrarios</b>' :
+             peor.c === 'read' ? 'la <b>comprensión lectora</b> de aquí abajo, empezando por «Idea principal» y «Deducir»' :
              'las <b>parejas contrarreloj</b>, que fijan vocabulario rápido';
   return '<div class="note small"><b>Tu punto más flojo ahora mismo:</b> ' + CATS[peor.c] +
     ' (' + peor.s.ok + ' de ' + peor.s.tot + ' · ' + Math.round(peor.p * 100) + ' %). Empieza por ' + reco + '.</div>';
@@ -1374,6 +1401,238 @@ function juegoVelocidad() {
     var b = el('<button class="btn small">Otra vez</button>');
     b.onclick = function () { juegoVelocidad(); };
     document.getElementById('vzona').appendChild(b);
+  }
+}
+
+// ---------- gimnasio · comprensión lectora ----------
+// Seis herramientas, una por cada destreza que compone la comprensión lectora.
+// No se entrenan juntas: leer para hacerse una idea y leer para encontrar un
+// dato son operaciones opuestas, y mezclarlas es lo que deja a la gente
+// leyendo despacio y sin entender.
+var LEC = window.LECTURA || { textos: [] };
+
+function textoDe(id) {
+  for (var i = 0; i < LEC.textos.length; i++) if (LEC.textos[i].id === id) return LEC.textos[i];
+  return LEC.textos[0];
+}
+function parrafos(t) {
+  return String(t).split(/\n\n+/).map(function (p) { return '<p>' + esc(p) + '</p>'; }).join('');
+}
+function palabrasDe(t) { return String(t).trim().split(/\s+/).length; }
+
+// Un solo cronómetro para toda la sección. Antes cada ejercicio abría el suyo
+// y no lo cerraba: al cambiar de herramienta el reloj viejo seguía corriendo
+// contra un elemento que ya no existía y reventaba cada medio segundo.
+var lecIv = null;
+function pararCrono() { if (lecIv) { clearInterval(lecIv); lecIv = null; } }
+function crono(id, t0) {
+  pararCrono();
+  lecIv = setInterval(function () {
+    var e = document.getElementById(id);
+    if (!e) { pararCrono(); return; }
+    var s2 = Math.round((Date.now() - t0) / 1000);
+    e.textContent = Math.floor(s2 / 60) + ':' + String(s2 % 60).padStart(2, '0');
+  }, 500);
+}
+
+// El texto, con su traducción plegada. Va plegada a propósito: si la tienes
+// delante mientras lees, no estás entrenando comprensión lectora.
+function panelTexto(T, oculto) {
+  return '<div class="card lecc' + (oculto ? ' tapado' : '') + '" id="lectxt">' +
+    '<div class="row between"><h3 style="margin:0">' + esc(T.t) + '</h3>' +
+    '<span class="tagp">' + esc(T.nivel) + ' · ' + esc(T.tipo) + ' · ' + palabrasDe(T.txt) + ' palabras</span></div>' +
+    '<div class="lect en">' + parrafos(T.txt) + '</div>' +
+    '<details class="trad-txt"><summary>Ver el texto en español</summary>' +
+    '<p class="small dim">Ábrelo <b>después</b> de responder, para comprobar. Si lo lees antes no estás entrenando comprensión lectora: estás leyendo en español.</p>' +
+    '<div class="lect">' + parrafos(T.es) + '</div></details></div>';
+}
+
+function juegoLectura(modo, id) {
+  pararCrono();
+  var T = textoDe(id), host = document.getElementById('glec');
+  var sel = '<div class="card flat"><label class="small"><b>Texto</b> <select id="lecSel">' +
+    LEC.textos.map(function (x) {
+      return '<option value="' + x.id + '"' + (x.id === T.id ? ' selected' : '') + '>' +
+        esc(x.nivel) + ' · ' + esc(x.t) + '</option>';
+    }).join('') + '</select></label>' +
+    '<span class="dim small" style="margin-left:12px">Empieza por un nivel en el que entiendas casi todo: la comprensión lectora se entrena con textos fáciles leídos deprisa, no con textos difíciles leídos despacio.</span></div>';
+  host.innerHTML = sel + '<div id="leczona"></div>';
+  document.getElementById('lecSel').onchange = function () { juegoLectura(modo, this.value); };
+  var z = document.getElementById('leczona');
+
+  if (modo === 'idea') return modoIdea(z, T);
+  if (modo === 'dato') return modoDato(z, T);
+  if (modo === 'vel') return modoVelocidad(z, T);
+  return modoPreguntas(z, T, modo);
+
+  // --- 1 · idea principal: se lee contra reloj y luego se tapa el texto ---
+  function modoIdea(z, T) {
+    z.innerHTML = '<div class="note small"><b>Skimming.</b> No leas entero: lee el título, la <b>primera frase de cada párrafo</b> y la última del texto. ' +
+      'En cuanto sepas de qué va, pulsa el botón. Se cronometra a propósito: aquí la velocidad es la destreza.</div>' +
+      '<div class="row"><button class="btn" id="li0">Empezar a leer</button><span class="timer" id="lit">0:00</span></div><div id="lizona"></div>';
+    var t0 = 0;
+    document.getElementById('li0').onclick = function () {
+      var b = this;
+      if (!t0) {
+        t0 = Date.now(); b.textContent = 'Ya sé de qué va →';
+        document.getElementById('lizona').innerHTML = panelTexto(T);
+        crono('lit', t0);
+        return;
+      }
+      pararCrono();
+      var segs = Math.max(1, Math.round((Date.now() - t0) / 1000));
+      b.disabled = true;
+      var ops = shuffle([T.idea[0], T.idea[1], T.idea[2]]);
+      var it = qMC('¿De qué trata el texto?', ops, ops.indexOf(T.idea[0]), T.idea[3], 'read');
+      it.part = 'Idea principal · ' + T.t;
+      var zona = document.getElementById('lizona');
+      zona.innerHTML = '<div class="note small">El texto se ha tapado a propósito. Si necesitas volver a mirarlo para responder, es que no has hecho skimming: has hecho lectura lenta.</div><div id="lipreg"></div>';
+      runTest(zona.querySelector('#lipreg'), [it], { min: 100, pasoTxt: 'Acertaste la idea en ' + segs + ' segundos' }, function (pct, pass, foot) {
+        S.ses++; save();
+        var vel = Math.round(palabrasDe(T.txt) / (segs / 60));
+        foot.insertAdjacentHTML('beforebegin', '<div class="metrics">' + metric(segs + ' s', 'tiempo de lectura') +
+          metric(vel, 'palabras/minuto') + '</div><p class="small ' + (pass && segs <= 45 ? 'ok-t' : 'dim') + '">' +
+          (!pass ? 'Fallar la idea principal casi siempre significa que te has quedado atascada en un párrafo. Vuelve a intentarlo con otro texto leyendo <b>solo</b> las primeras frases: da vértigo y funciona.'
+            : segs <= 30 ? 'Eso es skimming de verdad: has captado el sentido sin leerlo todo. Es exactamente lo que hay que hacer en la primera pasada de un examen.'
+            : segs <= 60 ? 'Bien, aunque todavía estás leyendo demasiado. Prueba a hacerlo en menos de treinta segundos: verás que sigues acertando.'
+            : 'Has acertado, pero leyéndolo entero. El objetivo de este ejercicio no es acertar: es acertar deprisa.') + '</p>');
+        var b2 = el('<button class="btn sec small">Otro texto</button>');
+        b2.onclick = function () { juegoLectura('idea', LEC.textos[Math.floor(Math.random() * LEC.textos.length)].id); };
+        foot.appendChild(b2);
+      });
+    };
+  }
+
+  // --- 2 · buscar el dato: la pregunta primero, el texto delante, contra reloj ---
+  function modoDato(z, T) {
+    var lote = pick(T.datos, Math.min(4, T.datos.length)), k = 0, ac = 0, t0 = Date.now();
+    z.innerHTML = '<div class="note small"><b>Scanning.</b> Al revés que lo anterior: <b>lee primero la pregunta</b> y después barre el texto ' +
+      'buscando solo la forma de esa palabra o de esa cifra. No leas las frases: búscalas con la vista.</div>' +
+      '<div class="row between"><span class="dim small" id="ldn"></span><span class="timer" id="ldt">0:00</span></div>' +
+      '<div id="ldpreg"></div>' + panelTexto(T);
+    crono('ldt', t0);
+    paso();
+    function paso() {
+      // Si ya no estamos en este ejercicio —se ha cambiado de herramienta o de
+      // texto mientras corría el temporizador— no hay nada que pintar.
+      var zz = document.getElementById('ldpreg'), cont = document.getElementById('ldn');
+      if (!zz || !cont) { pararCrono(); return; }
+      cont.textContent = 'Dato ' + Math.min(k + 1, lote.length) + ' de ' + lote.length;
+      if (k >= lote.length) {
+        pararCrono();
+        var segs = Math.round((Date.now() - t0) / 1000), pct = Math.round(ac / lote.length * 100);
+        rec('read', pct >= 75, 'scanning · ' + T.t); S.ses++; save();
+        zz.innerHTML = '<div class="card flat"><div class="metrics">' + metric(pct + '%', 'aciertos') +
+          metric(ac + '/' + lote.length, 'datos') + metric(segs + ' s', 'tiempo total') +
+          metric(Math.round(segs / lote.length) + ' s', 'por dato') + '</div><p class="small ' + (pct >= 75 ? 'dim' : 'bad-t') + '">' +
+          (segs / lote.length <= 15 && pct >= 75 ? 'Ese es el ritmo: menos de quince segundos por dato. En el examen esta parte no debe consumirte tiempo de pensar.'
+            : pct >= 75 ? 'Los encuentras, pero tardando. Truco: fíjate en la <b>forma</b> de la palabra —una cifra, una mayúscula, una palabra larga— en vez de leer las frases.'
+            : 'Se te escapan. Casi siempre es porque estás leyendo el texto en vez de barrerlo. Vuelve a intentarlo tapando mentalmente todo salvo lo que se parece a la respuesta.') + '</p></div>';
+        var b = el('<button class="btn sec small">Otra tanda</button>');
+        b.onclick = function () { juegoLectura('dato', T.id); };
+        zz.appendChild(b); return;
+      }
+      var p = lote[k].split('|');
+      zz.innerHTML = '<div class="card"><div class="qt">' + esc(p[0]) + '</div>' +
+        '<input type="text" id="ldin" autocomplete="off" spellcheck="false" placeholder="Copia el dato tal y como aparece en el texto…">' +
+        '<button class="btn small" id="ldok" style="margin-top:10px">Comprobar</button><div id="ldfb"></div></div>';
+      var inp = zz.querySelector('#ldin');
+      zz.querySelector('#ldok').onclick = function () {
+        var mia = norm(inp.value), sol = norm(p[1]);
+        var ok = mia === sol || (mia.length > 1 && sol.indexOf(mia) >= 0 && mia.length >= sol.length - 2);
+        if (ok) ac++;
+        inp.disabled = true; this.disabled = true;
+        rec('read', ok, 'dato: ' + p[0]);
+        zz.querySelector('#ldfb').innerHTML = '<div class="fb ' + (ok ? 'ok' : 'bad') + '">' +
+          (ok ? '✔ Correcto.' : '✖ Era <b class="en">' + esc(p[1]) + '</b>.') +
+          ' <span class="dim">' + esc(p[2]) + '</span></div>';
+        var c = el('<button class="btn small" style="margin-top:10px">Siguiente →</button>');
+        c.onclick = function () { k++; paso(); };
+        zz.querySelector('#ldfb').appendChild(c);
+        if (ok) { k++; setTimeout(paso, 900); }
+      };
+      inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') zz.querySelector('#ldok').click(); });
+      inp.focus();
+    }
+  }
+
+  // --- 3, 4 y 5 · deducir, vocabulario por contexto y referencia ---
+  function modoPreguntas(z, T, modo) {
+    var fuente = modo === 'infer' ? T.infer : modo === 'vocab' ? T.vocab : T.ref;
+    var titulo = modo === 'infer' ? 'Deducir' : modo === 'vocab' ? 'Vocabulario por contexto' : '¿A qué se refiere?';
+    var aviso = modo === 'infer'
+      ? '<b>Deducir.</b> La respuesta no está escrita con esas palabras, pero <b>siempre se apoya en una línea concreta</b> del texto. Antes de contestar, busca esa línea. Si no la encuentras, no es la respuesta.'
+      : modo === 'vocab'
+      ? '<b>Vocabulario por contexto.</b> Sin diccionario y sin traductor: eso es justo lo que hay que dejar de hacer. Mira lo que va <b>antes y después</b> de la palabra; el contexto casi siempre la define.'
+      : '<b>Referencia.</b> Cada pregunta es un <i>it</i>, un <i>this</i> o un <i>they</i>. Regla: casi siempre se refieren a lo <b>último nombrado</b>, y cuando es <i>this</i> suele recoger <b>la idea entera</b> de la frase anterior, no una palabra.';
+    var items = fuente.map(function (l) {
+      var p = l.split('|');
+      var ops = shuffle([p[1], p[2], p[3]]);
+      var q = qMC(modo === 'vocab' ? '¿Qué significa <b class="en">' + esc(p[0]) + '</b> en este texto?'
+                : modo === 'ref' ? '¿A qué se refiere <b class="en">' + esc(p[0]) + '</b>?'
+                : esc(p[0]),
+        ops, ops.indexOf(p[1]), p[4], 'read');
+      q.part = titulo + ' · ' + T.t;
+      return q;
+    });
+    z.innerHTML = '<div class="note small">' + aviso + '</div>' + panelTexto(T) + '<div id="lqz"></div>';
+    runTest(document.getElementById('lqz'), shuffle(items), {
+      min: 70, pasoTxt: 'Bien: te apoyas en el texto, no en la intuición',
+      protocolo: '<ol class="proto-l"><li><b>Vuelve al texto y busca la línea</b> que sostiene la respuesta correcta. Está ahí; la explicación te dice dónde.</li>' +
+        '<li><b>Pregúntate por qué te convenció la mala.</b> Casi siempre es porque suena verosímil pero el texto no lo dice: eso es exactamente lo que mide el examen.</li>' +
+        '<li><b>Subraya mentalmente esa línea</b> antes de seguir. La próxima vez la reconocerás.</li></ol>'
+    }, function (pct, pass, foot) {
+      rec('read', pass, 'lectura · ' + modo); S.ses++; save();
+      var b = el('<button class="btn sec small">Otro texto</button>');
+      b.onclick = function () { juegoLectura(modo, LEC.textos[Math.floor(Math.random() * LEC.textos.length)].id); };
+      foot.appendChild(b);
+    });
+  }
+
+  // --- 6 · velocidad lectora con control de comprensión ---
+  function modoVelocidad(z, T) {
+    var pal = palabrasDe(T.txt);
+    z.innerHTML = '<div class="note small"><b>Velocidad.</b> Lee el texto entero, de un tirón, <b>sin volver atrás y sin traducir</b>. ' +
+      'Al terminar hay tres preguntas: la velocidad sin comprensión no cuenta. Referencia en lengua extranjera: 120-180 palabras por minuto.</div>' +
+      '<div class="row"><button class="btn" id="lv0">Empezar</button><span class="timer" id="lvt">0:00</span>' +
+      '<span class="dim small">' + pal + ' palabras</span></div><div id="lvzona"></div>';
+    var t0 = 0;
+    document.getElementById('lv0').onclick = function () {
+      var b = this;
+      if (!t0) {
+        t0 = Date.now(); b.textContent = 'He terminado →';
+        document.getElementById('lvzona').innerHTML = panelTexto(T);
+        crono('lvt', t0);
+        return;
+      }
+      pararCrono(); b.disabled = true;
+      var segs = Math.max(1, Math.round((Date.now() - t0) / 1000));
+      var wpm = Math.round(pal / (segs / 60));
+      var ops = shuffle([T.idea[0], T.idea[1], T.idea[2]]);
+      var items = [qMC('¿De qué trata el texto?', ops, ops.indexOf(T.idea[0]), T.idea[3], 'read')];
+      pick(T.infer, Math.min(2, T.infer.length)).forEach(function (l) {
+        var p = l.split('|'), o2 = shuffle([p[1], p[2], p[3]]);
+        items.push(qMC(esc(p[0]), o2, o2.indexOf(p[1]), p[4], 'read'));
+      });
+      items.forEach(function (x) { x.part = 'Control de comprensión'; });
+      var zona = document.getElementById('lvzona');
+      zona.innerHTML = '<div class="metrics">' + metric(wpm, 'palabras/minuto') + metric(segs + ' s', 'tiempo') + metric(pal, 'palabras') + '</div>' +
+        '<p class="small ' + (wpm >= 120 ? 'ok-t' : wpm >= 90 ? 'dim' : 'bad-t') + '">' +
+        (wpm >= 180 ? 'Muy rápido. Comprueba con las preguntas que no has ido tan deprisa como para perder el sentido.'
+          : wpm >= 120 ? 'Velocidad de lector competente en lengua extranjera. A partir de aquí lo que hay que cuidar es la comprensión, no el ritmo.'
+          : wpm >= 90 ? 'Por debajo de lo cómodo. Casi siempre es traducción mental: prueba a leer el mismo texto otra vez sin permitirte decirlo en español.'
+          : 'Muy despacio para comprender bien: a este ritmo no da tiempo a sostener el sentido de la frase mientras llegas al final. La causa casi siempre es volver atrás. Léelo otra vez tapando con el dedo lo ya leído.') + '</p>' +
+        '<div class="note small">Ahora las preguntas, <b>con el texto tapado</b>. Velocidad sin comprensión no vale de nada.</div><div id="lvpreg"></div>';
+      runTest(zona.querySelector('#lvpreg'), items, { min: 67, pasoTxt: 'Comprensión confirmada a ' + wpm + ' palabras por minuto' }, function (pct, pass, foot) {
+        rec('read', pass, 'velocidad lectora'); S.ses++; save();
+        foot.insertAdjacentHTML('beforebegin', '<p class="small ' + (pass ? 'ok-t' : 'bad-t') + '">' +
+          (pass ? 'Velocidad <b>y</b> comprensión. Esa es la marca que hay que repetir en textos cada vez más largos.'
+            : 'Has leído deprisa pero se ha perdido el sentido. Baja el ritmo un veinte por ciento y repite: la velocidad útil es la máxima a la que sigues entendiendo, no la máxima.') + '</p>');
+        var b2 = el('<button class="btn sec small">Otro texto</button>');
+        b2.onclick = function () { juegoLectura('vel', LEC.textos[Math.floor(Math.random() * LEC.textos.length)].id); };
+        foot.appendChild(b2);
+      });
+    };
   }
 }
 

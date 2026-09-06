@@ -369,3 +369,12 @@ li.chk.quiza > b{color:var(--faint)}
 h4.sub{margin:14px 0 4px; font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--faint)}
 .card.fam .errs li{margin:7px 0}
 .card.fam .pmin .par{min-width:200px}
+
+/* comprensión lectora */
+.card.lecc .lect p{margin:0 0 10px; line-height:1.75}
+.card.lecc .lect.en p{font-size:15px}
+.card.lecc.tapado .lect.en{filter:blur(4px); user-select:none}
+details.trad-txt{margin-top:10px; border-top:1px solid var(--line); padding-top:8px}
+details.trad-txt summary{cursor:pointer; font-size:12.5px; color:var(--dim)}
+details.trad-txt .lect p{font-size:13px; color:var(--dim)}
+#lecSel{max-width:100%}

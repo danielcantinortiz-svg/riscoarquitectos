@@ -232,6 +232,11 @@ taller de habla— pasa por **un único gestor**. Antes cada ejercicio creaba su
 navegador solo admite uno activo a la vez, abrir un segundo ejercicio sin cerrar el primero dejaba el micrófono
 peleándose consigo mismo. Ahora hay uno solo, con estas garantías:
 
+- **Un reconocedor nuevo por grabación.** Reutilizar uno solo parecía más limpio y era la causa de un fallo
+  difícil de ver: al abortar el anterior, su `onend` llegaba con retraso y arrancaba la grabación nueva por su
+  cuenta; el arranque legítimo se encontraba entonces el reconocedor ocupado, lanzaba `InvalidStateError` y la
+  grabación moría nada más empezar. Se notaba sobre todo en la prueba oral, porque es donde lo natural es
+  comprobar el micrófono justo antes de grabar.
 - **Parada garantizada.** El botón vuelve siempre al reposo: al parar, al fallar y también cuando otra pantalla
   toma el micrófono. Antes, un error dejaba el botón en «Parar» para siempre.
 - **Sin bucles.** El navegador cierra el reconocimiento en cuanto hay un silencio, así que se rearranca solo;

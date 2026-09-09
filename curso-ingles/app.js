@@ -159,7 +159,20 @@ var MIC = (function () {
 
   function cerrar(texto) {
     var s = ses; ses = null;
+    soltar();
     if (s && s.onFin) s.onFin(texto);
+  }
+  // Cada grabación estrena su propio reconocedor. Reutilizar uno solo parecía
+  // más limpio y era la causa del fallo: al abortar el anterior, su onend
+  // llegaba tarde y arrancaba la grabación nueva por su cuenta; el arranque
+  // legítimo se encontraba entonces el reconocedor ocupado, lanzaba
+  // InvalidStateError y la grabación moría nada más empezar. Se veía sobre
+  // todo en la prueba oral, porque allí es normal probar el micrófono antes.
+  function soltar() {
+    if (!r) return;
+    r.onresult = null; r.onerror = null; r.onend = null;   // que no nos hable ya
+    try { r.abort(); } catch (x) {}
+    r = null;
   }
   function crear() {
     r = new SR();
@@ -193,7 +206,9 @@ var MIC = (function () {
       var ahora = Date.now();
       cortes = (ahora - ultimo < 500) ? cortes + 1 : 0;
       ultimo = ahora;
-      if (cortes > 6) {
+      // Si ya está entrando texto, los cortes son los normales del navegador
+      // ante un silencio y no hay nada que avisar.
+      if (cortes > 6 && !ses.texto) {
         ses.onError && ses.onError('El micrófono se corta nada más empezar. Suele ser el permiso del sistema o que otra aplicación lo tiene ocupado (una videollamada, por ejemplo). Ciérrala y vuelve a intentarlo.', true);
         cerrar(ses.texto); return;
       }
@@ -211,35 +226,34 @@ var MIC = (function () {
       stopAudio();                       // nunca grabar mientras habla el sintetizador
       // Si había otra grabación en marcha se descarta, y se avisa a su pantalla
       // para que su botón vuelva al reposo en vez de quedarse en «Parar».
-      if (ses) { var previa = ses; ses = null; try { r.abort(); } catch (x) {} previa.onCancel && previa.onCancel(); }
-      if (!r) crear();
+      var previa = ses; ses = null;
+      soltar();
+      if (previa) previa.onCancel && previa.onCancel();
+      crear();
       r.lang = (voice && voice.lang) || 'en-GB';
       ses = { texto: '', onParcial: o.onParcial, onFin: o.onFin, onError: o.onError, onCancel: o.onCancel, parando: false, fatal: false };
       cortes = 0; ultimo = 0;
       try { r.start(); }
       catch (x) {
-        // InvalidStateError: el reconocedor anterior seguía vivo. Se aborta y
-        // se reintenta una sola vez.
-        try { r.abort(); } catch (y) {}
-        var mio = ses;
-        setTimeout(function () {
-          if (ses !== mio) return;
-          try { r.start(); } catch (z) { o.onError && o.onError('El micrófono no ha arrancado. Recarga la página y vuelve a intentarlo.', true); cerrar(''); }
-        }, 300);
+        ses = null;
+        soltar();
+        o.onError && o.onError('El micrófono no ha arrancado. Cierra cualquier programa que lo esté usando, recarga la página y vuelve a intentarlo.', true);
+        o.onCancel && o.onCancel();
+        return false;
       }
       return true;
     },
     stop: function () {
       if (!ses) return;
       ses.parando = true;
+      if (!r) { cerrar(ses.texto); return; }
       try { r.stop(); } catch (x) { cerrar(ses.texto); }
     },
     // Al cambiar de pantalla: se corta sin avisar a nadie.
     abort: function () {
-      if (!ses) return;
       var s2 = ses; ses = null;
-      try { r.abort(); } catch (x) {}
-      s2.onCancel && s2.onCancel();
+      soltar();
+      if (s2) s2.onCancel && s2.onCancel();
     }
   };
 })();
@@ -2250,23 +2264,26 @@ function panelMicro(host) {
   }
 
   var btn = document.getElementById('micTest'), res = document.getElementById('micRes');
-  btn.onclick = function () {
-    if (MIC.grabando()) { MIC.stop(); return; }
-    res.innerHTML = '<div class="card flat"><p class="small dim">Habla ahora, en inglés y en voz alta. Por ejemplo: <b class="en">This is a test of my microphone.</b></p>' +
-      '<div class="live en" id="micLive">…</div></div>';
-    var live = document.getElementById('micLive'), t0 = Date.now(), fallo = false, tope;
-    btn.textContent = '■ Parar'; btn.classList.add('rec');
-    tope = setTimeout(function () { MIC.stop(); }, 6000);
-    MIC.start({
-      onCancel: function () { clearTimeout(tope); btn.textContent = 'Probar 6 segundos'; btn.classList.remove('rec'); },
-      onParcial: function (t, suelto) { live.innerHTML = esc(t) + '<span class="dim">' + esc(suelto) + '</span>'; },
-      onError: function (m) {
-        fallo = true;
-        res.innerHTML = '<div class="note small"><b>No ha funcionado.</b> ' + esc(m) + '</div>';
-      },
-      onFin: function (t) {
+  // Con su propio estado: antes preguntaba si el micrófono estaba grabando en
+  // general, así que estando en marcha la prueba oral el botón cortaba esa
+  // grabación en vez de iniciar la comprobación.
+  var t0 = 0, fallo = false, tope = null, live = null;
+  botonGrabar(btn, '■ Parar', 'Probar 6 segundos', {
+    onInicio: function () {
+      fallo = false; t0 = Date.now();
+      res.innerHTML = '<div class="card flat"><p class="small dim">Habla ahora, en inglés y en voz alta. Por ejemplo: <b class="en">This is a test of my microphone.</b></p>' +
+        '<div class="live en" id="micLive">…</div></div>';
+      live = document.getElementById('micLive');
+      tope = setTimeout(function () { MIC.stop(); }, 6000);
+    },
+    onCancel: function () { clearTimeout(tope); },
+    onParcial: function (t, suelto) { if (live) live.innerHTML = esc(t) + '<span class="dim">' + esc(suelto) + '</span>'; },
+    onError: function (m) {
+      fallo = true;
+      res.innerHTML = '<div class="note small"><b>No ha funcionado.</b> ' + esc(m) + '</div>';
+    },
+    onFin: function (t) {
         clearTimeout(tope);
-        btn.textContent = 'Probar 6 segundos'; btn.classList.remove('rec');
         if (fallo) return;
         var pal = toks(norm(t)).length;
         res.innerHTML = pal >= 2
@@ -2276,9 +2293,8 @@ function panelMicro(host) {
           : '<div class="note small"><b>El micrófono se abre, pero no ha entendido nada.</b> Las tres causas por orden de frecuencia: ' +
             'hablaste demasiado bajo o demasiado lejos; el micrófono que usa el sistema no es el que crees; o hablaste en español, ' +
             'y el reconocedor está puesto en inglés. Vuelve a probar diciendo claramente <b class="en">this is a test</b>.</div>';
-      }
-    });
-  };
+    }
+  });
 }
 
 // ---------- vista: taller de expresión oral ----------

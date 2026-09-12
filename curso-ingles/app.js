@@ -839,8 +839,14 @@ function explicaDestrezas() {
      'Ve al <b>Gimnasio</b>: «Ordena la frase» para el orden y «¿Cuál encaja?» para preposiciones y conectores. Y en cada fallo lee la explicación entera: dice por qué la buena es buena y por qué la que elegiste no lo es.'],
     ['Léxico', 'Vocabulario: reconocer una palabra, su contrario, la palabra que falta en una frase. Se alimenta del vocabulario de cada día y de las parejas contrarreloj.',
      'Haz el <b>Repaso</b> todos los días aunque no hagas día nuevo: el sistema de repaso espaciado es lo que convierte una palabra vista en una palabra tuya. Si una palabra aparece en «se te resisten», escríbele un gancho.'],
-    ['Comprensión lectora', 'Leer un texto en inglés y responder sobre él sin traducirlo palabra por palabra. En realidad son seis destrezas distintas: idea principal, buscar un dato, deducir, adivinar vocabulario por contexto, saber a qué se refiere un pronombre y leer a velocidad.',
-     'El <b>Gimnasio</b> tiene ahora una herramienta para cada una de esas seis, con ocho textos graduados de A2 a C1. Si esta barra es tu punto flojo, empieza por «Idea principal» y «Deducir». Y la regla de fondo: traducir mientras lees es lo que hunde esta destreza, así que lee el texto entero y seguido, sin diccionario, antes de mirar ninguna pregunta.'],
+    ['Comprensión lectora', 'Leer un texto en inglés y responder sobre él sin traducirlo palabra por palabra. En realidad son seis destrezas distintas: idea principal, buscar un dato, deducir, adivinar vocabulario por contexto, saber a qué se refiere un pronombre y leer a velocidad.' +
+     '<br><br><b>Cómo se calcula exactamente:</b> es el número de respuestas acertadas dividido entre el número de respuestas dadas, acumulado desde que empezaste, en las preguntas de este tipo: las del <b>bloque de lectura de cada día</b>, las de <b>comprensión del examen de nivel y de los simulacros</b>, y las <b>seis herramientas de comprensión lectora del gimnasio</b>. No es una estimación ni una media ponderada: son tus propias respuestas contadas una a una. Por eso baja al empezar una herramienta nueva y sube sola según practicas. Con menos de ocho respuestas en total el dato aún no es fiable.',
+     'Tienes una herramienta para cada una de las seis, en el <b>Gimnasio</b>, con ocho textos graduados de A2 a C1: ' +
+     '<a href="#gimnasio/lec-idea">Idea principal</a> · <a href="#gimnasio/lec-dato">Buscar el dato</a> · ' +
+     '<a href="#gimnasio/lec-infer">Deducir</a> · <a href="#gimnasio/lec-vocab">Palabra por contexto</a> · ' +
+     '<a href="#gimnasio/lec-ref">¿A qué se refiere?</a> · <a href="#gimnasio/lec-vel">Velocidad lectora</a>.' +
+     '<br><br><b>Plan para subirla, por orden:</b> empieza por <b>Idea principal</b> con los textos de A2 hasta hacerlo en menos de treinta segundos; sigue con <b>Deducir</b>, que es la que más peso tiene en el examen; y deja <b>Velocidad lectora</b> para medirte una vez por semana, no todos los días. ' +
+     'La regla de fondo, la que más sube esta barra: <b>traducir mientras lees es lo que la hunde</b>. Lee el texto entero y seguido, sin diccionario y sin volver atrás, antes de mirar ninguna pregunta; y cada respuesta justifícala señalando la línea exacta que la sostiene. Si no puedes señalarla, no es la respuesta.'],
     ['Comprensión oral', 'Entender el inglés hablado: los dictados, los diálogos del día y las preguntas sobre lo que has escuchado. Es la destreza que más se resiente si solo estudias con los ojos.',
      'Escucha primero a velocidad normal y solo después usa «Más despacio». Repite el mismo diálogo tres días seguidos: la segunda y la tercera vez oyes palabras que la primera no existían para ti. Si va muy por debajo del resto, baja la velocidad en la pestaña Audio y alarga el bloque de escucha.'],
     ['Producción escrita', 'Lo que escribes tú: las traducciones al inglés, los huecos que se rellenan tecleando y el texto del bloque final que se evalúa. Aquí no hay opciones donde elegir, así que mide lo que de verdad sabes producir.',
@@ -888,7 +894,7 @@ function vProgreso() {
   });
   h += '<div class="card"><h3>Aciertos por destreza</h3>' + bars(rows) +
     '<p class="small dim">Es el porcentaje de aciertos acumulado en cada tipo de pregunta desde que empezaste. La destreza más baja es la que decide tu nivel real: un examen de Cambridge no hace media, exige un mínimo en cada parte.</p>' +
-    '<details class="expl"><summary>Qué mide cada una y qué hacer para subirla</summary>' + explicaDestrezas() + '</details></div>';
+    '<details class="expl" id="dExpl"><summary>Qué mide cada una y qué hacer para subirla</summary>' + explicaDestrezas() + '</details></div>';
 
   // oral
   h += '<div class="card"><div class="row between"><h3 style="margin:0">Expresión oral</h3><button class="btn small" id="goOral">Hacer una prueba oral</button></div>';
@@ -1931,7 +1937,7 @@ function vFamilias(arg) {
       x.f.map(function (l) {
         var p = l.split('|');
         return '<tr><td>' + palabraES(p[0]) + '</td>' +
-          '<td class="dim small">' + esc(p[1]) + trEs(p[2]) + '</td>' +
+          '<td class="dim small">' + esc(p[1]) + '</td>' +
           '<td><span class="en vb" data-say="' + esc(p[3]) + '" title="Escuchar la frase">' + esc(p[3]) + '</span> ' + trad(p[3]) + '</td></tr>';
       }).join('') + '</table></div>';
     if (x.ph && x.ph.length) {

@@ -97,9 +97,11 @@ traducción al español» la enciende y la apaga **en todo el curso** a la vez, 
 las partidas de emparejar sigue apareciendo solo al pulsar: si estuviera a la vista, emparejar dejaría de tener
 mérito.
 
-El diccionario de apoyo (`data/es.js`) tiene 457 entradas y cubre por completo el vocabulario del gimnasio
-y de la tabla de derivadas —raíces, derivadas, adjetivos y conectores—, comprobado con un test que falla si
-aparece una palabra sin traducción. Distingue los pares que más se confunden: *boring* es «aburrido (la
+El diccionario de apoyo (`data/es.js`) tiene 615 entradas y cubre por completo el vocabulario del gimnasio
+y de las tablas de derivadas y de familias —raíces, derivadas, las 220 formas de las 51 familias, adjetivos y
+conectores—, comprobado con un test que falla si aparece una palabra sin traducción. La columna «Qué es» de la
+tabla de derivadas está también en español (*adjetivo*, *sustantivo (persona)*, *adverbio*), que es lo que
+necesita quien está aprendiendo justamente esas palabras. Distingue los pares que más se confunden: *boring* es «aburrido (la
 cosa)» y *bored* «aburrido (la persona)»; *economic* es «de la economía» y *economical* «que ahorra».
 Para las frases de ejemplo completas, que un diccionario de palabras sueltas no puede cubrir, se mantiene
 el enlace al traductor.

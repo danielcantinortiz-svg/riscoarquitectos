@@ -590,6 +590,105 @@ function correccion(mio, bueno) {
     '</div>';
 }
 
+// ---------- ítems en inglés generados del propio día ----------
+// El test diario venía con cada vez más español según subía el nivel: en C1
+// dos de cada tres preguntas estaban en castellano. En el examen real de
+// Cambridge no hay una sola palabra de español, así que a partir de B1 las
+// preguntas con apoyo en español se van sustituyendo por estas, construidas
+// con las frases inglesas del propio día.
+var ES_RE = /[áéíóúñ¿¡]|\b(el|la|los|las|un|una|que|de|para|con|es|son|qué|cuál|cuándo|significa|quiere decir|elige|incorrecta|traduce)\b/i;
+function tieneEspanol(t) {
+  if (ES_RE.test(String(t.q || ''))) return true;
+  return (t.o || []).some(function (o) { return ES_RE.test(String(o)); });
+}
+// Cuánto español se tolera en el test de cada nivel. En A1 y A2 el apoyo en
+// la lengua materna ayuda; a partir de B2 estorba, y en C1 no pinta nada.
+var CUPO_ES = { A1: 1, A2: 1, B1: 0.65, B2: 0.25, C1: 0 };
+
+var GRAMATICALES = ['a', 'an', 'the', 'of', 'in', 'on', 'at', 'to', 'for', 'with', 'from', 'by',
+  'that', 'which', 'it', 'there', 'is', 'are', 'was', 'were', 'be', 'been', 'has', 'have', 'had',
+  'do', 'does', 'did', 'not', 'and', 'but', 'so', 'if', 'as', 'than', 'too', 'up', 'out', 'about'];
+var VACIAS = { i: 1, you: 1, he: 1, she: 1, we: 1, they: 1, my: 1, your: 1, this: 1, these: 1, very: 1, please: 1 };
+
+// Frases inglesas del día: los chunks y la parte inglesa del diálogo.
+function frasesDelDia(D) {
+  var v = (D.chunks || []).slice();
+  (D.dial && D.dial.l || []).forEach(function (l) {
+    var p = String(l).split('|');
+    if (p.length >= 2 && p[1]) v.push(p[1]);
+  });
+  return v.filter(function (f) { return String(f).split(/\s+/).length >= 5; });
+}
+
+function itemsIngles(D, L, cuantos) {
+  var frases = frasesDelDia(D), out = [];
+  if (!frases.length) return out;
+  var voc = (D.vocab || []).map(vparts).map(function (x) { return x.w; })
+    .filter(function (w) { return /^[a-z]+$/i.test(w); });
+
+  shuffle(frases).forEach(function (f) {
+    if (out.length >= cuantos) return;
+    var pal = f.replace(/[.!?]$/, '').split(/\s+/);
+    // open cloze: se tapa una palabra gramatical y se escribe
+    var idx = [];
+    pal.forEach(function (w, i) {
+      if (i === 0) return;
+      if (GRAMATICALES.indexOf(w.toLowerCase().replace(/[^a-z']/g, '')) >= 0) idx.push(i);
+    });
+    if (idx.length && out.length < cuantos) {
+      var i0 = idx[Math.floor(Math.random() * idx.length)];
+      var sol = pal[i0].replace(/[^A-Za-z']/g, '');
+      var copia = pal.slice(); copia[i0] = '___';
+      out.push({ t: 'oc', q: copia.join(' '), a: sol, cat: 'cam', part: 'Open cloze · una sola palabra' });
+    }
+    // multiple-choice cloze: se tapa una palabra con contenido y se elige
+    if (out.length < cuantos && voc.length >= 3) {
+      var cand = [];
+      pal.forEach(function (w, i) {
+        var limpio = w.toLowerCase().replace(/[^a-z']/g, '');
+        if (limpio.length < 4) return;
+        if (GRAMATICALES.indexOf(limpio) >= 0 || VACIAS[limpio]) return;
+        cand.push(i);
+      });
+      if (cand.length) {
+        var i1 = cand[Math.floor(Math.random() * cand.length)];
+        var buena = pal[i1].replace(/[^A-Za-z'-]/g, '');
+        // Los señuelos se eligen con la misma terminación que la palabra tapada
+        // siempre que se pueda: un distractor que no encaja ni gramaticalmente
+        // se descarta solo y no mide nada.
+        var fin = (buena.match(/(ing|ed|ly|tion|ment|ness|s)$/i) || [''])[0].toLowerCase();
+        var libres = voc.filter(function (w) { return w.toLowerCase() !== buena.toLowerCase(); });
+        var iguales = fin ? libres.filter(function (w) { return w.toLowerCase().slice(-fin.length) === fin; }) : [];
+        var malas = pick(iguales, 3);
+        if (malas.length < 3) malas = malas.concat(pick(libres.filter(function (w) { return malas.indexOf(w) < 0; }), 3 - malas.length));
+        if (malas.length === 3) {
+          var c2 = pal.slice(); c2[i1] = '___';
+          var ops = shuffle([buena].concat(malas));
+          var q = qMC('Choose the word that fits:<br>' + gapHtml(c2.join(' ')), ops, ops.indexOf(buena),
+            'The full sentence is: <b class="en">' + esc(f) + '</b>', 'lex');
+          q.part = 'Multiple-choice cloze';
+          q.say = f;
+          out.push(q);
+        }
+      }
+    }
+  });
+  return out.slice(0, cuantos);
+}
+
+// Sustituye las preguntas con español por otras en inglés, según el nivel.
+function ajustaNivel(base, D, L) {
+  var cupo = CUPO_ES[L.id];
+  if (cupo === undefined) cupo = 1;
+  var conEs = base.filter(tieneEspanol), sinEs = base.filter(function (t) { return !tieneEspanol(t); });
+  var dejar = Math.round(conEs.length * cupo);
+  var quitar = conEs.length - dejar;
+  if (quitar <= 0) return { items: base, cambiados: 0, total: base.length };
+  var nuevos = itemsIngles(D, L, quitar);
+  var items = sinEs.concat(pick(conEs, dejar), nuevos);
+  return { items: items, cambiados: nuevos.length, total: items.length };
+}
+
 // ---------- examen de nivel con formato Cambridge ----------
 function buildExam(L) {
   var id = L.id;
@@ -3640,7 +3739,10 @@ function vDia(nStr) {
   }
 
   function b7(host, D, n, done) {
-    var base = (D.test || []).map(function (t) { return qMC(t.q, t.o, t.k, t.exp); });
+    // En B1 y por encima, las preguntas con apoyo en español se sustituyen por
+    // ítems en inglés hechos con las frases del propio día. En C1 no queda ninguna.
+    var aj = ajustaNivel(D.test || [], D, L);
+    var base = aj.items.map(function (t) { return t.t ? t : qMC(t.q, t.o, t.k, t.exp); });
     var extra = [qDic(pick(D.chunks, 1)[0])];
     if (D.prod && D.prod.tr) extra.push(qTr(D.prod.tr[0], D.prod.tr[1]));
     var cam = camItems(L.id, 'oc', 1).concat(camItems(L.id, 'wf', 1));
@@ -3654,6 +3756,13 @@ function vDia(nStr) {
     }
     var wrap = el('<div></div>');
     var start = el('<button class="btn">Empezar test · ' + items.length + ' ítems (incluye formato Cambridge) · necesitas 70 %</button>');
+    var soloIngles = CUPO_ES[L.id] === 0;
+    host.appendChild(el('<p class="small dim">Formato de examen del nivel <b>' + L.id + '</b>: ' +
+      (soloIngles ? '<b>todo en inglés</b>, como en el C1 Advanced real. Aquí ya no hay preguntas con apoyo en español.'
+       : CUPO_ES[L.id] < 1 ? 'mayoría de preguntas <b>en inglés</b>. De las que traían apoyo en español solo se conserva ' +
+           (CUPO_ES[L.id] >= 0.6 ? 'dos de cada tres' : 'una de cada cuatro') + '; el resto se sustituye por ítems en inglés.'
+       : 'con apoyo en español, que a este nivel ayuda más de lo que estorba.') +
+      (aj.cambiados ? ' Hoy se han generado <b>' + aj.cambiados + '</b> ítems en inglés con las frases de este día.' : '') + '</p>'));
     host.appendChild(start); host.appendChild(wrap);
     start.onclick = function () {
       start.remove();

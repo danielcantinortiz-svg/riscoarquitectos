@@ -309,6 +309,34 @@ fuera del curso, lo dice y explica en qué orden se arregla.
 Todas se muestran en inglés, con audio al pulsar cualquier palabra y un enlace al traductor de Google
 por si hace falta; en la tabla de verbos el español está detrás de un interruptor, apagado por defecto.
 
+## El nivel Cambridge del contenido diario
+
+Auditado nivel por nivel. La **progresión gramatical y temática sí es de nivel**: A2 trabaja *be going to*,
+viajes y transporte; C1 trabaja el *understatement* británico, la ironía y el registro atenuado. Cada nivel
+tiene 300 palabras de vocabulario, 180 chunks y 240 ítems de test.
+
+Pero la auditoría encontró un defecto real y medible, y **era el contrario de lo que debía**: cuanto más alto
+el nivel, **más español** había en el test diario.
+
+| Nivel | Preguntas con apoyo en español (antes) | Ahora |
+|---|---|---|
+| A2 | 35 % | 35 % (se mantiene: a este nivel ayuda) |
+| B1 | 41 % | 28 % |
+| B2 | 57 % | 17 % |
+| C1 | **67 %** | **0 %** |
+
+En un C1 Advanced real no hay una sola palabra de español. La corrección no reescribe las preguntas a mano:
+sustituye las que llevan apoyo en español por **ítems en inglés generados con las frases del propio día** —los
+chunks y la parte inglesa del diálogo—, en dos formatos de examen:
+
+- **Open cloze**: se tapa una palabra gramatical de una frase del día y se escribe (*It could ___ worse, I
+  suppose* → `be`). Es la Parte 2 del examen.
+- **Multiple-choice cloze**: se tapa una palabra con contenido y se elige entre cuatro, con los señuelos
+  tomados del vocabulario del día y **con la misma terminación** que la palabra correcta siempre que se pueda,
+  porque un distractor que no encaja ni gramaticalmente se descarta solo y no mide nada. Es la Parte 1.
+
+Cada día dice en pantalla qué política de examen le toca a su nivel y cuántos ítems en inglés se han generado.
+
 ## Evaluación
 
 - **Test diario** (12 ítems, dos de ellos con formato Cambridge): **≥ 70 %** para completar el día.

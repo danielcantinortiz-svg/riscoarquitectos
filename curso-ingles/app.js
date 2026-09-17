@@ -404,6 +404,8 @@ function runTest(host, items, opts, done) {
     var q = c.querySelector('#qq');
 
     if (it.t === 'mc') {
+      // La explicación se pinta como HTML: viene de nuestros datos, no de lo
+      // que escribe nadie, y muchas llevan la palabra clave en negrita.
       q.appendChild(el('<div class="qt">' + it.q + '</div>'));
       it.o.forEach(function (o, oi) {
         var b = el('<button class="opt">' + esc(o) + '</button>');
@@ -412,7 +414,7 @@ function runTest(host, items, opts, done) {
           var ok = oi === it.k;
           b.classList.add(ok ? 'ok' : 'bad');
           if (!ok) q.querySelectorAll('.opt')[it.k].classList.add('ok');
-          q.appendChild(el('<div class="fb ' + (ok ? 'ok' : 'bad') + '">' + (ok ? '✔ Correcto.' : '✖ La respuesta es: ' + esc(it.o[it.k])) + (it.exp ? ' <span class="dim">' + esc(it.exp) + '</span>' : '') + '</div>'));
+          q.appendChild(el('<div class="fb ' + (ok ? 'ok' : 'bad') + '">' + (ok ? '✔ Correcto.' : '✖ La respuesta es: ' + esc(it.o[it.k])) + (it.exp ? ' <span class="dim">' + it.exp + '</span>' : '') + '</div>'));
           if (it.say) speak(it.say);   // se oye la frase inglesa resuelta, no la explicación en español
           next(ok, it);
         };
@@ -604,75 +606,261 @@ function buildExam(L) {
 }
 
 // ---------- evaluador de expresión escrita ----------
+// Cada regla trae, además de la explicación, el reemplazo que la corrige
+// cuando la corrección es segura. Así el texto no solo se puntúa: se devuelve
+// corregido y enfrentado al original, que es de donde se aprende.
 var ERRORES = [
-  [/\bi am agree\b/i, 'I am agree → <b>I agree</b>'],
-  [/\bi (have|had) \d+ years\b/i, 'I have X years → <b>I am X (years old)</b>'],
-  [/\b(the )?people (is|was|has)\b/i, 'people is → <b>people are</b>'],
-  [/\b(explain|say|suggest)\s+(me|him|her|us|them)\b/i, 'explain me → <b>explain it to me</b> (say/suggest tampoco llevan persona directa)'],
-  [/\b(informations|advices|furnitures|knowledges|equipments|softwares)\b/i, 'sustantivo incontable en plural → <b>information, advice, furniture…</b>'],
-  [/\bdepend(s|ed)? (of|in)\b/i, 'depend of → <b>depend on</b>'],
-  [/\bsince (\d+|one|two|three|four|five|six|seven|eight|nine|ten|many|several|a few) (years|months|days|weeks|hours)\b/i, 'since + duración → <b>for</b> + duración (since se usa con un punto de partida: since 2019, since Monday)'],
-  [/\b(childs|mans|womans|peoples|feets|toothes|persons and)\b/i, 'plural irregular mal formado → <b>children, men, women, people, feet, teeth</b>'],
-  [/\b(a|an|the) (advice|information|news|furniture|homework)\b/i, 'incontable con artículo indefinido → <b>a piece of advice / some information</b>'],
-  [/\bhave (seen|been|done|gone|made|had|finished|worked|visited|eaten) [^.]*\b(yesterday|last (week|year|month|night)|ago|in \d{4})\b/i, 'present perfect con marcador de pasado cerrado → usa <b>past simple</b>'],
-  [/\bassist(ed)? to\b/i, 'assist to → <b>attend</b>'],
-  [/\bdespite of\b/i, 'despite of → <b>despite</b> / <b>in spite of</b>'],
-  [/\b(more|most) (easy|big|good|bad|cheap|fast|happy|simple|early)\b/i, 'more easy → <b>easier</b> (adjetivo corto: -er / -est)'],
-  [/\bmore better\b/i, 'more better → <b>better</b>'],
-  [/\b(am|is|are|was|were) used to \w+(?<!ing)\b(?! \w+ing)/i, 'be used to + <b>-ing</b> (I am used to work<b>ing</b>)'],
-  [/(^|\. )(Is|Are|Was|Were) (very|a |the |not )/i, 'falta el sujeto: <b>It is…</b> (el inglés nunca omite el sujeto)'],
-  [/\bin the actuality\b|\bactually,? (i|we) (live|work|study)\b/i, '"actually" no es "actualmente" → <b>currently / at the moment</b>'],
-  [/\bfor to \w+/i, 'for to do → <b>to do</b>'],
-  [/\bi\s+(think|believe|hope)\s+that\s+yes\b/i, 'I think that yes → <b>I think so</b>'],
-  [/\bdo(n't| not) know nothing\b|\bdo(n't| not) have nothing\b/i, 'doble negación → <b>do not know anything</b> / <b>know nothing</b>'],
-  [/\bhe\s+(have|do|go|work|live|want|need|make|take|say|think|like|know)\b|\bshe\s+(have|do|go|work|live|want|need|make|take|say|think|like|know)\b/i, 'tercera persona sin -s → <b>he has, she goes, it works…</b>'],
-  [/\bthe next week\b|\bthe last year\b/i, 'the next week → <b>next week</b> (sin artículo)']
+  [/\bi am agree\b/gi, 'I am agree → <b>I agree</b>', 'I agree'],
+  [/\bi (?:have|had) (\d+|one|two|three|four|five|six|seven|eight|nine|ten|twenty|thirty|forty|fifty) years\b/gi, 'I have X years → <b>I am X years old</b>', 'I am $1 years old'],
+  [/\b(the )?people (is|was|has)\b/gi, 'people is → <b>people are</b> (people ya es plural)', null],
+  [/\b(explain|say|suggest)\s+(me|him|her|us|them)\b/gi, 'explain me → <b>explain it to me</b> (say y suggest tampoco llevan la persona directa)', '$1 it to $2'],
+  [/\binformations\b/gi, 'information es incontable: no tiene plural', 'information'],
+  [/\badvices\b/gi, 'advice es incontable: no tiene plural', 'advice'],
+  [/\bfurnitures\b/gi, 'furniture es incontable: no tiene plural', 'furniture'],
+  [/\b(knowledges|equipments|softwares|works of me)\b/gi, 'sustantivo incontable en plural → <b>knowledge, equipment, software</b>', null],
+  [/\bdepend(s|ed)? (of|in)\b/gi, 'depend of → <b>depend on</b>', 'depend$1 on'],
+  [/\bsince (\d+|one|two|three|four|five|six|seven|eight|nine|ten|many|several|a few) (years|months|days|weeks|hours)\b/gi, 'since + duración → <b>for</b> + duración (since se usa con un punto de partida: since 2019, since Monday)', 'for $1 $2'],
+  [/\bchilds\b/gi, 'plural irregular → <b>children</b>', 'children'],
+  [/\bmans\b/gi, 'plural irregular → <b>men</b>', 'men'],
+  [/\bwomans\b/gi, 'plural irregular → <b>women</b>', 'women'],
+  [/\bpeoples\b/gi, 'people ya es plural → <b>people</b>', 'people'],
+  [/\b(a|an) (advice|information|news|furniture|homework)\b/gi, 'incontable con artículo indefinido → <b>a piece of advice</b>, <b>some information</b>', 'some $2'],
+  [/\bassist(ed)? to\b/gi, 'assist to → <b>attend</b> (assist significa ayudar)', 'attend'],
+  [/\bdespite of\b/gi, 'despite of → <b>despite</b> (sin of) o <b>in spite of</b>', 'despite'],
+  [/\bmore (easy|big|cheap|fast|happy|simple|early|small|young|old|high|low)\b/gi, 'adjetivo corto: no lleva more, lleva <b>-er</b>', null],
+  [/\bmore better\b/gi, 'more better → <b>better</b>', 'better'],
+  [/\bmore worse\b/gi, 'more worse → <b>worse</b>', 'worse'],
+  [/\bthe most (easy|big|cheap|fast|happy|simple|early|small|young|old|high|low)\b/gi, 'adjetivo corto: no lleva the most, lleva <b>the -est</b>', null],
+  [/\b(am|is|are|was|were) used to (\w+?)(?!ing)\b(?=\s|[.,;])/gi, 'be used to + <b>-ing</b>: I am used to work<b>ing</b>', null],
+  [/(^|[.!?]\s+)Is\s+(very|a |an |the |not |good|bad|important|possible|difficult|easy)/g, 'falta el sujeto: <b>It is…</b> El inglés nunca omite el sujeto', '$1It is $2'],
+  [/(^|[.!?]\s+)(?:Are|Were|Was|Am)\s+(very|a |an |the |not |good|bad|important|possible|difficult|easy)/g, 'falta el sujeto. El inglés nunca lo omite: <b>It is</b>, <b>They are</b>, <b>There is</b>…', null],
+  [/\bin the actuality\b/gi, 'in the actuality → <b>currently</b> / <b>at the moment</b>', 'currently'],
+  [/\bactually,? (i|we) (live|work|study)\b/gi, '«actually» no es «actualmente»: significa «en realidad» → <b>currently</b>', null],
+  [/\bfor to (\w+)/gi, 'for to do → <b>to do</b>', 'to $1'],
+  [/\bi\s+(think|believe|hope)\s+that\s+yes\b/gi, 'I think that yes → <b>I think so</b>', 'I $1 so'],
+  [/\bdo(?:n't| not) (know|have) nothing\b/gi, 'doble negación → <b>do not know anything</b>', "don't $1 anything"],
+  [/\b(he|she|it)\s+(have)\b/gi, 'tercera persona → <b>$1 has</b>', '$1 has'],
+  [/\b(he|she|it)\s+(do)\b(?!\s+not)/gi, 'tercera persona → <b>$1 does</b>', '$1 does'],
+  [/\b(he|she|it)\s+go\b/gi, 'tercera persona → <b>goes</b> (no «gos»)', '$1 goes'],
+  [/\b(he|she|it)\s+(work|live|want|need|make|take|say|think|like|know|come|look|seem|cost|open|close)\b/gi, 'tercera persona sin -s: el verbo la lleva siempre con he, she e it', '$1 $2s'],
+  [/\bthe next (week|month|year|time)\b/gi, 'the next week → <b>next week</b> (sin artículo)', 'next $1'],
+  [/\bthe last (week|month|year|time|night)\b/gi, 'the last week → <b>last week</b> (sin artículo)', 'last $1'],
+  [/\bhow is called\b/gi, 'how is called → <b>what is it called</b>', 'what is it called'],
+  [/\bi am (agree|boring|afraid of that)\b/gi, 'cuidado: <b>I agree</b>, y <b>I am bored</b> si te aburres tú', null],
+  [/\bin (monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b/gi, 'los días llevan <b>on</b>, no in', 'on $1'],
+  [/\bin the morning of\b/gi, 'una fecha concreta lleva <b>on</b>: on the morning of…', 'on the morning of'],
+  [/\bdifferent of\b/gi, 'different of → <b>different from</b>', 'different from'],
+  [/\bmarried with\b/gi, 'married with → <b>married to</b>', 'married to'],
+  [/\bthink in\b/gi, 'think in → <b>think about</b> / <b>think of</b>', 'think about'],
+  [/\bdiscuss about\b/gi, 'discuss about → <b>discuss</b> (sin preposición)', 'discuss'],
+  [/\benter to\b/gi, 'enter to → <b>enter</b> (sin preposición)', 'enter'],
+  [/\bi am accord\b/gi, 'I am accord → <b>I agree</b>', 'I agree'],
+  [/\bare agree\b/gi, 'are agree → <b>agree</b>', 'agree'],
+  [/\bi'?m going to (\w+ing)\b/gi, 'be going to + <b>infinitivo</b>, no -ing', null],
+  [/\bmake a (photo|party|question|mistake of)\b/gi, 'make a photo → <b>take a photo</b>; make a party → <b>have a party</b>; make a question → <b>ask a question</b>', null],
+  [/\btake a decision\b/gi, 'take a decision → <b>make a decision</b>', 'make a decision'],
+  [/\bdo a mistake\b/gi, 'do a mistake → <b>make a mistake</b>', 'make a mistake'],
+  [/\bsince \d{4} (i|we) (work|live|study)\b/gi, 'con since el verbo va en <b>present perfect</b>: I have worked…', null],
+  [/\bi\b(?=\s)/g, 'el pronombre <b>I</b> va siempre en mayúscula', 'I'],
+  [/\b(can|could|must|should|will|would|may|might)\s+((?:i|you|he|she|we|they|it)\s+)?to\s+(\w+)/gi, 'los verbos modales van con <b>infinitivo sin to</b>: can pay, must go', '$1 $2$3'],
+  [/(^|[.!?]\s+|\n)\s*(is|are|was|were)\s+(very|a |an |the |not |good|bad|important|possible|difficult|easy|expensive|cheap)/gi, 'falta el sujeto. El inglés nunca lo omite: <b>It is…</b>, <b>They are…</b>, <b>There is…</b>', null],
+  [/\bevery days\b/gi, 'every days → <b>every day</b>', 'every day']
 ];
-function evalEscrito(text, D) {
+// Comprueba lo que pide el enunciado cuando trae una cifra: «6 líneas»,
+// «80 palabras». Antes no se miraba, así que un diálogo de dos líneas podía
+// sacar buena nota.
+function pideEnunciado(txt) {
+  var t = String(txt || '');
+  var m = t.match(/(\d+)\s*(l[ií]neas?|frases?|palabras?|intervenciones?)/i);
+  if (!m) return null;
+  var k = m[2].toLowerCase();
+  return { n: parseInt(m[1], 10), que: /palabra/.test(k) ? 'palabras' : /l[ií]nea|intervenc/.test(k) ? 'lineas' : 'frases' };
+}
+
+// Estructuras que separan un texto de A2 de uno de B2: subordinación,
+// pasiva, tiempos perfectos y condicionales. Un texto sin errores pero
+// hecho de frases cortas y sueltas no es C1: es A2 bien escrito.
+var COMPLEJAS = [
+  /\bbecause\b/i, /\balthough\b/i, /\beven though\b/i, /\bthough\b/i, /\bhowever\b/i,
+  /\bwhich\b/i, /\bwhile\b/i, /\bwhereas\b/i, /\bdespite\b/i, /\bin spite of\b/i,
+  /\bunless\b/i, /\bwhether\b/i, /\bso that\b/i, /\bin order to\b/i, /\brather than\b/i,
+  /\bnot only\b/i, /\bas soon as\b/i, /\btherefore\b/i, /\bmoreover\b/i, /\bnevertheless\b/i,
+  /\bas long as\b/i, /\bwould have\b/i, /\bcould have\b/i, /\bhad been\b/i,
+  /\b(have|has|had) (been|worked|done|made|finished|lived|seen|taken|written|built)\b/i,
+  /\b(was|were|is|are|been) (built|made|designed|finished|written|given|sent|used|opened)\b/i,
+  /\bif .{3,40}\b(would|could|might)\b/i
+];
+function nivelPorComplejidad(r) {
+  var t = r.original, usadas = 0;
+  COMPLEJAS.forEach(function (re) { if (re.test(t)) usadas++; });
+  var n = 1;                                   // 1=A2 2=B1 3=B2 4=C1
+  if (r.avg >= 11 && usadas >= 2) n = 2;
+  if (r.avg >= 14 && usadas >= 4 && r.ttr >= 48) n = 3;
+  if (r.avg >= 17 && usadas >= 6 && r.ttr >= 55 && r.words >= 120) n = 4;
+  if (r.words < 30) n = Math.min(n, 1);        // sin texto no hay pruebas
+  else if (r.words < 60) n = Math.min(n, 2);
+  if (r.errs.length >= 5) n = Math.min(n, 1);  // la corrección también manda
+  else if (r.errs.length >= 3) n = Math.min(n, 2);
+  return { n: n, usadas: usadas };
+}
+
+function evalEscrito(text, D, enunciado) {
   var t = String(text || '').trim();
   var words = t ? t.split(/\s+/).length : 0;
-  var sents = t.split(/[.!?]+/).filter(function (s) { return s.trim().length > 2; });
+  var lineas = t.split(/\n+/).filter(function (l) { return l.trim().length > 1; }).length;
+  var sents = t.split(/[.!?]+/).filter(function (x) { return x.trim().length > 2; });
   var avg = sents.length ? Math.round(words / sents.length) : 0;
-  var toks = norm(t).split(' ').filter(Boolean);
-  var uniq = {}; toks.forEach(function (w) { uniq[w] = 1; });
-  var ttr = toks.length ? Math.round(Object.keys(uniq).length / toks.length * 100) : 0;
-  var errs = [];
-  ERRORES.forEach(function (r) { try { if (r[0].test(t)) errs.push(r[1]); } catch (e) {} });
+  var tk = norm(t).split(' ').filter(Boolean);
+  var uniq = {}; tk.forEach(function (w) { uniq[w] = 1; });
+  var ttr = tk.length ? Math.round(Object.keys(uniq).length / tk.length * 100) : 0;
+
+  // errores, con el trozo real del texto y la versión corregida
+  var errs = [], corregido = t;
+  ERRORES.forEach(function (r) {
+    try {
+      r[0].lastIndex = 0;
+      var m = t.match(r[0]);
+      if (!m) return;
+      var frag = m[0].trim();
+      if (!errs.some(function (e) { return e.txt.toLowerCase() === frag.toLowerCase(); }))
+        errs.push({ txt: frag, exp: r[1], auto: !!r[2] });
+      if (r[2]) { r[0].lastIndex = 0; corregido = corregido.replace(r[0], r[2]); }
+    } catch (e) {}
+  });
+
+  // higiene: mayúsculas y punto final
+  var forma = [];
+  if (t && !/^[A-Z"“¿¡-]/.test(t)) forma.push('El texto empieza en minúscula.');
+  if (t && !/[.!?"”]$/.test(t)) forma.push('Falta el punto final.');
+  if (/[a-z]\s*\.\s*[a-z]/.test(t)) forma.push('Hay una frase que empieza en minúscula después de un punto.');
+
+  // lo que pedía el enunciado
+  var pide = enunciado || null, cumplePide = null;
+  if (pide) {
+    var hay = pide.que === 'palabras' ? words : pide.que === 'lineas' ? Math.max(lineas, sents.length) : sents.length;
+    // Quedarse a un pelo no es incumplir: se da por bueno a partir del 90 %.
+    cumplePide = { pedido: pide.n, hay: hay, que: pide.que, ok: hay >= Math.floor(pide.n * 0.9) };
+  }
+
   var lt = t.toLowerCase();
   var chunksUsed = (D && D.chunks || []).filter(function (c) {
     var core = norm(c).split(' ').slice(0, 4).join(' ');
     return core.length > 6 && lt.indexOf(core) >= 0;
   });
   var vocabUsed = (D && D.vocab || []).map(vparts).filter(function (v) { return lt.indexOf(v.w.toLowerCase()) >= 0; });
-  var score = 0;
-  score += Math.min(30, Math.round(words / 90 * 30));          // extensión
-  score += Math.min(20, Math.round(ttr / 60 * 20));            // riqueza léxica
-  score += avg >= 12 && avg <= 24 ? 15 : avg >= 8 ? 9 : 4;     // madurez sintáctica
-  score += Math.min(12, vocabUsed.length * 3);                 // vocabulario del día
-  score += Math.min(8, chunksUsed.length * 4);                 // chunks del día
-  score += errs.length ? -7 * errs.length : 15;                // corrección
-  score = Math.max(0, Math.min(100, score));
-  return { words: words, sents: sents.length, avg: avg, ttr: ttr, errs: errs, chunks: chunksUsed, vocab: vocabUsed, score: score };
+
+  // Los cuatro criterios de Cambridge, cada uno sobre 5, como en el examen real
+  var cont = 5;
+  if (cumplePide && !cumplePide.ok) cont -= cumplePide.hay >= cumplePide.pedido * 0.7 ? 2 : 4;
+  // La extensión solo se penaliza por palabras cuando la tarea no pedía otra
+  // medida: un diálogo de seis líneas puede ser corto y estar perfecto.
+  if (!(cumplePide && cumplePide.ok)) { if (words < 25) cont -= 3; else if (words < 40) cont -= 2; }
+  cont = Math.max(0, Math.min(5, cont));
+
+  var comu = 5;
+  if (words < 30) comu -= 2;
+  if (!chunksUsed.length) comu -= 1;
+  comu = Math.max(0, Math.min(5, comu));
+
+  var org = 5;
+  if (sents.length < 3) org -= 2;
+  if (avg > 28) org -= 2; else if (avg < 6 && sents.length > 2) org -= 1;
+  if (forma.length) org -= Math.min(2, forma.length);
+  org = Math.max(0, Math.min(5, org));
+
+  var leng = 5;
+  leng -= Math.min(4, errs.length);
+  if (ttr < 45 && tk.length > 25) leng -= 1;
+  if (vocabUsed.length >= 3) leng = Math.min(5, leng + 1);
+  // Con menos de veinticinco palabras no hay pruebas suficientes para darle
+  // un sobresaliente en lengua: no cometer errores no es lo mismo que acertar.
+  if (words < 25) leng = Math.min(3, leng);
+  leng = Math.max(0, Math.min(5, leng));
+
+  var crit = [
+    { t: 'Contenido', v: cont, q: 'Si has hecho lo que pedía la tarea y con la extensión pedida.' },
+    { t: 'Logro comunicativo', v: comu, q: 'Si el texto cumple su función y usa el registro y las estructuras del día.' },
+    { t: 'Organización', v: org, q: 'Si está ordenado, con frases de longitud razonable y bien puntuado.' },
+    { t: 'Lenguaje', v: leng, q: 'Corrección gramatical y riqueza de vocabulario.' }
+  ];
+  var score = Math.round((cont + comu + org + leng) / 20 * 100);
+  // En Cambridge el Contenido es eliminatorio: si no has hecho la tarea, no
+  // importa lo bien escrito que esté lo que sí hiciste.
+  if (cont <= 1) score = Math.min(score, 35);
+  else if (cont === 2) score = Math.min(score, 55);
+
+  var base = { words: words, sents: sents.length, lineas: lineas, avg: avg, ttr: ttr,
+               errs: errs, forma: forma, pide: cumplePide, corregido: corregido,
+               original: t, chunks: chunksUsed, vocab: vocabUsed,
+               crit: crit, score: score };
+  // La nota dice lo bien que has hecho ESTA tarea; la banda estima tu nivel,
+  // y para eso no basta con no fallar: hace falta complejidad.
+  var cx = nivelPorComplejidad(base);
+  base.banda = ['A2', 'B1', 'B2', 'C1'][cx.n - 1];
+  base.complejas = cx.usadas;
+  return base;
 }
+
 function escritoHtml(r) {
   var h = '<div class="metrics">' +
     metric(r.words, 'palabras') + metric(r.sents, 'frases') + metric(r.avg, 'palabras/frase') +
     metric(r.ttr + '%', 'riqueza léxica') + metric(r.vocab.length, 'del vocabulario') + metric(r.chunks.length, 'chunks del día') +
     '</div>';
-  h += '<div class="row between" style="margin-top:12px"><b>Puntuación de escritura</b><span class="score sm ' + (r.score >= 70 ? 'ok-t' : r.score >= 50 ? '' : 'bad-t') + '">' + r.score + '</span></div>';
-  h += '<div class="bar"><i style="width:' + r.score + '%"></i></div>';
+
+  h += '<div class="row between" style="margin-top:12px"><b>Puntuación de escritura</b>' +
+    '<span><span class="pill ' + r.banda.toLowerCase() + '">' + r.banda + '</span> ' +
+    '<span class="score sm ' + (r.score >= 70 ? 'ok-t' : r.score >= 50 ? '' : 'bad-t') + '">' + r.score + '</span></span></div>' +
+    '<div class="bar"><i style="width:' + r.score + '%"></i></div>';
+
+  // los cuatro criterios de Cambridge, como en el examen real
+  h += '<h3>Los cuatro criterios de Cambridge</h3><div class="tablewrap"><table>' +
+    '<tr><th>Criterio</th><th>Nota</th><th>Qué valora</th></tr>' +
+    r.crit.map(function (c) {
+      return '<tr><td><b>' + c.t + '</b></td><td class="' + (c.v >= 4 ? 'ok-t' : c.v <= 2 ? 'bad-t' : '') + '">' +
+        c.v + ' / 5</td><td class="dim small">' + c.q + '</td></tr>';
+    }).join('') + '</table></div>' +
+    '<p class="small dim">Es la misma rejilla del <i>Writing</i> de Cambridge: cada criterio se puntúa de 0 a 5 y se suman. ' +
+    'El <b>Contenido</b> es eliminatorio, como en el examen real: si la tarea no está hecha, da igual lo bien escrito que esté el resto.</p>' +
+    '<div class="note small"><b>La nota y la banda miden cosas distintas.</b> La <b>nota</b> dice lo bien que has hecho <i>esta</i> tarea. ' +
+    'La <b>banda</b> (' + r.banda + ') estima tu nivel, y para eso no basta con no cometer errores: hace falta <b>complejidad</b>. ' +
+    'En este texto se han detectado <b>' + r.complejas + '</b> estructuras de nivel —subordinadas, pasiva, tiempos perfectos, condicionales— ' +
+    'con una media de <b>' + r.avg + '</b> palabras por frase. Un texto impecable hecho de frases cortas y sueltas es un A2 bien escrito, no un C1.</div>';
+
+  if (r.pide) {
+    h += '<div class="note small ' + (r.pide.ok ? '' : 'aviso') + '"><b>Lo que pedía la tarea:</b> ' +
+      r.pide.pedido + ' ' + r.pide.que + '. Has escrito <b>' + r.pide.hay + '</b>. ' +
+      (r.pide.ok ? 'Cumplido.' : 'En el examen, no cumplir la extensión pedida es lo que más puntos cuesta, más que un error de gramática.') + '</div>';
+  }
+
   if (r.errs.length) {
-    h += '<h3>Errores detectados (' + r.errs.length + ')</h3><ul class="errs">' + r.errs.map(function (e) { return '<li>' + e + '</li>'; }).join('') + '</ul>';
+    h += '<h3>Correcciones (' + r.errs.length + ')</h3><ul class="errs">' +
+      r.errs.map(function (e) {
+        return '<li>En «<b class="en">' + esc(e.txt) + '</b>»: ' + e.exp +
+          (e.auto ? '' : ' <span class="dim small">· esta la tienes que arreglar tú</span>') + '</li>';
+      }).join('') + '</ul>';
+    if (r.corregido !== r.original) {
+      h += '<div class="corr"><div class="corr-l"><span class="et">Tu texto</span><p class="en">' + esc(r.original) + '</p></div>' +
+        '<div class="corr-l ok"><span class="et">Corregido</span><p class="en">' + esc(r.corregido) + '</p></div>' +
+        '<p class="small dim leyenda">Solo se corrigen automáticamente los errores que tienen una única solución posible. ' +
+        'Los demás aparecen arriba explicados, para que los arregles tú: hacerlo tú es lo que fija la corrección.</p></div>';
+    }
   } else if (r.words > 20) {
     h += '<p class="ok-t small" style="margin-top:10px">✔ Ningún error típico de hispanohablante detectado.</p>';
   }
+
+  if (r.forma.length) {
+    h += '<h3>Presentación</h3><ul class="errs">' + r.forma.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' +
+      '<p class="small dim">Parece menor y no lo es: en el examen escrito la puntuación y las mayúsculas entran en el criterio de Organización.</p>';
+  }
+
   if (r.vocab.length) h += '<p class="small dim">Vocabulario del día usado: ' + r.vocab.map(function (v) { return esc(v.w); }).join(', ') + '</p>';
-  h += '<p class="small dim">El detector cubre los veinte errores fosilizados más frecuentes; no sustituye a una corrección humana.</p>';
+  h += '<p class="small dim">El corrector cubre los cincuenta errores fosilizados más frecuentes del hispanohablante y la rejilla de Cambridge; ' +
+    'no sustituye a una corrección humana, pero sí detecta lo que de verdad te está costando puntos.</p>';
   return h;
 }
-function metric(v, l) { return '<div class="met"><b>' + v + '</b><span>' + l + '</span></div>'; }
 
 // ---------- gráficos (una sola serie · sin color categórico) ----------
+function metric(v, l) { return '<div class="met"><b>' + v + '</b><span>' + l + '</span></div>'; }
 function sparkline(vals, w, h) {
   if (vals.length < 2) return '<p class="small dim">Necesitas al menos dos días completados para ver la evolución.</p>';
   w = w || 640; h = h || 120;
@@ -2303,6 +2491,185 @@ function panelMicro(host) {
   });
 }
 
+// ---------- los 44 fonemas del inglés ----------
+// El inglés tiene 44 sonidos y el español 24. Esta sección los pone todos
+// sobre la mesa, marcados por la dificultad real que tienen para quien habla
+// español, y los entrena con dos ejercicios.
+var FON = window.FONEMAS || { grupos: [], pares: [] };
+
+function todosFonemas() {
+  var v = [];
+  FON.grupos.forEach(function (G) { G.v.forEach(function (x) { v.push(x); }); });
+  return v;
+}
+function pillDif(d) {
+  var t = d === 'alta' ? 'hay que entrenarla' : d === 'media' ? 'se confunde' : 'fácil';
+  return '<span class="pill dif-' + d + '">' + t + '</span>';
+}
+
+function seccionFonemas() {
+  return '<h2 class="sec">0 · El mapa de los 44 sonidos</h2>' +
+    '<div class="card"><p class="dim small">' + FON.intro + '</p>' +
+    profe({
+      porque: '<ol class="proto-l">' + FON.teoria.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ol>',
+      como: '<p>No estudies los 44. Pulsa <b>«Solo los difíciles»</b> y trabaja esos doce, que son los que el español no tiene. ' +
+        'De cada uno: lee qué hace la boca, pulsa el símbolo para oír sus tres palabras seguidas y repítelas en voz alta ' +
+        '<b>inmediatamente después</b> de oírlas. Dos sonidos por sesión, no más.</p>' +
+        '<p>Después, los dos ejercicios: <b>«¿Cuál lleva este sonido?»</b> entrena reconocer la vocal dentro de la palabra, y ' +
+        '<b>«Pares mínimos»</b> entrena distinguirlo de su vecino, que es donde está el malentendido real.</p>',
+      fallo: '<p>Si fallas un sonido una y otra vez, no es falta de práctica: es que <b>todavía no lo oyes</b>. Y lo que no se oye no se puede producir.</p>' +
+        '<ol class="proto-l">' +
+        '<li><b>Vuelve a los pares mínimos de ese sonido</b> y escúchalos sin intentar decirlos, muchas veces seguidas. Solo oído.</li>' +
+        '<li><b>Cuando aciertes ocho de diez a ciegas</b>, y solo entonces, empieza a producirlo.</li>' +
+        '<li><b>Al producirlo, exagera.</b> Un sonido nuevo sale siempre a medias; si apuntas al centro te quedas corta.</li>' +
+        '<li><b>Déjalo reposar.</b> La boca automatiza un movimiento nuevo durmiendo, como en cualquier deporte. Insistir el mismo día no añade nada.</li></ol>',
+      error: '<p>Estudiar los 44 de golpe, o ninguno. Los dos extremos fallan por lo mismo: no distinguen lo que cuesta de lo que no. ' +
+        'Dieciocho de los 44 son prácticamente iguales que en español y no necesitan ni un minuto.</p>'
+    }) +
+    '<div class="row"><button class="btn" id="fonDif">Solo los difíciles (12)</button>' +
+    '<button class="btn sec" id="fonTodo">Ver los 44</button>' +
+    '<button class="btn" data-fon="cual">¿Cuál lleva este sonido?</button>' +
+    '<button class="btn" data-fon="pares">Pares mínimos</button></div>' +
+    '<div id="fonprac"></div><div id="fonlist"></div></div>';
+}
+
+function cablearFonemas() {
+  var soloDif = true;
+  document.getElementById('fonDif').onclick = function () { soloDif = true; pinta(); };
+  document.getElementById('fonTodo').onclick = function () { soloDif = false; pinta(); };
+  app.querySelectorAll('[data-fon]').forEach(function (b) {
+    b.onclick = function () { b.dataset.fon === 'cual' ? juegoCual() : juegoParesFon(); };
+  });
+  pinta();
+
+  function pinta() {
+    var out = FON.grupos.map(function (G) {
+      var v = G.v.filter(function (x) { return !soloDif || x.dif === 'alta'; });
+      if (!v.length) return '';
+      return '<h4 class="sub">' + esc(G.t) + '</h4>' +
+        (soloDif ? '' : '<p class="dim small" style="margin:0 0 8px">' + G.nota + '</p>') +
+        '<div class="tablewrap"><table><tr><th>Sonido</th><th>Ejemplos</th><th>Qué hace la boca · error típico</th></tr>' +
+        v.map(function (x) {
+          return '<tr><td><button class="btn sec small fon" data-say="' + esc(x.ej.join(', ')) + '" title="Oír las palabras">' +
+            esc(x.s) + '</button><br><span class="dim small">' + esc(x.n) + '</span><br>' + pillDif(x.dif) + '</td>' +
+            '<td>' + x.ej.map(function (w) {
+              return '<span class="en vb pal2" data-say="' + esc(w) + '">' + esc(w) + '</span>';
+            }).join(' · ') + '</td>' +
+            '<td class="small">' + x.boca + '<br><span class="dim"><b>Error típico:</b> ' + x.error + '</span></td></tr>';
+        }).join('') + '</table></div>';
+    }).join('');
+    var host = document.getElementById('fonlist');
+    host.innerHTML = '<p class="dim small" style="margin-top:12px">' +
+      (soloDif ? 'Los <b>doce sonidos que el español no tiene</b>. Son los que hay que entrenar; los otros treinta y dos no lo necesitan.'
+               : 'Los <b>44 sonidos</b>, con su dificultad real marcada. Pulsa el símbolo para oír sus palabras seguidas.') + '</p>' + out;
+    host.querySelectorAll('.fon').forEach(function (b) {
+      b.onclick = function () { speakSeq(b.dataset.say.split(', '), 0.85); };
+    });
+    host.querySelectorAll('.pal2').forEach(function (x) { x.onclick = function () { speak(x.dataset.say); }; });
+  }
+
+  // --- ¿cuál lleva este sonido? ---
+  // Se pregunta al revés que antes, y solo con vocales. Preguntar «qué sonido
+  // lleva cat» no tiene una sola respuesta —lleva /k/, /æ/ y /t/—, así que la
+  // pregunta era ambigua. Se pregunta por la vocal, que sí es única en una
+  // palabra de una sílaba, y los señuelos salen de otras vocales.
+  var SINDRILL = { about: 1, teacher: 1, architect: 1, computer: 1, father: 1, idea: 1 };
+  function vocalesDrill() {
+    var v = [];
+    FON.grupos.slice(0, 3).forEach(function (G) {
+      G.v.forEach(function (x) {
+        if (x.s === '/ə/') return;                       // la schwa está en todas las palabras largas
+        var pal = x.ej.filter(function (w) { return !SINDRILL[w]; });
+        if (pal.length >= 2) v.push({ s: x.s, n: x.n, boca: x.boca, ej: pal });
+      });
+    });
+    return v;
+  }
+  function juegoCual() {
+    var voc = vocalesDrill(), pool = [];
+    voc.forEach(function (x) {
+      x.ej.forEach(function (w) {
+        var otros = pick(voc.filter(function (z) { return z.s !== x.s; }), 2);
+        var malas = otros.map(function (z) { return z.ej[Math.floor(Math.random() * z.ej.length)]; });
+        if (malas.indexOf(w) >= 0) return;
+        var ops = shuffle([w].concat(malas));
+        var ancla = x.ej.filter(function (o) { return o !== w; }).slice(0, 2)
+          .map(function (o) { return '<b class="en">' + esc(o) + '</b>'; }).join(' y ');
+        var q = qMC('¿Cuál de estas palabras lleva la vocal <b>' + esc(x.s) + '</b>, la de ' + ancla + '?',
+          ops, ops.indexOf(w),
+          'Es <b class="en">' + esc(w) + '</b>. ' + x.boca, 'list');
+        q.part = 'Fonemas · ' + x.s;
+        q.say = w;
+        pool.push(q);
+      });
+    });
+    var host = document.getElementById('fonprac');
+    host.innerHTML = '';
+    runTest(host, pick(pool, 12), {
+      min: 70, pasoTxt: 'Bien: ya reconoces la vocal dentro de la palabra',
+      protocolo: '<ol class="proto-l"><li><b>Escucha la buena y la que elegiste, una detrás de otra.</b> La diferencia está solo en la vocal; todo lo demás sobra.</li>' +
+        '<li><b>Sube a la ficha de ese sonido</b> y oye sus palabras seguidas: el parecido entre ellas es lo que hay que fijar.</li>' +
+        '<li><b>Dilo en voz alta exagerando.</b> Un sonido nuevo sale siempre a medias; si apuntas al centro te quedas corta.</li></ol>'
+    }, function (pct, pass, foot) {
+      rec('list', pass, 'fonemas · identificar vocal'); S.ses++; save();
+      var b = el('<button class="btn sec small">Otra tanda</button>');
+      b.onclick = juegoCual;
+      foot.appendChild(b);
+    });
+    host.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // --- pares mínimos de todo el inventario ---
+  function juegoParesFon() {
+    var host = document.getElementById('fonprac');
+    var lote = pick(FON.pares, 10), k = 0, ac = 0;
+    paint();
+    function paint() {
+      if (k >= lote.length) {
+        var pct = Math.round(ac / lote.length * 100);
+        rec('list', pct >= 70, 'fonemas · pares mínimos'); S.ses++; save();
+        host.innerHTML = '<div class="card flat"><div class="metrics">' + metric(pct + '%', 'aciertos de oído') +
+          metric(ac + '/' + lote.length, 'pares') + '</div><p class="small ' + (pct >= 70 ? 'dim' : 'bad-t') + '">' +
+          (pct >= 85 ? 'Tu oído separa los sonidos. Ese es el requisito para poder producirlos: ahora ya tiene sentido trabajar la boca.'
+            : pct >= 60 ? 'A medias. Repite esta prueba dos días seguidos <b>sin intentar pronunciar nada</b>: primero el oído, después la boca.'
+            : 'Todavía no los separas al oírlos, y lo que no se oye no se puede decir. Pulsa arriba las palabras de los sonidos difíciles, muchas veces, y vuelve mañana.') +
+          '</p></div>';
+        var b = el('<button class="btn sec small">Otra tanda</button>');
+        b.onclick = juegoParesFon;
+        host.appendChild(b); return;
+      }
+      var p = lote[k].split('|'), cual = Math.random() < 0.5 ? 0 : 1;
+      host.innerHTML = '<div class="card flat"><p class="small dim">Par ' + (k + 1) + ' de ' + lote.length + ' · ' +
+        esc(p[2]) + ' frente a ' + esc(p[3]) + ' · escucha y di cuál es</p>' +
+        '<div class="row"><button class="btn small" id="fo">🔊 Escuchar otra vez</button></div>' +
+        '<div class="opts" id="foo"></div><div id="fofb"></div></div>';
+      speak(p[cual]);
+      host.querySelector('#fo').onclick = function () { speak(p[cual]); };
+      var row = host.querySelector('#foo');
+      [0, 1].forEach(function (j) {
+        var b = el('<button class="opt en">' + esc(p[j]) + '<span class="trad-es">' + esc(traduccion(p[j]) || '') + '</span></button>');
+        b.onclick = function () {
+          row.querySelectorAll('.opt').forEach(function (x) { x.disabled = true; });
+          var bien = j === cual;
+          b.classList.add(bien ? 'ok' : 'bad');
+          if (!bien) row.querySelectorAll('.opt')[cual].classList.add('ok');
+          if (bien) ac++;
+          rec('list', bien, 'par mínimo ' + p[0] + '/' + p[1]);
+          host.querySelector('#fofb').innerHTML = '<div class="fb ' + (bien ? 'ok' : 'bad') + '">' +
+            (bien ? '✔ Era <b class="en">' + esc(p[cual]) + '</b>, con ' + esc(p[cual === 0 ? 2 : 3]) + '.'
+                  : '✖ Era <b class="en">' + esc(p[cual]) + '</b> (' + esc(p[cual === 0 ? 2 : 3]) + '), no <b class="en">' +
+                    esc(p[1 - cual]) + '</b> (' + esc(p[cual === 0 ? 3 : 2]) + '). Vuelve a oírlas seguidas y fíjate solo en ese sonido.') + '</div>';
+          k++;
+          if (bien) { setTimeout(paint, 800); return; }
+          var c = el('<button class="btn small" style="margin-top:8px">Continuar →</button>');
+          c.onclick = paint; host.querySelector('#fofb').appendChild(c);
+        };
+        row.appendChild(b);
+      });
+    }
+  }
+}
+
 // ---------- vista: taller de expresión oral ----------
 // La pestaña «Oral» evalúa; esta enseña. Sonidos uno a uno, repetición con
 // corrección palabra a palabra, ritmo de la frase, lectura cronometrada y
@@ -2388,6 +2755,8 @@ function vHabla(arg) {
     'los sonidos, los pares mínimos y el ritmo funcionan igual. Para los de grabarte necesitas Chrome o Edge de escritorio.</div>';
   h += '<div id="micPanel"></div>';
 
+  h += seccionFonemas();
+
   // 1 · sonidos
   h += '<h2 class="sec">1 · Los sonidos que te delatan</h2>' +
     '<p class="dim small">Diez fichas. En cada una: por qué falla en español, qué hace exactamente la boca, un truco y pares ' +
@@ -2464,6 +2833,7 @@ function vHabla(arg) {
   app.innerHTML = h;
   panelMicro(document.getElementById('micPanel'));
   cablearInterruptor();
+  cablearFonemas();
   app.querySelectorAll('.vb').forEach(function (x) { x.onclick = function () { speak(x.dataset.say); }; });
   app.querySelectorAll('[data-oido]').forEach(function (b) { b.onclick = function () { pruebaOido(b.dataset.oido | 0); }; });
   app.querySelectorAll('[data-rep]').forEach(function (b) {
@@ -2717,7 +3087,16 @@ function vHabla(arg) {
 function vExamenes() {
   var h = '<h1>Exámenes y simulacros</h1>' +
     '<p class="dim">Dos cosas distintas. El <b>examen de nivel</b> son 40 ítems de Use of English para cerrar el mes (apto con 75 %). El <b>simulacro completo</b> reproduce el examen oficial de cada nivel con sus secciones de comprensión lectora larga, listening, writing y speaking.</p>' +
-    '<div class="note small"><b>Aviso importante:</b> el examen oficial de cada nivel es distinto. A2 Key y B1 Preliminary no tienen word formation ni key word transformation; ese trabajo se hace aquí como <b>preparación hacia el B2 First</b>, que sí los incluye. Los simulacros, en cambio, siguen el formato real de cada examen: A2 Key, B1 Preliminary, B2 First y C1 Advanced.</div>';
+    '<div class="note small"><b>Aviso importante:</b> el examen oficial de cada nivel es distinto. A2 Key y B1 Preliminary no tienen word formation ni key word transformation; ese trabajo se hace aquí como <b>preparación hacia el B2 First</b>, que sí los incluye. Los simulacros, en cambio, siguen el formato real de cada examen: A2 Key, B1 Preliminary, B2 First y C1 Advanced.</div>' +
+    '<div class="card"><h3 style="margin-top:0">A qué examen corresponde cada etapa</h3>' +
+    '<div class="tablewrap"><table><tr><th>Etapa del curso</th><th>Nivel MCER</th><th>Examen oficial de Cambridge</th><th>En el curso</th></tr>' +
+    '<tr><td><span class="pill a1">A1</span> Módulo 0 · 30 días</td><td>A1 → umbral de A2</td><td class="dim">Ninguno: Cambridge no examina adultos por debajo del A2</td><td>Examen de módulo, sin simulacro</td></tr>' +
+    '<tr><td><span class="pill a2">A2</span> Mes 1 · días 1-30</td><td>A2</td><td><b>A2 Key</b> (KET)</td><td>Examen de nivel + simulacro completo</td></tr>' +
+    '<tr><td><span class="pill b1">B1</span> Mes 2 · días 31-60</td><td>B1</td><td><b>B1 Preliminary</b> (PET)</td><td>Examen de nivel + simulacro completo</td></tr>' +
+    '<tr><td><span class="pill b2">B2</span> Mes 3 · días 61-90</td><td>B2</td><td><b>B2 First</b> (FCE)</td><td>Examen de nivel + simulacro completo</td></tr>' +
+    '<tr><td><span class="pill c1">C1</span> Mes 4 · días 91-120</td><td>C1</td><td><b>C1 Advanced</b> (CAE)</td><td>Examen de nivel + simulacro completo</td></tr>' +
+    '</table></div>' +
+    '<p class="small dim">Además, el <b>texto que escribes cada día</b> se corrige con la rejilla real del <i>Writing</i> de Cambridge —Contenido, Logro comunicativo, Organización y Lenguaje, cada uno sobre 5— y devuelve una estimación de banda; y la <b>prueba oral</b> la estima a partir de fluidez, densidad léxica y estructuras usadas. Así hay una referencia de nivel en las cuatro destrezas, no solo en el examen de fin de mes.</p></div>';
   ORDEN.forEach(function (li) {
     var L = LEVELS[li];
     var dn = doneDays().filter(function (n) { return n > li * 30 && n <= li * 30 + 30; }).length;
@@ -3207,10 +3586,11 @@ function vDia(nStr) {
     var evb = el('<button class="btn small">Evaluar mi texto</button>');
     var res = el('<div id="wres"></div>');
     evb.onclick = function () {
-      var r = evalEscrito(ta.value, D);
+      var r = evalEscrito(ta.value, D, pideEnunciado(P.escribe));
       if (r.words < 12) { res.innerHTML = '<div class="note">Escribe al menos doce palabras antes de evaluar.</div>'; return; }
       res.innerHTML = '<div class="card flat">' + escritoHtml(r) + '</div>';
-      S.escr.push({ f: hoy(), dia: n, words: r.words, ttr: r.ttr, avg: r.avg, errs: r.errs.length, score: r.score, lista: r.errs });
+      S.escr.push({ f: hoy(), dia: n, words: r.words, ttr: r.ttr, avg: r.avg, errs: r.errs.length, score: r.score,
+                    banda: r.banda, lista: r.errs.map(function (e) { return e.exp; }) });
       rec('prod', r.score >= 60, 'texto escrito día ' + n); save();
     };
     var mb = el('<button class="btn sec small">Ver respuesta modelo</button>');

@@ -194,6 +194,39 @@ El modo profesor de la pestaña nombra los tres fallos típicos y cómo se corri
 verbo donde iba el sustantivo, haber acertado la categoría pero no el sufijo, y haber confundido la cosa con
 la persona.
 
+## Los 44 fonemas · dentro de «Habla»
+
+El inglés tiene **44 sonidos**; el español, **24**. Veinte sonidos que la boca no ha hecho nunca y que el oído,
+de entrada, no distingue: por eso se puede saber mucho vocabulario y aun así no entender una conversación.
+
+El inventario completo, agrupado en vocales cortas, vocales largas, diptongos, consonantes que el español no
+tiene y consonantes fáciles. Cada ficha lleva el símbolo, tres o cuatro palabras de ejemplo que suenan
+seguidas al pulsarlo, qué hace exactamente la boca, el error típico y —lo que de verdad ordena el trabajo— la
+**dificultad real para un hispanohablante**: 12 de dificultad alta, 14 media y 18 que prácticamente coinciden
+con el español y no necesitan ni un minuto. El botón **«Solo los difíciles»** deja los doce que importan.
+
+Dos ejercicios: **¿Cuál lleva este sonido?** (tres palabras, hay que decir cuál lleva la vocal indicada;
+se pregunta por la vocal porque es el único sonido que una palabra de una sílaba tiene una sola vez) y
+**Pares mínimos**, con 39 pares de todo el inventario y el nombre de los dos fonemas en juego.
+
+## Corrección de la escritura con la rejilla de Cambridge
+
+El texto del bloque de escritura ya no se puntúa con una heurística: se corrige con los **cuatro criterios
+reales del *Writing* de Cambridge** —Contenido, Logro comunicativo, Organización y Lenguaje, cada uno sobre 5—
+y el **Contenido es eliminatorio**, como en el examen: una tarea sin hacer no se salva por estar bien escrita.
+
+- **Comprueba lo que pedía el enunciado.** Si la tarea dice «un diálogo de 6 líneas» o «unas 80 palabras», lo
+  cuenta y lo dice. Antes no se miraba, así que un diálogo de dos líneas podía sacar buena nota.
+- **Corrige de verdad.** Cincuenta reglas con el error típico del hispanohablante, cada una con el **fragmento
+  real del texto** y, cuando la corrección es inequívoca, el reemplazo aplicado: al final se muestran el texto
+  original y el corregido enfrentados. Lo que no tiene una única solución posible se explica y se deja para
+  que lo arregle ella, que es lo que fija la corrección.
+- **Revisa la presentación**: mayúscula inicial, punto final, minúscula después de punto, el pronombre *I*.
+- **Separa la nota de la banda.** La nota dice lo bien hecha que está *esta* tarea; la banda estima el nivel, y
+  para eso no basta con no fallar: se miden **estructuras de nivel** (subordinación, pasiva, tiempos perfectos,
+  condicionales) y la longitud media de frase. Un texto impecable hecho de frases cortas es un A2 bien escrito,
+  no un C1.
+
 ## Taller de expresión oral · pestaña «Habla»
 
 La pestaña **Oral** mide; la pestaña **Habla** enseña. La premisa: un hispanohablante adulto no falla en

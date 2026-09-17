@@ -378,3 +378,10 @@ details.trad-txt{margin-top:10px; border-top:1px solid var(--line); padding-top:
 details.trad-txt summary{cursor:pointer; font-size:12.5px; color:var(--dim)}
 details.trad-txt .lect p{font-size:13px; color:var(--dim)}
 #lecSel{max-width:100%}
+
+/* los 44 fonemas */
+button.fon{font:600 15px/1.2 var(--mono); padding:6px 10px}
+.pill.dif-alta{background:#fdeceb; color:#a5352b}
+.pill.dif-media{background:#fdf3e3; color:#8a5a12}
+.pill.dif-baja{background:#eaf5ee; color:#1f7a4d}
+.opt .trad-es{font-size:11.5px}

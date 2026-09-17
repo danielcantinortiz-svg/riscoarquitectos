@@ -27,3 +27,10 @@
 
 ---
 <sub>Estudio de arquitectura · Zaragoza · Aragón · España</sub>
+
+---
+
+## 🎧 Curso de inglés · desde cero a C1
+
+Aplicación de aprendizaje de inglés en 150 días (Módulo 0 desde cero + A2 → C1), con audio, mnemotecnia, evaluación oral y escrita y exámenes con formato Cambridge:
+**[English Immersion · Módulo 0 + A2 → C1](curso-ingles/)**

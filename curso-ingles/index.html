@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>English Immersion · Módulo 0 + A2 → C1 · 150 días</title>
+<meta name="description" content="Curso de inglés desde cero hasta C1: Módulo 0 (A0→A1+) y el itinerario A2→C1. Adquisición natural, audio, evaluación oral y escrita y tests con formato Cambridge. Un nivel por mes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="logo">EN</span> English Immersion <b>0 → C1</b></div>
+  <nav>
+    <button data-go="home" class="tab">Panel</button>
+    <button data-go="plan" class="tab">Método</button>
+    <button data-go="repaso" class="tab">Repaso</button>
+    <button data-go="progreso" class="tab">Progreso</button>
+    <button data-go="habla" class="tab">Habla</button>
+    <button data-go="oral" class="tab">Oral</button>
+    <button data-go="gimnasio" class="tab">Gimnasio</button>
+    <button data-go="frases" class="tab">Frases</button>
+    <button data-go="familias" class="tab">Familias</button>
+    <button data-go="derivadas" class="tab">Derivadas</button>
+    <button data-go="verbos" class="tab">Verbos</button>
+    <button data-go="examenes" class="tab">Exámenes</button>
+    <button id="cfgBtn" class="tab ghost">Audio</button>
+  </nav>
+</header>
+
+<div id="cfg" class="cfg hidden">
+  <label>Voz <select id="voiceSel"></select></label>
+  <label>Velocidad <input id="rate" type="range" min="0.5" max="1.2" step="0.05" value="0.95"><span id="rateV">0.95</span></label>
+  <label><input id="autoplay" type="checkbox" checked> Reproducir automáticamente</label>
+  <button id="testVoice" class="btn small">Probar voz</button>
+</div>
+
+<main id="app"></main>
+
+<footer class="foot">
+  <span>Progreso guardado en este navegador.</span>
+  <button id="exportBtn" class="link">Trasladar progreso a otra dirección</button>
+  <button id="importBtn" class="link hidden">Importar</button>
+  <button id="resetBtn" class="link danger">Reiniciar</button>
+</footer>
+
+<script src="data/curso.js"></script>
+<script src="data/a1.js"></script>
+<script src="data/a2.js"></script>
+<script src="data/b1.js"></script>
+<script src="data/b2.js"></script>
+<script src="data/c1.js"></script>
+<script src="data/cambridge.js"></script>
+<script src="data/anexos.js"></script>
+<script src="data/simulacro.js"></script>
+<script src="data/verbos.js"></script>
+<script src="data/derivadas.js"></script>
+<script src="data/frases.js"></script>
+<script src="data/habla.js"></script>
+<script src="data/familias.js"></script>
+<script src="data/lectura.js"></script>
+<script src="data/fonemas.js"></script>
+<script src="data/gimnasio.js"></script>
+<script src="data/es.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

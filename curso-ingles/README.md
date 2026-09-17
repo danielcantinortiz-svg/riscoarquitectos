@@ -306,6 +306,12 @@ fuera del curso, lo dice y explica en qué orden se arregla.
   caros: *«that's an interesting idea»* es un no, y *«I hear what you say»* cierra la discusión.
   Trae 30 huecos propios con las trampas UK / US y alimenta las parejas contrarreloj del gimnasio.
 
+**Todas las palabras inglesas suenan.** En la tabla de derivadas, la **raíz** (`RELAX`, `BORE`) no se podía
+pulsar: era la única palabra inglesa de esa pantalla sin audio. Lo mismo pasaba con el **pasado** y el
+**participio** de la tabla de verbos, que solo sonaban dentro de las tres formas seguidas. Ahora las 219
+raíces y las 218 celdas de pasado y participio se oyen sueltas al pulsarlas, y las raíces se pronuncian como
+palabras aunque estén escritas en mayúsculas.
+
 Todas se muestran en inglés, con audio al pulsar cualquier palabra y un enlace al traductor de Google
 por si hace falta; en la tabla de verbos el español está detrás de un interruptor, apagado por defecto.
 

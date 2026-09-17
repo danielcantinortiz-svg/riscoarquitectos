@@ -2034,7 +2034,10 @@ function vDerivadas() {
         (f ? '' : '<p class="dim small">' + G.nota + '</p>') +
         '<div class="tablewrap"><table><tr><th>Raíz</th><th>Palabra derivada</th><th>Qué es</th><th>Ejemplo</th></tr>' +
         filas.map(function (p) {
-          return '<tr><td><span class="mono">' + esc(p[0]) + '</span>' + trEs(traduccion(p[0])) + '</td>' +
+          // La raíz también se puede oír: era la única palabra inglesa de la
+          // tabla que no sonaba al pulsarla.
+          return '<tr><td><b class="en vb pal mono" data-say="' + esc(p[0]) + '" title="Pulsa para oír la raíz">' +
+            esc(p[0]) + '</b>' + trEs(traduccion(p[0])) + '</td>' +
             '<td>' + palabraES(p[1]) + '</td>' +
             '<td class="dim small">' + esc(p[2]) + '</td>' +
             '<td><span class="en vb" data-say="' + esc(p[3]) + '" title="Escuchar la frase">' + esc(p[3]) + '</span> ' + trad(p[3]) + '</td></tr>';
@@ -2391,7 +2394,10 @@ function vVerbos(filtroInicial) {
           return '<tr>' +
             '<td><b class="en vb" data-say="' + esc(p[0] + ', ' + p[2] + ', ' + p[3]) + '" title="Escuchar las tres formas">' + esc(p[0]) + '</b> ' + trad(p[0]) +
             (verEs ? '<br><span class="dim small">' + esc(p[1]) + '</span>' : '') + '</td>' +
-            '<td class="en">' + esc(p[2]) + '</td><td class="en">' + esc(p[3]) + '</td>' +
+            // El pasado y el participio también suenan: eran las otras dos
+            // palabras inglesas del curso que no se podían escuchar sueltas.
+            '<td><b class="en vb pal" data-say="' + esc(p[2]) + '" title="Escuchar el pasado">' + esc(p[2]) + '</b></td>' +
+            '<td><b class="en vb pal" data-say="' + esc(p[3]) + '" title="Escuchar el participio">' + esc(p[3]) + '</b></td>' +
             '<td><span class="en vb" data-say="' + esc(p[4]) + '" title="Escuchar la frase">' + esc(p[4]) + '</span> ' + trad(p[4]) +
             (verEs ? '<br><span class="dim small">' + esc(p[5]) + '</span>' : '') + '</td></tr>';
         }).join('') + '</table></div></div>';

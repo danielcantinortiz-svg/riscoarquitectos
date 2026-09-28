@@ -26,15 +26,16 @@
 
 > **Criterio de precios:** tarifa mínima de arquitecto colegiado (trabajo firmado y visado por arquitecta), por encima de la media de portales (Certicalia Zaragoza: 350 € mínimo · 880 € medio · 3.000 € máximo). Justificación en la página: arquitecta colegiada que firma y tramita, estudio de viabilidad previo, presupuesto cerrado, respuesta a requerimientos incluida. Honorarios «desde», sin IVA (21 %), sin tasas, ICIO ni visado.
 >
-> | Servicio | Precio web (desde, sin IVA) |
+> | Servicio | Precio web (siempre «desde», sin IVA) |
 > |---|---|
-> | Estudio de viabilidad (descontable) | **500 €** |
-> | Certificado de antigüedad | **980 €** |
-> | Obra menor | **1.500 €** |
-> | Cerramiento de terraza (proyecto de fachada) | **3.800 €** |
-> | Ampliación / ático | **4.800 €** |
-> | Local a vivienda | **5.800 €** |
-> | Casa de campo / vivienda completa | **9.000 €** |
+> | Estudio de viabilidad (descontable) | **desde 500 €** |
+> | Certificado de antigüedad | **desde 980 €** |
+> | Obra menor | **desde 1.500 €** |
+> | Cerramiento de terraza (proyecto de fachada) | **desde 3.800 €** |
+> | Ampliación / ático | **desde 4.800 €** |
+> | Local a vivienda | **desde 5.800 €** |
+> | Nave / almacén | **desde 6.500 €** |
+> | Casa de campo / vivienda completa | **desde 9.000 €** |
 
 ---
 
@@ -53,6 +54,7 @@
 | Ampliación / ático / buhardilla | Proyecto de legalización visado + certificado estructural | **desde 4.800 €** + IVA |
 | Casa de campo / vivienda completa | Proyecto completo de legalización | **desde 9.000 €** + IVA |
 | Local a vivienda (ya ejecutado) | Proyecto de cambio de uso + legalización | **desde 5.800 €** + IVA |
+| Nave / almacén | Proyecto de legalización + justificación de uso | **desde 6.500 €** + IVA |
 | Certificado de antigüedad | Certificado técnico para notaría/Registro | **desde 980 €** + IVA |
 
 **Referencia de mercado:** Certicalia publica para Zaragoza honorarios de **350 € (mínimo), 880 € (media) y 3.000 € (máximo)** para «legalizar obras sin licencia». Ojo: esos precios suelen cubrir solo la documentación técnica básica. Los nuestros incluyen estudio previo, proyecto firmado por arquitecta colegiada, tramitación y respuesta a los requerimientos del Ayuntamiento hasta la resolución.
@@ -91,13 +93,13 @@ En otros municipios (Cuarte, Utebo, Cadrete, María de Huerva…) se aplican **s
 ## 5. Cómo te damos precio cerrado
 
 1. Nos mandas fotos, dirección y qué se hizo (WhatsApp 651 19 05 88).
-2. Hacemos el **estudio de viabilidad** (**500 € + IVA**, que te descontamos si nos encargas la legalización).
+2. Hacemos el **estudio de viabilidad** (**desde 500 € + IVA**, que te descontamos si nos encargas la legalización).
 3. Te damos **presupuesto cerrado** con honorarios + estimación de tasas e ICIO.
 
 ## Preguntas frecuentes
 
 ### ¿Cuánto cobra un arquitecto por legalizar una obra en Zaragoza?
-Depende del tipo de obra y de si requiere proyecto visado. En Risco Arquitectos los honorarios van desde 1.500 € + IVA en obras menores, 3.800 € en cerramientos de terraza y 4.800 € en ampliaciones, hasta 9.000 € + IVA en viviendas completas, sin incluir tasas ni ICIO.
+Depende del tipo de obra y de si requiere proyecto visado. En Risco Arquitectos los honorarios son: obras menores desde 1.500 €, cerramientos de terraza desde 3.800 €, ampliaciones desde 4.800 € y viviendas completas desde 9.000 € (+ IVA), sin incluir tasas ni ICIO.
 
 ### ¿Hay que pagar el ICIO si la obra ya está hecha?
 Sí. Al legalizar se devengan la tasa urbanística y el ICIO igual que si se hubiera pedido la licencia antes de construir.

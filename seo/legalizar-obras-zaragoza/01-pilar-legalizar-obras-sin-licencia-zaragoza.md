@@ -112,11 +112,11 @@ El coste total tiene tres partes:
 
 | Concepto | Qué es | Orientación |
 |---|---|---|
-| **Honorarios técnicos** | Estudio, proyecto, visado, tramitación | **Desde 1.500 €** (obra menor) · **3.800 €** (terraza) · **4.800 €** (ampliación) · **5.800 €** (local a vivienda) · **9.000 €** (vivienda completa) · + IVA |
+| **Honorarios técnicos** | Estudio, proyecto, visado, tramitación | Obra menor **desde 1.500 €** · terraza **desde 3.800 €** · ampliación **desde 4.800 €** · local a vivienda **desde 5.800 €** · vivienda completa **desde 9.000 €** (+ IVA) |
 | **Tasas e ICIO** | Tasa urbanística + impuesto sobre construcciones, calculados sobre el presupuesto de la obra | Porcentaje del presupuesto de ejecución material |
 | **Posible sanción** | Solo si hay expediente sancionador | Leve 600-6.000 € · grave 6.000-60.000 € |
 
-El **estudio de viabilidad** cuesta **500 € + IVA** y te lo descontamos si nos encargas la legalización. **Te damos presupuesto cerrado tras el estudio.**
+El **estudio de viabilidad** cuesta **desde 500 € + IVA** y te lo descontamos si nos encargas la legalización. **Te damos presupuesto cerrado tras el estudio.**
 
 → Desglose con ejemplos: [¿Cuánto cuesta legalizar una obra en Zaragoza?](/cuanto-cuesta-legalizar-obra-zaragoza/)
 

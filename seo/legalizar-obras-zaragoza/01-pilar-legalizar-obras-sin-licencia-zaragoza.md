@@ -112,11 +112,11 @@ El coste total tiene tres partes:
 
 | Concepto | Qué es | Orientación |
 |---|---|---|
-| **Honorarios técnicos** | Estudio, proyecto, visado, tramitación | Desde unos cientos de euros en obras pequeñas hasta varios miles en ampliaciones o viviendas completas |
+| **Honorarios técnicos** | Estudio, proyecto, visado, tramitación | **Desde 420 €** (obra menor) · **1.080 €** (terraza) · **1.440 €** (ampliación) · **1.800 €** (local a vivienda) · **3.000 €** (vivienda completa) · + IVA |
 | **Tasas e ICIO** | Tasa urbanística + impuesto sobre construcciones, calculados sobre el presupuesto de la obra | Porcentaje del presupuesto de ejecución material |
 | **Posible sanción** | Solo si hay expediente sancionador | Leve 600-6.000 € · grave 6.000-60.000 € |
 
-Como referencia de mercado, Certicalia publica para Zaragoza un rango de **350 € a 3.000 €** de honorarios (media ~880 €). **Te damos presupuesto cerrado tras el estudio de viabilidad.**
+El **estudio de viabilidad** cuesta **150 € + IVA** y te lo descontamos si nos encargas la legalización. **Te damos presupuesto cerrado tras el estudio.**
 
 → Desglose con ejemplos: [¿Cuánto cuesta legalizar una obra en Zaragoza?](/cuanto-cuesta-legalizar-obra-zaragoza/)
 

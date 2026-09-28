@@ -24,7 +24,17 @@
 **Slug:** `cuanto-cuesta-legalizar-obra-zaragoza`
 **H1:** ¿Cuánto cuesta legalizar una obra en Zaragoza?
 
-> ⚠️ **Antes de publicar:** rellenar los campos `[DESDE X €]` con los honorarios reales de Risco Arquitectos. No publicar cifras que el estudio no vaya a respetar.
+> **Criterio de precios:** precio base de mercado en Zaragoza (referencia Certicalia: 350 € mínimo · 880 € medio · 3.000 € máximo, y precio medio de cerramiento de terraza ~900 €) **+20 %**. Honorarios «desde», sin IVA (21 %), sin tasas, ICIO ni visado.
+>
+> | Servicio | Base mercado | +20 % (precio web) |
+> |---|---|---|
+> | Estudio de viabilidad | 125 € | **150 €** |
+> | Certificado de antigüedad | 250 € | **300 €** |
+> | Obra menor | 350 € | **420 €** |
+> | Cerramiento de terraza (proyecto de fachada) | 900 € | **1.080 €** |
+> | Ampliación / ático | 1.200 € | **1.440 €** |
+> | Local a vivienda | 1.500 € | **1.800 €** |
+> | Casa de campo / vivienda completa | 2.500 € | **3.000 €** |
 
 ---
 
@@ -36,14 +46,14 @@
 
 ## 1. Honorarios del arquitecto
 
-| Tipo de obra | Documentación | Honorarios Risco |
+| Tipo de obra | Documentación | Honorarios Risco (sin IVA) |
 |---|---|---|
-| Obra menor (porche ligero, pérgola, reforma interior sin estructura) | Memoria técnica + planos | `[DESDE X €]` |
-| Cerramiento de terraza (edificio en Zaragoza) | Proyecto de fachada + acuerdo de comunidad | `[DESDE X €]` (se reparte entre vecinos si se hace conjunto) |
-| Ampliación / ático / buhardilla | Proyecto de legalización visado + certificado estructural | `[DESDE X €]` |
-| Casa de campo / vivienda completa | Proyecto completo de legalización | `[DESDE X €]` |
-| Local a vivienda (ya ejecutado) | Proyecto de cambio de uso + legalización | `[DESDE X €]` |
-| Certificado de antigüedad | Certificado técnico para notaría/Registro | `[DESDE X €]` |
+| Obra menor (porche ligero, pérgola, reforma interior sin estructura) | Memoria técnica + planos | **desde 420 €** + IVA |
+| Cerramiento de terraza (edificio en Zaragoza) | Proyecto de fachada + acuerdo de comunidad | **desde 1.080 €** + IVA (se reparte entre vecinos si se hace conjunto) |
+| Ampliación / ático / buhardilla | Proyecto de legalización visado + certificado estructural | **desde 1.440 €** + IVA |
+| Casa de campo / vivienda completa | Proyecto completo de legalización | **desde 3.000 €** + IVA |
+| Local a vivienda (ya ejecutado) | Proyecto de cambio de uso + legalización | **desde 1.800 €** + IVA |
+| Certificado de antigüedad | Certificado técnico para notaría/Registro | **desde 300 €** + IVA |
 
 **Referencia de mercado:** Certicalia publica para Zaragoza honorarios de **350 € (mínimo), 880 € (media) y 3.000 € (máximo)** para «legalizar obras sin licencia». Ojo: esos precios suelen cubrir solo la documentación técnica básica; comprueba si incluyen visado y tramitación.
 
@@ -81,13 +91,13 @@ En otros municipios (Cuarte, Utebo, Cadrete, María de Huerva…) se aplican **s
 ## 5. Cómo te damos precio cerrado
 
 1. Nos mandas fotos, dirección y qué se hizo (WhatsApp 651 19 05 88).
-2. Hacemos el **estudio de viabilidad** `[precio / descontable]`.
+2. Hacemos el **estudio de viabilidad** (**150 € + IVA**, que te descontamos si nos encargas la legalización).
 3. Te damos **presupuesto cerrado** con honorarios + estimación de tasas e ICIO.
 
 ## Preguntas frecuentes
 
 ### ¿Cuánto cobra un arquitecto por legalizar una obra en Zaragoza?
-Depende del tipo de obra y de si requiere proyecto visado. Como referencia, el mercado en Zaragoza va de unos 350 € en obras menores a 3.000 € o más en ampliaciones o viviendas completas, sin incluir tasas ni ICIO.
+Depende del tipo de obra y de si requiere proyecto visado. En Risco Arquitectos los honorarios van desde 420 € + IVA en obras menores, 1.080 € en cerramientos de terraza y 1.440 € en ampliaciones, hasta 3.000 € + IVA en viviendas completas, sin incluir tasas ni ICIO.
 
 ### ¿Hay que pagar el ICIO si la obra ya está hecha?
 Sí. Al legalizar se devengan la tasa urbanística y el ICIO igual que si se hubiera pedido la licencia antes de construir.

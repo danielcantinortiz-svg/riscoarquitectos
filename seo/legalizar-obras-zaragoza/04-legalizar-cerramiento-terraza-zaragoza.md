@@ -70,7 +70,7 @@ Sin el acuerdo de la comunidad no se puede obtener la licencia. Si el cerramient
 
 ## Cuánto cuesta
 
-- **Proyecto de fachada** (repartible entre vecinos): `[DESDE X €]`.
+- **Proyecto de fachada** (repartible entre vecinos): **desde 1.080 € + IVA**.
 - **Tasa urbanística e ICIO** sobre el presupuesto de los cerramientos.
 - El precio medio nacional para legalizar un cerramiento de terraza ronda los 900 € (rango 300-2.000 €) según portales especializados; en Zaragoza el reparto comunitario suele abaratarlo por vecino.
 

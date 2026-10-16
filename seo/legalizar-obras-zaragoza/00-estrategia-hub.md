@@ -128,14 +128,14 @@ Ayuntamiento de Zaragoza · Gerencia de Urbanismo (Edificio Seminario, Vía Hisp
 | 2 | `/obras-sin-licencia-prescripcion-aragon/` | Guía | prescripción obras sin licencia aragón | Info → comercial | **CRITICAL** | ✅ Borrador completo (`02-…md`) |
 | 3 | `/cuanto-cuesta-legalizar-obra-zaragoza/` | Guía precio | cuánto cuesta legalizar una obra zaragoza | Comercial | **CRITICAL** | ✅ Borrador completo (`03-…md`) |
 | 4 | `/legalizar-cerramiento-terraza-zaragoza/` | Servicio | legalizar cerramiento terraza zaragoza | Transaccional | HIGH | ✅ Borrador completo (`04-…md`) |
-| 5 | `/carta-ayuntamiento-obra-sin-licencia-zaragoza/` | Guía urgente | carta ayuntamiento obra sin licencia | Transaccional urgente | HIGH | Brief (§6) |
-| 6 | `/certificado-antiguedad-zaragoza/` | Servicio | certificado de antigüedad zaragoza | Transaccional | HIGH | Brief (§6) |
-| 7 | `/legalizar-ampliacion-vivienda-zaragoza/` | Servicio | legalizar ampliación vivienda zaragoza | Transaccional | HIGH | Brief (§6) |
-| 8 | `/legalizar-casa-de-campo-zaragoza/` | Servicio | legalizar casa de campo / suelo no urbanizable | Transaccional | HIGH | Brief (§6) |
-| 9 | `/vender-casa-con-obras-sin-licencia/` | Guía | vender casa con obras sin licencia | Info → comercial | MEDIUM | Brief (§6) |
-| 10 | `/legalizar-piscina-porche-zaragoza/` | Servicio | legalizar piscina / porche zaragoza | Transaccional | MEDIUM | Brief (§6) |
-| 11 | `/legalizar-nave-zaragoza/` | Servicio | legalizar nave almacén zaragoza | Transaccional | MEDIUM | Brief (§6) |
-| 12-18 | `/legalizar-obras-[municipio]/` | Local | legalizar obra + municipio | Transaccional local | MEDIUM | Plantilla (`05-plantilla-municipio.md`) |
+| 5 | `/carta-ayuntamiento-obra-sin-licencia-zaragoza/` | Guía urgente | carta ayuntamiento obra sin licencia | Transaccional urgente | HIGH | ✅ Borrador completo (`07-…md`) |
+| 6 | `/certificado-antiguedad-zaragoza/` | Servicio | certificado de antigüedad zaragoza | Transaccional | HIGH | ✅ Borrador completo (`08-…md`) |
+| 7 | `/legalizar-ampliacion-vivienda-zaragoza/` | Servicio | legalizar ampliación vivienda zaragoza | Transaccional | HIGH | ✅ Borrador completo (`09-…md`) |
+| 8 | `/legalizar-casa-de-campo-zaragoza/` | Servicio | legalizar casa de campo / suelo no urbanizable | Transaccional | HIGH | ✅ Borrador completo (`10-…md`) |
+| 9 | `/vender-casa-con-obras-sin-licencia/` | Guía | vender casa con obras sin licencia | Info → comercial | MEDIUM | ✅ Borrador completo (`11-…md`) |
+| 10 | `/legalizar-piscina-porche-zaragoza/` | Servicio | legalizar piscina / porche zaragoza | Transaccional | MEDIUM | ✅ Borrador completo (`12-…md`) |
+| 11 | `/legalizar-nave-zaragoza/` | Servicio | legalizar nave almacén zaragoza | Transaccional | MEDIUM | ✅ Borrador completo (`13-…md`) |
+| 12-18 | `/legalizar-obras-[municipio]/` | Local | legalizar obra + municipio | Transaccional local | MEDIUM | ✅ Borradores en `municipios/` (verificar marcadores *[Verificar…]*) |
 
 **Regla anti-canibalización:** solo el pilar ataca «legalizar obras sin licencia zaragoza». Cada satélite ataca su propia keyword y enlaza al pilar con anchor exacto o parcial. Las páginas de municipio atacan «legalizar obra + municipio», nunca «Zaragoza».
 

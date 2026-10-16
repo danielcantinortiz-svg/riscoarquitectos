@@ -11,11 +11,21 @@ Estrategia y contenidos listos para publicar en riscoarquitectos.es (WordPress +
 | [`04-legalizar-cerramiento-terraza-zaragoza.md`](04-legalizar-cerramiento-terraza-zaragoza.md) | Servicio terrazas (+ captación de administradores de fincas) | Borrador listo |
 | [`05-plantilla-municipio.md`](05-plantilla-municipio.md) | Plantilla para páginas de Cuarte, Cadrete, María, Utebo, Villanueva, La Puebla, Zuera | Plantilla |
 | [`06-schema-jsonld.md`](06-schema-jsonld.md) | JSON-LD del pilar (ProfessionalService + Service + FAQPage + Breadcrumb) | Listo |
+| [`07-carta-ayuntamiento-obra-sin-licencia-zaragoza.md`](07-carta-ayuntamiento-obra-sin-licencia-zaragoza.md) | Qué hacer si llega una carta del Ayuntamiento | Borrador listo |
+| [`08-certificado-antiguedad-zaragoza.md`](08-certificado-antiguedad-zaragoza.md) | Certificado de antigüedad (notaría y Registro) | Borrador listo |
+| [`09-legalizar-ampliacion-vivienda-zaragoza.md`](09-legalizar-ampliacion-vivienda-zaragoza.md) | Ampliaciones, áticos y buhardillas | Borrador listo |
+| [`10-legalizar-casa-de-campo-zaragoza.md`](10-legalizar-casa-de-campo-zaragoza.md) | Casas de campo, torres y casetas en suelo rústico | Borrador listo |
+| [`11-vender-casa-con-obras-sin-licencia.md`](11-vender-casa-con-obras-sin-licencia.md) | Vender con obras sin legalizar (+ inmobiliarias) | Borrador listo |
+| [`12-legalizar-piscina-porche-zaragoza.md`](12-legalizar-piscina-porche-zaragoza.md) | Piscinas, porches, pérgolas y casetas | Borrador listo |
+| [`13-legalizar-nave-zaragoza.md`](13-legalizar-nave-zaragoza.md) | Naves y almacenes | Borrador listo |
+| [`municipios/`](municipios/) | Cuarte, Cadrete, María de Huerva, Utebo, Villanueva de Gállego, La Puebla de Alfindén, Zuera | Borradores (revisar marcadores *[Verificar…]*) |
 
 ## Orden de publicación
 1. Pilar + schema + enlaces desde home, menú, `/arquitectos-en-zaragoza/` y `/cambio-de-uso-local-vivienda-zaragoza/`.
 2. Prescripción Aragón + Precio.
 3. Terraza + resto de satélites (briefs en §6 de la estrategia).
 4. Municipios, de 2 en 2.
+
+**Precios:** siempre «desde», IVA aparte (viabilidad 500 € · certificado 980 € · obra menor 1.500 € · terraza 3.800 € · ampliación 4.800 € · local 5.800 € · nave 6.500 € · vivienda completa 9.000 €).
 
 **Antes de publicar:** añadir reseñas y casos reales con fotos propias, y no enlazar a satélites que aún no existan.

@@ -2,7 +2,7 @@
 window.DIAS_B2 = [
 {
  d:1, tema:"Lo que pudo haber sido", objetivo:"Hablar de pasados imposibles con el tercer condicional.",
- chunks:["If I had known, I would have told you.","We would have missed the flight if we had left later.","I could have helped if you had asked.","Had I known, things would be different.","It would never have happened otherwise.","If only I had listened to her."],
+ chunks:["If we had found the water table earlier, we would have redesigned the basement.", "Had I known about the delay, I would have booked a later flight.", "If they had told us, we could have changed the order.", "We would not have lost three days if the drawing had been withdrawn.", "If the survey had been done properly, this would not have happened.", "I would have flown instead if the train had been full."],
  vocab:["regret|arrepentirse|I regret not calling.","hindsight|retrospectiva|With hindsight, it was obvious.","otherwise|de otro modo|Otherwise it would have failed.","narrowly|por poco|We narrowly avoided it.","end up|acabar|We would have ended up lost.","blame|culpar|Do not blame yourself.","warn|avisar|I warned you about it.","spot|detectar|Nobody spotted the error.","in time|a tiempo|We got there just in time.","turn down|rechazar|I turned down the offer."],
  dial:{t:"Looking back on a decision", l:[
   "A|Do you ever regret turning down that job?|¿Te arrepientes alguna vez de haber rechazado aquel trabajo?",
@@ -38,7 +38,7 @@ window.DIAS_B2 = [
 },
 {
  d:2, tema:"Deseos y lamentos", objetivo:"Usar wish, if only y condicionales mixtos.",
- chunks:["I wish I spoke better German.","I wish I had studied harder.","If only he would listen.","I would rather you did not tell her.","It is time we left.","If I had saved more, I would be able to buy it now."],
+ chunks:["I wish we had asked for a written instruction.", "If only the licence had arrived a week earlier.", "I wish I spoke better German for these meetings.", "If I had taken the earlier flight, I would be there by now.", "He wishes he had never taken that project on.", "I wish the client would make up his mind."],
  vocab:["wish|desear / ojalá|I wish I knew.","if only|ojalá|If only I could.","would rather|preferir que|I would rather you stayed.","it is time|ya va siendo hora|It is time we left.","long for|anhelar|I long for a break.","miss out on|perderse algo|I missed out on the chance.","take for granted|dar por sentado|Do not take it for granted.","settle for|conformarse con|I will not settle for less.","dwell on|darle vueltas a|Do not dwell on it.","move on|pasar página|It is time to move on."],
  dial:{t:"A late-night conversation", l:[
   "A|I wish I had studied languages at university.|Ojalá hubiera estudiado idiomas en la universidad.",
@@ -74,7 +74,7 @@ window.DIAS_B2 = [
 },
 {
  d:3, tema:"Reproches y suposiciones", objetivo:"Dominar los modales perfectos.",
- chunks:["You should have told me earlier.","She must have left already.","It can't have been him.","They might have got lost.","I needn't have worried.","You could have warned me."],
+ chunks:["They should have checked the levels before pouring.", "We could have saved a fortune by keeping the frame.", "He must have misread the section.", "They cannot have approved it without a survey.", "You might have mentioned the asbestos.", "We needn't have rushed the drawings after all."],
  vocab:["needn't have|no hacía falta que|I needn't have worried.","ought to have|debería haber|You ought to have called.","bound to|seguro que|He was bound to find out.","let alone|ni mucho menos|I cannot walk, let alone run.","after all|al fin y al cabo|After all, he is new.","in fairness|en justicia|In fairness, he tried.","overlook|pasar por alto|I overlooked that detail.","assume|dar por hecho|I assumed you knew.","point out|señalar|She pointed out the error.","hold against|reprochar|I do not hold it against you."],
  dial:{t:"After a mistake at work", l:[
   "A|The client noticed the error before we did.|El cliente vio el error antes que nosotros.",
@@ -110,7 +110,7 @@ window.DIAS_B2 = [
 },
 {
  d:4, tema:"Énfasis por inversión", objetivo:"Dar fuerza y elegancia a tus frases invirtiendo el orden.",
- chunks:["Never have I seen anything like it.","Not only did he apologise, he also paid.","Rarely does she complain.","Under no circumstances should you sign it.","Only then did I understand.","No sooner had we arrived than it started to rain."],
+ chunks:["Not only did the budget go up, but the programme slipped as well.", "Never have I seen a survey that inaccurate.", "Rarely does a client agree to the first option.", "Only then did we realise the wall was load-bearing.", "Little did we know what the basement was hiding.", "At no point was the asbestos mentioned."],
  vocab:["rarely|rara vez|Rarely does he call.","seldom|pocas veces|Seldom do we agree.","hardly ever|casi nunca|Hardly ever does it snow.","no sooner|apenas|No sooner had we left…","under no circumstances|bajo ningún concepto|Under no circumstances.","not until|no hasta que|Not until later did I know.","at no point|en ningún momento|At no point did he lie.","little did I know|poco imaginaba yo|Little did I know.","only then|solo entonces|Only then did it make sense.","by no means|de ninguna manera|By no means is it easy."],
  dial:{t:"An unexpected outcome", l:[
   "A|How did the negotiation go?|¿Cómo fue la negociación?",
@@ -146,7 +146,7 @@ window.DIAS_B2 = [
 },
 {
  d:5, tema:"Poner el foco", objetivo:"Reorganizar la frase para destacar lo importante.",
- chunks:["What I need is more time.","It was Marta who suggested it.","The thing that bothers me is the delay.","All I want is a clear answer.","What happened was that the file was corrupted.","It is the price that worries me, not the quality."],
+ chunks:["What the client really wants is more daylight.", "It was the damp, not the structure, that worried us.", "All we need is a written instruction.", "The thing that bothers me is the deadline.", "It is the north façade that gets no light at all.", "What surprised me was how quickly they agreed."],
  vocab:["the thing is|la cuestión es|The thing is, we are late.","the point is|el caso es|The point is, it works.","all I want|lo único que quiero|All I want is clarity.","what matters|lo que importa|What matters is the result.","as far as … goes|en cuanto a|As far as cost goes.","in terms of|en términos de|In terms of quality.","when it comes to|en lo que respecta a|When it comes to money.","the fact that|el hecho de que|The fact that he lied.","rather than|más que|Speed rather than quality.","let alone|y menos aún|Let alone finish it."],
  dial:{t:"Getting to the point", l:[
   "A|So what exactly is the problem?|¿Cuál es exactamente el problema?",
@@ -182,7 +182,7 @@ window.DIAS_B2 = [
 },
 {
  d:6, tema:"Frases compactas", objetivo:"Comprimir información con cláusulas de participio.",
- chunks:["Having finished the report, I went home.","Built in 1902, the factory is now a museum.","Not knowing what to say, he left.","Being the youngest, she was ignored.","Once completed, the form must be signed.","Faced with the evidence, he admitted everything."],
+ chunks:["Having checked the levels, we gave the go-ahead.", "Built in 1920, the house has solid brick walls.", "Faced with a tight budget, we kept the original stair.", "Knowing the licence would take months, we started the survey.", "Delayed by the weather, the works resumed in April.", "Once approved, the drawings go straight to site."],
  vocab:["having done|habiendo hecho|Having done that, we left.","faced with|ante|Faced with the facts.","given|dado que|Given the situation.","provided|siempre que|Provided it is legal.","regarding|en cuanto a|Regarding your email.","including|incluyendo|Including all costs.","followed by|seguido de|Followed by a debate.","based on|basado en|Based on the data.","compared with|comparado con|Compared with last year.","despite having|a pesar de haber|Despite having tried."],
  dial:{t:"Presenting a case", l:[
   "A|How would you summarise the report?|¿Cómo resumirías el informe?",
@@ -218,7 +218,7 @@ window.DIAS_B2 = [
 },
 {
  d:7, tema:"REPASO · Debatir con argumentos", objetivo:"Sostener una postura, rebatir y concluir.",
- chunks:["There is a strong case for reform.","The evidence suggests otherwise.","Admittedly, there are drawbacks.","That argument does not hold up.","On balance, the benefits outweigh the costs.","Let me put it another way."],
+ chunks:["The strongest argument for retrofit is the embodied carbon.", "That is true in principle, but not on this plot.", "There are two things to weigh up here.", "I take the point about cost, yet the saving is temporary.", "Let me put it the other way round.", "On balance, I would keep the existing frame."],
  vocab:["a strong case for|argumentos sólidos a favor|A strong case for change.","drawback|inconveniente|The main drawback is cost.","outweigh|pesar más que|Benefits outweigh risks.","on balance|en conjunto|On balance, it works.","hold up|sostenerse|That argument does not hold up.","undermine|socavar|That undermines the claim.","evidence|pruebas|The evidence is clear.","assumption|suposición|That is an assumption.","valid|válido|A valid point.","dismiss|descartar|We cannot dismiss it."],
  dial:{t:"A debate about city centres", l:[
   "A|There is a strong case for banning cars in the centre.|Hay argumentos sólidos para prohibir los coches en el centro.",
@@ -254,7 +254,7 @@ window.DIAS_B2 = [
 },
 {
  d:8, tema:"Se dice que…", objetivo:"Usar las pasivas impersonales del inglés periodístico.",
- chunks:["It is said that the company is in trouble.","He is believed to be abroad.","The building is thought to date from 1650.","She is reported to have resigned.","It is widely assumed that prices will fall.","No decision is expected before June."],
+ chunks:["It is said that the building was designed by a local architect.", "The works are believed to have started in 1908.", "It is widely assumed that stone lasts for ever.", "The delay is thought to be due to the supplier.", "It is understood that the council will decide in June.", "He is known to be difficult about fees."],
  vocab:["be said to|se dice que|He is said to be rich.","be believed to|se cree que|She is believed to be abroad.","be thought to|se piensa que|It is thought to be safe.","be reported to|se informa de que|He is reported to have left.","be expected to|se espera que|Prices are expected to rise.","allegedly|presuntamente|He allegedly lied.","reportedly|según se informa|She reportedly resigned.","claim|afirmar|The company claims otherwise.","deny|negar|He denies everything.","confirm|confirmar|Nothing has been confirmed."],
  dial:{t:"Discussing a news story", l:[
   "A|Have you read about the takeover?|¿Has leído lo de la absorción?",
@@ -290,7 +290,7 @@ window.DIAS_B2 = [
 },
 {
  d:9, tema:"Verbos de decir con patrón", objetivo:"Reportar con precisión y matiz según el verbo.",
- chunks:["He accused me of lying.","She admitted making a mistake.","They insisted on paying.","He warned us not to go.","She apologised for being late.","He denied having seen it."],
+ chunks:["The engineer insisted on a second survey.", "They accused the contractor of cutting corners.", "She admitted making a mistake with the opening.", "He denied having seen the revised drawing.", "The council advised us to submit earlier.", "They warned us about the water table."],
  vocab:["accuse of|acusar de|He accused me of lying.","admit|admitir|She admitted making a mistake.","insist on|insistir en|They insisted on paying.","warn against|advertir contra|He warned us against it.","apologise for|disculparse por|She apologised for the delay.","deny|negar|He denied taking it.","blame for|culpar de|They blamed me for the error.","congratulate on|felicitar por|He congratulated me on the result.","persuade to|convencer de|She persuaded me to stay.","remind to|recordar que|Remind me to call."],
  dial:{t:"Reporting a difficult meeting", l:[
   "A|How did the meeting end?|¿Cómo acabó la reunión?",
@@ -326,7 +326,7 @@ window.DIAS_B2 = [
 },
 {
  d:10, tema:"Relativas de precisión", objetivo:"Usar relativas explicativas y con preposición.",
- chunks:["The report, which was published yesterday, is damning.","The person to whom I spoke was very helpful.","This is the reason why I called.","He arrived late, which annoyed everyone.","The company for which she works is Swiss.","There were fifty applicants, most of whom were unqualified."],
+ chunks:["The house, which had been empty for a decade, needed everything.", "The plot on which the warehouse stood is now a garden.", "The engineer with whom we worked has retired.", "The detail, the cost of which was never agreed, is still open.", "Our hotel, where the conference was held, is being refurbished.", "The client, whose brief changed three times, finally decided."],
  vocab:["damning|demoledor|A damning report.","in which case|en cuyo caso|In which case, we wait.","some of whom|algunos de los cuales|Some of whom left.","the extent to which|la medida en que|The extent to which it works.","whereby|por el cual|A system whereby users pay.","hence|de ahí que|Hence the delay.","thereby|con lo cual|Thereby reducing costs.","insofar as|en la medida en que|Insofar as it applies.","notwithstanding|no obstante|Notwithstanding the cost.","albeit|aunque|Effective, albeit slow."],
  dial:{t:"Analysing a report", l:[
   "A|Have you seen the report, which came out yesterday?|¿Has visto el informe, que salió ayer?",
@@ -363,7 +363,7 @@ window.DIAS_B2 = [
 ,
 {
  d:11, tema:"Futuros de precisión", objetivo:"Proyectar el futuro con matices profesionales.",
- chunks:["By next June I will have been working here for ten years.","The meeting is to be held on Tuesday.","We are on the verge of signing.","The results are due out shortly.","Prices are set to rise again.","It is only a matter of time."],
+ chunks:["By this time next year we will have finished the whole block.", "By June we will have been working on this for two years.", "The contractor is to start on the fifteenth.", "The meeting is scheduled to take place in Madrid.", "We are due to submit the application on Friday.", "They will be flying out before the deadline."],
  vocab:["be to|estar previsto (formal)|The meeting is to be held.","be on the verge of|estar a punto de|On the verge of collapse.","be set to|ir a (previsión)|Prices are set to rise.","be due out|estar previsto que salga|The report is due out.","in the long run|a la larga|In the long run, it pays.","sooner or later|tarde o temprano|Sooner or later it will happen.","a matter of time|cuestión de tiempo|It is a matter of time.","forthcoming|próximo|The forthcoming election.","imminent|inminente|A decision is imminent.","in due course|a su debido tiempo|We will inform you in due course."],
  dial:{t:"Briefing before a merger", l:[
   "A|When is the announcement due?|¿Cuándo está previsto el anuncio?",
@@ -399,7 +399,7 @@ window.DIAS_B2 = [
 },
 {
  d:12, tema:"Hablar con cautela", objetivo:"Matizar afirmaciones como un profesional (hedging).",
- chunks:["It would appear that there is a problem.","This may well be the best option.","There is a tendency to overestimate the risk.","It is arguably the most important factor.","The results are somewhat inconclusive.","I would be inclined to wait."],
+ chunks:["It would appear that the survey was incomplete.", "The evidence suggests that the damp comes from below.", "There is a tendency to underestimate the cost of access.", "It may well be that the frame is sound.", "This would seem to indicate a drainage problem.", "To some extent, the delay was predictable."],
  vocab:["arguably|posiblemente / se podría decir|Arguably the best.","somewhat|algo, un tanto|Somewhat unclear.","tend to|tender a|People tend to exaggerate.","may well|bien podría|That may well be true.","be inclined to|inclinarse a|I am inclined to agree.","broadly speaking|en términos generales|Broadly speaking, yes.","to some extent|hasta cierto punto|True to some extent.","appear to|parecer|It appears to be working.","suggest|apuntar a|The data suggest a trend.","by and large|en general|By and large, it works."],
  dial:{t:"Presenting uncertain data", l:[
   "A|Are the results conclusive?|¿Son concluyentes los resultados?",
@@ -435,7 +435,7 @@ window.DIAS_B2 = [
 },
 {
  d:13, tema:"El inglés del trabajo", objetivo:"Manejar colocaciones y modismos del entorno profesional.",
- chunks:["Let us touch base next week.","We need to think outside the box.","That is not really my call.","Can we take this offline?","We are behind schedule.","Let us play it by ear."],
+ chunks:["Let us touch base after the site meeting.", "Could you give me a ballpark figure?", "We will have to value engineer the façade.", "That is outside the scope of our appointment.", "It is back to the drawing board, I am afraid.", "Let us take that offline and decide on Friday."],
  vocab:["touch base|ponerse en contacto|Let us touch base on Monday.","my call|mi decisión|That is not my call.","take it offline|tratarlo aparte|Let us take this offline.","behind schedule|con retraso|We are behind schedule.","in the pipeline|en preparación|Two projects in the pipeline.","cut corners|hacer chapuzas por ahorrar|We cannot cut corners.","bottom line|lo esencial / resultado final|The bottom line is cost.","play it by ear|improvisar|Let us play it by ear.","get the ball rolling|poner en marcha|Let us get the ball rolling.","on the same page|de acuerdo|Are we on the same page?"],
  dial:{t:"A project stand-up", l:[
   "A|Where are we with the Lisbon proposal?|¿Cómo vamos con la propuesta de Lisboa?",
@@ -471,7 +471,7 @@ window.DIAS_B2 = [
 },
 {
  d:14, tema:"REPASO · Presentación oral", objetivo:"Estructurar y sostener una presentación de cinco minutos.",
- chunks:["I would like to begin by outlining the context.","Moving on to my second point…","As you can see from the figures…","This brings me to my main conclusion.","To sum up, three things matter.","I am happy to take any questions."],
+ chunks:["Thank you all for making the time this morning.", "I will talk you through three options.", "If we move to the next slide, you will see the section.", "Let me come back to the budget in a moment.", "To sum up, there are two decisions to make today.", "Happy to talk through any of this in more detail."],
  vocab:["outline|esbozar|Let me outline the plan.","highlight|destacar|I would like to highlight this.","move on to|pasar a|Moving on to the next point.","bring me to|llevarme a|That brings me to my conclusion.","sum up|resumir|To sum up, three points.","take questions|responder preguntas|I will take questions now.","bear in mind|tener en cuenta|Bear in mind the cost.","in a nutshell|en pocas palabras|In a nutshell, it works.","the key takeaway|la idea clave|The key takeaway is simple.","back up|respaldar|The data back this up."],
  dial:{t:"Opening and closing a presentation", l:[
   "A|Good morning. I would like to begin by outlining the context.|Buenos días. Me gustaría empezar esbozando el contexto.",
@@ -507,7 +507,7 @@ window.DIAS_B2 = [
 },
 {
  d:15, tema:"Phrasal verbs de nivel alto", objetivo:"Entender el inglés real, que va lleno de ellos.",
- chunks:["The meeting dragged on for hours.","We need to iron out a few details.","She talked me out of it.","It all boils down to money.","They are cutting back on staff.","I cannot get my head round it."],
+ chunks:["We are not going to put up with another delay.", "I need to catch up on the correspondence before I fly.", "They came up with a much cheaper detail.", "We will have to do away with the corridor.", "I cannot get round the fire regulations.", "Let us get on with it before the weather turns."],
  vocab:["drag on|alargarse|The meeting dragged on.","iron out|limar (detalles)|Iron out the details.","talk out of|disuadir de|She talked me out of it.","boil down to|reducirse a|It boils down to money.","cut back on|recortar|Cutting back on costs.","get your head round|hacerse a la idea|I cannot get my head round it.","fall through|irse al traste|The deal fell through.","stand in for|sustituir a|I stood in for her.","put up with|aguantar|I will not put up with it.","come up with|idear|He came up with a plan."],
  dial:{t:"After a failed deal", l:[
   "A|So the Lisbon deal fell through?|¿Así que lo de Lisboa se fue al traste?",
@@ -543,7 +543,7 @@ window.DIAS_B2 = [
 },
 {
  d:16, tema:"Subrayar lo que dices", objetivo:"Enfatizar con recursos gramaticales y léxicos.",
- chunks:["I do understand your concern.","It was absolutely essential.","That is exactly what I meant.","She herself admitted it.","Never in my life have I been so surprised.","It is by far the best option."],
+ chunks:["It is the access, above all, that worries me.", "I do think the courtyard is worth the money.", "This is precisely what I meant on site.", "The one thing we cannot change is the height limit.", "It really is the cheapest option available.", "What matters most here is the daylight."],
  vocab:["do + verb|sí que (énfasis)|I do agree.","absolutely|absolutamente|Absolutely right.","utterly|completamente|Utterly wrong.","by far|con diferencia|By far the best.","in the slightest|en absoluto|Not in the slightest.","whatsoever|en absoluto|No doubt whatsoever.","precisely|precisamente|Precisely my point.","indeed|efectivamente|It is indeed true.","far from|lejos de|Far from easy.","anything but|todo menos|Anything but simple."],
  dial:{t:"Defending a position firmly", l:[
   "A|You do not seem convinced.|No pareces convencido.",
@@ -579,7 +579,7 @@ window.DIAS_B2 = [
 },
 {
  d:17, tema:"Marcadores del habla real", objetivo:"Sonar natural con los conectores de la conversación.",
- chunks:["Mind you, it was not easy.","Having said that, I would try again.","As it happens, I was there.","To be fair, he did warn us.","Come to think of it, that explains everything.","Anyway, where were we?"],
+ chunks:["Right, so where were we?", "Actually, now that you mention it, there is one more thing.", "To be fair, the contractor did warn us.", "Anyway, let us move on to the budget.", "Mind you, the location is excellent.", "As I was saying, the licence is the bottleneck."],
  vocab:["mind you|eso sí|Mind you, it was cheap.","having said that|dicho esto|Having said that, I agree.","as it happens|da la casualidad|As it happens, I know him.","come to think of it|ahora que lo pienso|Come to think of it, yes.","by the way|por cierto|By the way, she called.","anyway|en fin|Anyway, let us continue.","actually|en realidad|Actually, it was Tuesday.","I mean|quiero decir|I mean, it is obvious.","sort of|más o menos|It is sort of complicated.","you know|ya sabes|It is difficult, you know."],
  dial:{t:"A relaxed conversation about a trip", l:[
   "A|So how was the trip? Worth it?|¿Y qué tal el viaje? ¿Mereció la pena?",
@@ -615,7 +615,7 @@ window.DIAS_B2 = [
 },
 {
  d:18, tema:"Cambiar de registro", objetivo:"Reescribir el mismo contenido en formal e informal.",
- chunks:["We regret to inform you that your application was unsuccessful.","Sorry, you did not get the job.","Please do not hesitate to contact me.","Just give me a shout.","The matter requires further consideration.","We need to think about it a bit more."],
+ chunks:["I am writing to confirm the instruction issued on site.", "Just a quick one: can you send the photos?", "We regret to inform you of a delay of two weeks.", "Give me a ring when you land.", "Please do not hesitate to contact me.", "Sorry for the slow reply, it has been a mad week."],
  vocab:["regret to inform|lamentar informar|We regret to inform you.","unsuccessful|no seleccionado|Your application was unsuccessful.","do not hesitate|no dude en|Do not hesitate to call.","give a shout|avisar|Give me a shout.","further|adicional|Further information.","require|requerir|It requires attention.","obtain|obtener|To obtain a permit.","purchase|adquirir|To purchase tickets.","commence|comenzar|Work will commence in May.","terminate|finalizar|The contract terminates in June."],
  dial:{t:"The same news, two ways", l:[
   "A|We regret to inform you that your application was unsuccessful.|Lamentamos informarle de que su solicitud no ha sido seleccionada.",
@@ -651,7 +651,7 @@ window.DIAS_B2 = [
 },
 {
  d:19, tema:"Especular a fondo", objetivo:"Analizar causas y consecuencias con matices de probabilidad.",
- chunks:["There is every chance that it will work.","It is highly unlikely that they knew.","The odds are against us.","Chances are he simply forgot.","I would not rule it out.","It stands to reason that costs will rise."],
+ chunks:["The licence will almost certainly take three months.", "There is a slim chance that the steel arrives early.", "It is highly unlikely that the council will object.", "The odds are that the budget will go up.", "It is bound to rain on the day of the pour.", "I doubt very much that they will agree."],
  vocab:["every chance|muchas posibilidades|There is every chance.","highly unlikely|muy improbable|Highly unlikely.","the odds|las probabilidades|The odds are low.","rule out|descartar|I would not rule it out.","stands to reason|es lógico|It stands to reason.","conceivably|posiblemente|Conceivably, yes.","far-fetched|inverosímil|That sounds far-fetched.","plausible|verosímil|A plausible explanation.","account for|explicar|That accounts for the delay.","put down to|atribuir a|I put it down to stress."],
  dial:{t:"Analysing a failure", l:[
   "A|What accounts for the drop in sales?|¿A qué se debe la caída de ventas?",
@@ -687,7 +687,7 @@ window.DIAS_B2 = [
 },
 {
  d:20, tema:"Conceder y rebatir", objetivo:"Construir contraargumentos elegantes.",
- chunks:["Granted, the cost is high.","Whilst I accept the principle, the timing is wrong.","That may be so, but the evidence says otherwise.","There is some truth in that.","Even if that were true, it would not change anything.","The counter-argument is straightforward."],
+ chunks:["Admittedly the first option is cheaper, but it will not last.", "Granted, the plot is far from the centre.", "While I accept the argument, the figures say otherwise.", "Even so, I would keep the original façade.", "That may be true in theory; in practice it is not.", "I would go along with that up to a point."],
  vocab:["granted|concedido|Granted, it is expensive.","whilst|si bien|Whilst I agree, I hesitate.","that may be so|puede que sea así|That may be so, but…","there is some truth in|hay algo de verdad en|There is some truth in that.","even if|incluso si|Even if that were true.","counter-argument|contraargumento|The counter-argument is clear.","overstate|exagerar|You overstate the risk.","concede|conceder|I concede the point.","flawed|defectuoso|A flawed argument.","beside the point|irrelevante|That is beside the point."],
  dial:{t:"A disagreement between colleagues", l:[
   "A|The investment is simply too expensive.|La inversión es sencillamente demasiado cara.",
@@ -724,7 +724,7 @@ window.DIAS_B2 = [
 ,
 {
  d:21, tema:"REPASO · Ensayo de opinión", objetivo:"Escribir un texto argumentativo de nivel B2.",
- chunks:["It is often argued that…","There are compelling reasons to believe otherwise.","This essay will argue that…","A further consideration is…","In conclusion, the evidence points in one direction.","The issue is more nuanced than it appears."],
+ chunks:["This essay will argue that reuse beats demolition.", "There are three reasons for this.", "Critics of retrofit point to the cost of access.", "However, that argument overlooks the embodied carbon.", "The evidence on balance favours conservation.", "In conclusion, demolition should be the last resort."],
  vocab:["it is often argued|se suele argumentar|It is often argued that…","compelling|convincente|A compelling reason.","nuanced|matizado|A nuanced view.","a further consideration|otra consideración|A further consideration is cost.","the former / the latter|el primero / el segundo|The latter is preferable.","overall|en general|Overall, it works.","address|abordar|We must address the issue.","stem from|derivarse de|Problems stem from funding.","in essence|en esencia|In essence, it is simple.","ultimately|en última instancia|Ultimately, it is a choice."],
  dial:{t:"Planning an essay", l:[
   "A|What is the essay question?|¿Cuál es la pregunta del ensayo?",
@@ -760,7 +760,7 @@ window.DIAS_B2 = [
 },
 {
  d:22, tema:"Medio ambiente", objetivo:"Debatir sobre sostenibilidad con léxico preciso.",
- chunks:["We need to cut carbon emissions drastically.","Renewable energy is now cheaper than coal.","The measures do not go far enough.","It is a question of political will.","Recycling alone will not solve it.","The impact is already visible."],
+ chunks:["Emissions have fallen sharply since the retrofit.", "Energy consumption tends to peak in August.", "The figures have levelled off over the last two years.", "There has been a marked rise in the cost of steel.", "Demand for small flats continues to grow.", "The trend shows no sign of reversing."],
  vocab:["emissions|emisiones|Cut carbon emissions.","renewable|renovable|Renewable energy.","landfill|vertedero|It ends up in landfill.","waste|residuos / desperdiciar|Reduce food waste.","carbon footprint|huella de carbono|A large carbon footprint.","offset|compensar|Offset the emissions.","sustainable|sostenible|A sustainable model.","greenwashing|ecopostureo|That is pure greenwashing.","depletion|agotamiento|Resource depletion.","phase out|eliminar gradualmente|Phase out coal."],
  dial:{t:"Debating climate policy", l:[
   "A|Do you think the new measures go far enough?|¿Crees que las nuevas medidas van lo bastante lejos?",
@@ -796,7 +796,7 @@ window.DIAS_B2 = [
 },
 {
  d:23, tema:"Medios y desinformación", objetivo:"Analizar noticias con sentido crítico.",
- chunks:["The story was blown out of proportion.","The headline is misleading.","According to unnamed sources…","The report has been widely disputed.","It is worth checking the original source.","There is a clear bias in the coverage."],
+ chunks:["The report appears to be based on a single survey.", "The claim is not supported by the figures.", "It is worth asking who commissioned the study.", "The sample was far too small to draw conclusions.", "That headline is misleading at best.", "I would treat those numbers with caution."],
  vocab:["misleading|engañoso|A misleading headline.","bias|sesgo|A clear political bias.","coverage|cobertura|The media coverage.","source|fuente|An unnamed source.","claim|afirmación|An unverified claim.","dispute|cuestionar|The figure is disputed.","blow out of proportion|exagerar|It was blown out of proportion.","outlet|medio|A major news outlet.","fact-check|verificar|We must fact-check it.","spin|manipular el enfoque|Political spin."],
  dial:{t:"Discussing a news story", l:[
   "A|Did you see the headline about the hospital?|¿Viste el titular sobre el hospital?",
@@ -832,7 +832,7 @@ window.DIAS_B2 = [
 },
 {
  d:24, tema:"Diplomacia profesional", objetivo:"Decir cosas difíciles sin romper la relación.",
- chunks:["I am not entirely convinced by that approach.","Would it be possible to reconsider the timeline?","With respect, the figures tell a different story.","I appreciate the constraints you are under.","Perhaps we could look at this differently.","I am afraid that would be difficult for us."],
+ chunks:["I am afraid that is not going to be possible by Friday.", "With respect, that is not what the contract says.", "I would be reluctant to commit to that date.", "Perhaps we could look at this from another angle.", "I am sure we can find a solution that works for both.", "Let me check and come back to you."],
  vocab:["constraint|limitación|The constraints we face.","reconsider|reconsiderar|Could you reconsider?","with respect|con todo el respeto|With respect, I disagree.","appreciate|comprender / valorar|I appreciate the difficulty.","not entirely|no del todo|Not entirely convinced.","raise a concern|plantear una preocupación|May I raise a concern?","common ground|puntos en común|Let us find common ground.","step back|dar un paso atrás|Let us step back.","revisit|volver sobre|Can we revisit this?","workable|viable|A workable solution."],
  dial:{t:"A difficult conversation with a client", l:[
   "A|We expect delivery by the fifteenth, as agreed.|Esperamos la entrega el día quince, como acordamos.",
@@ -868,7 +868,7 @@ window.DIAS_B2 = [
 },
 {
  d:25, tema:"Datos y tendencias", objetivo:"Describir gráficos y cifras con precisión.",
- chunks:["Sales peaked in March and then levelled off.","There was a steady increase over the period.","The figure stands at twelve per cent.","Numbers plummeted in the second quarter.","This accounts for roughly a third of the total.","The trend has reversed since June."],
+ chunks:["Costs rose by twelve per cent over the year.", "Roughly a third of the budget goes on the structure.", "The figure has doubled since 2019.", "There is a clear correlation between orientation and energy use.", "On average, the works take nine months.", "The peak was in March, at eighty units."],
  vocab:["peak|alcanzar el máximo|Sales peaked in March.","level off|estabilizarse|The curve levelled off.","plummet|desplomarse|Numbers plummeted.","steady|constante|A steady increase.","stand at|situarse en|The figure stands at 12%.","account for|representar|It accounts for a third.","fluctuate|fluctuar|Prices fluctuated wildly.","reverse|invertirse|The trend has reversed.","marginal|marginal|A marginal change.","roughly|aproximadamente|Roughly a third."],
  dial:{t:"Reading a chart together", l:[
   "A|What does the first graph show?|¿Qué muestra el primer gráfico?",
@@ -904,7 +904,7 @@ window.DIAS_B2 = [
 },
 {
  d:26, tema:"Cultura y crítica", objetivo:"Reseñar y valorar con vocabulario rico.",
- chunks:["The performance was utterly compelling.","The plot is somewhat predictable.","It is beautifully shot but emotionally hollow.","The pace drags in the second half.","It is not without flaws, but it works.","I would recommend it with reservations."],
+ chunks:["The detailing is restrained, almost severe.", "It is a bold building, if slightly overbearing.", "The proportions are impeccable.", "The material choice is a little predictable.", "It sits comfortably within the streetscape.", "The interior is far more generous than it looks."],
  vocab:["compelling|absorbente|A compelling performance.","predictable|previsible|A predictable plot.","overrated|sobrevalorado|Utterly overrated.","underrated|infravalorado|A criminally underrated film.","pace|ritmo|The pace drags.","plot|argumento|The plot is thin.","hollow|hueco|Emotionally hollow.","stunning|impresionante|Stunning cinematography.","tedious|tedioso|A tedious first hour.","with reservations|con reservas|Recommended with reservations."],
  dial:{t:"After the cinema", l:[
   "A|What did you make of it?|¿Qué te pareció?",
@@ -940,7 +940,7 @@ window.DIAS_B2 = [
 },
 {
  d:27, tema:"Salud, hábitos y bienestar", objetivo:"Hablar de estilo de vida con nombres abstractos.",
- chunks:["There is growing awareness of mental health.","Burnout is increasingly common in this sector.","Sleep deprivation affects performance dramatically.","It is a question of striking a balance.","Prevention is cheaper than treatment.","The benefits are well documented."],
+ chunks:["The introduction of insulation led to a sharp drop in bills.", "There has been a significant improvement in air quality.", "The provision of daylight affects the well-being of the users.", "Our assessment of the structure is now complete.", "The reduction in noise was immediate.", "Recognition of the problem came far too late."],
  vocab:["awareness|concienciación|Growing awareness.","burnout|desgaste profesional|Burnout is common.","deprivation|privación|Sleep deprivation.","strike a balance|encontrar el equilibrio|Strike a balance.","well-being|bienestar|Employee well-being.","sedentary|sedentario|A sedentary lifestyle.","cope with|sobrellevar|How do you cope with stress?","take its toll|pasar factura|Stress takes its toll.","moderation|moderación|Everything in moderation.","evidence-based|basado en evidencia|Evidence-based advice."],
  dial:{t:"Talking about workplace stress", l:[
   "A|Do you think burnout is taken seriously here?|¿Crees que aquí se toma en serio el desgaste profesional?",
@@ -976,7 +976,7 @@ window.DIAS_B2 = [
 },
 {
  d:28, tema:"REPASO · Discusión abstracta", objetivo:"Sostener la parte 3 de un examen oral B2.",
- chunks:["That is an interesting question. Let me think.","It very much depends on the context.","I suppose the underlying issue is…","There are two ways of looking at this.","If I had to generalise, I would say…","Historically, that has not been the case."],
+ chunks:["In broad terms, the question is whether to keep the frame.", "There is a tension between cost and durability.", "That distinction matters more than it seems.", "It is a question of degree rather than of principle.", "The underlying issue is one of maintenance.", "I would frame it differently."],
  vocab:["underlying|subyacente|The underlying issue.","generalise|generalizar|If I had to generalise.","historically|históricamente|Historically speaking.","in principle|en principio|In principle, yes.","in practice|en la práctica|In practice, rarely.","a case in point|un buen ejemplo|A case in point is Spain.","to a large extent|en gran medida|True to a large extent.","the flip side|la otra cara|The flip side is cost.","in the grand scheme|en el conjunto|In the grand scheme of things.","by definition|por definición|By definition, it is limited."],
  dial:{t:"Speaking exam, part three", l:[
   "A|Do you think technology has improved education?|¿Cree que la tecnología ha mejorado la educación?",
@@ -1012,7 +1012,7 @@ window.DIAS_B2 = [
 },
 {
  d:29, tema:"Matices de significado", objetivo:"Distinguir sinónimos y connotaciones.",
- chunks:["He is not stubborn, he is determined.","There is a difference between cheap and inexpensive.","She is assertive rather than aggressive.","It was a mistake, not a lie.","The word carries negative connotations.","That is a euphemism for redundancy."],
+ chunks:["The flat is compact rather than small.", "Calling it ambitious is being generous.", "The proposal is bold; the previous one was reckless.", "It is a refurbishment, strictly speaking, not a restoration.", "He is confident, not arrogant.", "The word I would use is restrained."],
  vocab:["connotation|connotación|Negative connotations.","euphemism|eufemismo|A euphemism for firing.","subtle|sutil|A subtle difference.","interchangeable|intercambiable|They are not interchangeable.","derogatory|despectivo|A derogatory term.","neutral|neutro|A neutral word.","imply|dar a entender|That implies blame.","denote|denotar|It denotes quantity.","loaded|cargado|A loaded question.","precise|preciso|Be more precise."],
  dial:{t:"Choosing the right word", l:[
   "A|Would you describe him as stubborn?|¿Lo describirías como testarudo?",
@@ -1048,7 +1048,7 @@ window.DIAS_B2 = [
 },
 {
  d:30, tema:"Consolidación B2", objetivo:"Cerrar los 90 días y prepararte para el examen final.",
- chunks:["Three months ago I could not have had this conversation.","What has changed most is my confidence.","I no longer translate; I think in English.","Had I known it was this achievable, I would have started earlier.","The next step is maintaining the level.","It is a habit now, not a course."],
+ chunks:["I can argue a position and concede ground without losing it.", "I can report what was said with the right verb pattern.", "I can speculate with the right degree of certainty.", "I can change register between a site and a board meeting.", "I can write a report and an essay that hold together.", "I am ready to move on to C1."],
  vocab:["achievable|alcanzable|It is perfectly achievable.","maintain|mantener|Maintain the level.","plateau|estancamiento|Progress hits a plateau.","consolidate|consolidar|Consolidate what you know.","expose yourself to|exponerse a|Expose yourself to real English.","immerse|sumergirse|Immerse yourself in it.","keep up|mantener el ritmo|Keep it up.","fall behind|quedarse atrás|Do not fall behind.","milestone|hito|A major milestone.","from now on|de ahora en adelante|From now on, no subtitles."],
  dial:{t:"Ninety days later", l:[
   "A|So, ninety days. Was it worth it?|Bueno, noventa días. ¿Mereció la pena?",

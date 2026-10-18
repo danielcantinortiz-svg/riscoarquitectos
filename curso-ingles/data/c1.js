@@ -3,7 +3,7 @@
 window.DIAS_C1 = [
 {
  d:1, tema:"Poner el foco al frente", objetivo:"Reordenar la frase para dirigir la atención como un nativo culto.",
- chunks:["Rarely have I come across such a clear case.","What strikes me most is the tone.","So convincing was the argument that nobody objected.","Little did they realise what it would cost.","Not until much later did the truth emerge.","Such was the reaction that the plan was dropped."],
+ chunks:["What we had not anticipated was the water table.", "Such was the delay that the client considered pulling out.", "Only after the survey did the real cost emerge.", "Hardly had we started when the weather turned.", "So tight was the budget that stone was never an option.", "Not until the lintels arrived could we close the openings."],
  vocab:["come across|toparse con|I came across a striking detail.|CAM-ARROZ: cruzas un arrozal y te TOPAS con algo.","strike|impactar / llamar la atención|What strikes me is the silence.|Te GOLPEA la idea.","emerge|salir a la luz|The truth eventually emerged.|","objection|objeción|Nobody raised an objection.|","outset|comienzo|From the outset it was doomed.|OUT-SET: cuando se PONE fuera la primera piedra.","compelling|irrefutable|A compelling case.|","overlook|pasar por alto|We overlooked one detail.|Mirar POR ENCIMA y no verlo.","underpin|sustentar|The data underpin the claim.|UNDER-PIN: el pasador de debajo que sostiene.","at odds with|en desacuerdo con|That is at odds with the evidence.|","on the face of it|a primera vista|On the face of it, it works.|"],
  dial:{t:"Reviewing a flawed proposal", l:[
   "A|What did you make of the proposal?|¿Qué te pareció la propuesta?",
@@ -39,7 +39,7 @@ window.DIAS_C1 = [
 },
 {
  d:2, tema:"El subjuntivo formal", objetivo:"Usar el mandative subjunctive y las estructuras de exigencia.",
- chunks:["It is essential that everyone be informed.","I suggest that she reconsider the offer.","They demanded that the report be withdrawn.","Were it not for her, we would have failed.","Should you have any questions, do let me know.","It is vital that this remain confidential."],
+ chunks:["The council insists that the application be submitted in person.", "I recommend that the frame be retained wherever possible.", "Were the licence to arrive tomorrow, we could still finish in June.", "Should the steel be delayed again, we will have to reprogramme.", "It is essential that every instruction be issued in writing.", "Had the asbestos been declared, the price would have reflected it."],
  vocab:["essential|imprescindible|It is essential that we act.|","demand|exigir|They demanded that he resign.|","insist|insistir|She insisted that it be checked.|","withdraw|retirar|The report was withdrawn.|WITH-DRAW: te llevas lo dibujado.","confidential|confidencial|Keep it confidential.|","provision|disposición|Under the provisions of the contract.|","waive|renunciar a|They waived the fee.|WAIVE suena a WAVE: le dices adiós con la mano a ese derecho.","compliance|cumplimiento|In compliance with the law.|","stipulate|estipular|The contract stipulates a deadline.|","notwithstanding|no obstante|Notwithstanding the delay, we signed.|"],
  dial:{t:"A formal complaint escalated", l:[
   "A|The client demands that the report be withdrawn.|El cliente exige que se retire el informe.",
@@ -75,7 +75,7 @@ window.DIAS_C1 = [
 },
 {
  d:3, tema:"Un verbo, dos significados", objetivo:"Distinguir los verbos que cambian de sentido con gerundio o infinitivo.",
- chunks:["I remember locking the door.","Remember to lock the door.","I regret to inform you that…","I regret telling him.","He went on to become a minister.","She went on talking for an hour."],
+ chunks:["I regret to inform you that the works are suspended.", "I will never forget seeing that staircase for the first time.", "We stopped to look at the detail on the way out.", "We stopped looking at alternatives once the client decided.", "I remember asking for a written instruction.", "Remember to sign the visitors' book on the way in."],
  vocab:["regret|lamentar|I regret telling him.|","go on|continuar / pasar a|He went on to lead the firm.|","mean|significar / pretender|That would mean starting again.|","stop|parar de / pararse para|He stopped to think.|","try|intentar / probar a|Try restarting it.|","come to|llegar a|I came to realise it later.|","be bound to|estar destinado a|It was bound to fail.|BOUND = atado: estás ATADO a ese destino.","get round to|encontrar el momento de|I never get round to it.|","look to|aspirar a|We are looking to expand.|","afford to|permitirse|We cannot afford to wait.|"],
  dial:{t:"After a resignation", l:[
   "A|I regret to inform you that Marta has resigned.|Lamento informarle de que Marta ha dimitido.",
@@ -112,7 +112,7 @@ window.DIAS_C1 = [
 ,
 {
  d:4, tema:"Sea lo que sea", objetivo:"Manejar concesivas indefinidas y oraciones nominales.",
- chunks:["Whatever you decide, I will support it.","However hard I try, it never works.","No matter what they say, the answer is no.","Whoever wrote this knew the file.","Much as I admire her, I disagree.","Whether or not it rains, we go."],
+ chunks:["Whatever the client decides, we will need it in writing.", "Whichever option we take, the access stays the same.", "However tight the budget, the waterproofing is not negotiable.", "Whoever signed that drawing did not check the levels.", "Wherever you put the lift, you lose a bedroom.", "No matter how we detail it, the thermal bridge remains."],
  vocab:["whatever|sea lo que sea|Whatever happens, call me.|","however|por mucho que|However hard he tries.|","no matter|no importa|No matter what.|","whereby|por el cual|A system whereby users pay.|","much as|por mucho que|Much as I like it, no.|","whether or not|tanto si como si no|Whether or not you agree.|","insofar as|en la medida en que|Insofar as it applies.|","albeit|aunque|Effective, albeit slow.|ALL-BE-IT: aunque sea todo eso.","for all|a pesar de|For all his talent, he failed.|","given that|dado que|Given that time is short.|"],
  dial:{t:"An impasse in a negotiation", l:[
   "A|Whatever we offer, they will ask for more.|Ofrezcamos lo que ofrezcamos, pedirán más.",
@@ -148,7 +148,7 @@ window.DIAS_C1 = [
 },
 {
  d:5, tema:"Modismos de uso real", objetivo:"Reconocer y usar los idioms que aparecen de verdad.",
- chunks:["It is a blessing in disguise.","Let us not beat about the bush.","That is a stretch.","We are on thin ice here.","It came out of the blue.","I will take it with a pinch of salt."],
+ chunks:["We are flogging a dead horse with that supplier.", "It fell through at the eleventh hour.", "That is a can of worms I would rather not open.", "We are between a rock and a hard place on the budget.", "He threw a spanner in the works at the last meeting.", "Let us not throw good money after bad."],
  vocab:["a blessing in disguise|no hay mal que por bien no venga|It was a blessing in disguise.|","beat about the bush|andarse por las ramas|Stop beating about the bush.|Golpear ALREDEDOR del arbusto en vez de entrar.","on thin ice|en terreno resbaladizo|We are on thin ice.|Hielo FINO: un paso más y te hundes.","out of the blue|de repente|It came out of the blue.|Del AZUL del cielo, sin nube previa.","a pinch of salt|con reservas|Take it with a pinch of salt.|","the elephant in the room|lo que nadie menciona|Nobody mentioned the elephant in the room.|","a stretch|exagerado|That is a bit of a stretch.|Lo ESTIRAS hasta casi romperlo.","cut to the chase|ir al grano|Let us cut to the chase.|","the tip of the iceberg|la punta del iceberg|Just the tip of the iceberg.|","bite the bullet|apechugar|We had to bite the bullet.|Morder la BALA mientras te operan sin anestesia."],
  dial:{t:"An honest conversation about a project", l:[
   "A|Let us cut to the chase. Is it salvageable?|Vamos al grano. ¿Se puede salvar?",
@@ -184,7 +184,7 @@ window.DIAS_C1 = [
 },
 {
  d:6, tema:"La palabra exacta", objetivo:"Dominar colocaciones e intensificadores propios del C1.",
- chunks:["I am bitterly disappointed.","It is highly unlikely.","We drew a firm distinction.","She raised a valid concern.","It bears no resemblance to the original.","That poses a serious risk."],
+ chunks:["The delay was entirely avoidable.", "It is a bitterly disappointing outcome for the team.", "The detail is deceptively simple.", "We are acutely aware of the cost implications.", "It bears a striking resemblance to the original scheme.", "The argument is utterly compelling."],
  vocab:["bitterly disappointed|profundamente decepcionado|I was bitterly disappointed.|BITTER = amargo: la decepción sabe amarga.","highly unlikely|muy improbable|It is highly unlikely.|","draw a distinction|establecer una distinción|Let us draw a distinction.|","raise a concern|plantear una inquietud|She raised a concern.|","bear no resemblance|no parecerse en nada|It bears no resemblance.|","pose a risk|suponer un riesgo|That poses a risk.|","meet a requirement|cumplir un requisito|It meets the requirement.|","reach a consensus|alcanzar un consenso|We reached a consensus.|","utterly|completamente|Utterly pointless.|","vastly|enormemente|Vastly overestimated.|"],
  dial:{t:"Feedback on a redesign", l:[
   "A|What is your honest reaction?|¿Cuál es tu reacción sincera?",
@@ -220,7 +220,7 @@ window.DIAS_C1 = [
 },
 {
  d:7, tema:"REPASO · Debate de nivel C1", objetivo:"Sostener un argumento largo con matiz y contraataque.",
- chunks:["I would go further than that.","That rather depends on how you define it.","There is a fundamental flaw in that reasoning.","I take your point, up to a point.","Let me put the counter-case.","We are conflating two separate issues."],
+ chunks:["That is precisely the point I was coming to.", "I would question the premise of that argument.", "You are conflating two different issues there.", "I am not disputing the figures; I am disputing the reading of them.", "Let us be clear about what is actually being proposed.", "With the greatest respect, that is a false comparison."],
  vocab:["go further|ir más allá|I would go further.|","fundamental flaw|fallo de raíz|There is a fundamental flaw.|","conflate|mezclar dos cosas distintas|We are conflating two issues.|CON-FLATE: los inflas juntos en el mismo globo.","up to a point|hasta cierto punto|I agree, up to a point.|","counter-case|argumento contrario|Let me put the counter-case.|","premise|premisa|The premise is wrong.|","circular|circular (razonamiento)|That is circular reasoning.|","cherry-pick|elegir a conveniencia|You are cherry-picking data.|Coges solo las CEREZAS buenas del árbol.","straw man|hombre de paja|That is a straw man.|","bear out|corroborar|The data bear that out.|"],
  dial:{t:"A sharp exchange", l:[
   "A|Remote work has damaged productivity. The data show it.|El teletrabajo ha dañado la productividad. Los datos lo demuestran.",
@@ -257,7 +257,7 @@ window.DIAS_C1 = [
 ,
 {
  d:8, tema:"Escritura académica", objetivo:"Citar, matizar y estructurar como en un informe serio.",
- chunks:["The evidence suggests, albeit tentatively, that…","This is consistent with earlier findings.","A number of caveats apply.","The sample size limits any firm conclusion.","Correlation should not be read as causation.","Further research is warranted."],
+ chunks:["This report sets out the findings of the structural survey.", "The evidence presented below supports the following conclusions.", "For the purposes of this assessment, three options were considered.", "It should be noted that access was limited throughout.", "The findings are consistent with the earlier investigation.", "Further investigation is recommended before works commence."],
  vocab:["caveat|salvedad|A number of caveats apply.|CAVE-AT: cuidado, hay una CUEVA en el camino.","consistent with|coherente con|Consistent with earlier work.|","tentatively|de forma provisional|Tentatively, yes.|","warrant|justificar|Further research is warranted.|","correlation|correlación|Correlation is not causation.|","robust|sólido|A robust finding.|","outlier|valor atípico|Two outliers distort the mean.|OUT-LIER: el que se sale de la línea.","attribute to|atribuir a|Attributed to seasonality.|","margin of error|margen de error|Within the margin of error.|","preliminary|preliminar|Preliminary findings.|"],
  dial:{t:"Discussing a study", l:[
   "A|Do the findings support the hypothesis?|¿Los resultados apoyan la hipótesis?",
@@ -293,7 +293,7 @@ window.DIAS_C1 = [
 },
 {
  d:9, tema:"Lenguaje figurado", objetivo:"Entender la metáfora que el inglés usa sin darse cuenta.",
- chunks:["The argument does not hold water.","Prices have gone through the roof.","The idea gained traction.","We are haemorrhaging money.","The bottleneck is approval.","That was a watershed moment."],
+ chunks:["The budget is haemorrhaging money on access alone.", "The scheme has lost all momentum since January.", "We are building the argument from the ground up.", "The negotiation has reached a plateau.", "That proposal does not hold water.", "The project has finally turned the corner."],
  vocab:["hold water|sostenerse|That argument does not hold water.|Un cubo agujereado no RETIENE el agua.","gain traction|calar / ganar adeptos|The idea gained traction.|TRACCIÓN: las ruedas por fin agarran.","through the roof|por las nubes|Prices went through the roof.|","haemorrhage|sangrar (dinero)|We are haemorrhaging money.|","toxic|tóxico|A toxic debate.|","landscape|panorama|The regulatory landscape.|","bottleneck|cuello de botella|The bottleneck is approval.|","snowball|crecer sin control|The problem snowballed.|Una BOLA DE NIEVE que baja creciendo.","watershed|punto de inflexión|A watershed moment.|","groundwork|trabajo de base|We laid the groundwork.|"],
  dial:{t:"Explaining a business decline", l:[
   "A|Why did the strategy fail?|¿Por qué falló la estrategia?",
@@ -329,7 +329,7 @@ window.DIAS_C1 = [
 },
 {
  d:10, tema:"Phrasal verbs de registro alto", objetivo:"Elegir entre el phrasal y su equivalente latino según el contexto.",
- chunks:["The scheme was phased out gradually.","We must factor in the delay.","The findings bear out our concerns.","They glossed over the risks.","Let us flesh out the proposal.","The costs were written off."],
+ chunks:["We will have to put up with the scaffolding until April.", "Let us not lose sight of the original brief.", "They have come round to the idea of a courtyard.", "I will not stand for another unapproved change.", "We are running up against the height limit.", "It all boils down to the cost of access."],
  vocab:["phase out|eliminar gradualmente|Phased out by 2030.|","factor in|tener en cuenta|Factor in the delay.|","bear out|corroborar|The data bear it out.|","gloss over|pasar de puntillas por|They glossed over the risks.|GLOSS = barniz: lo tapas con una capa brillante.","flesh out|desarrollar|Flesh out the idea.|Ponerle CARNE al esqueleto.","write off|dar por perdido|The debt was written off.|","iron out|limar|Iron out the differences.|Pasar la PLANCHA sobre las arrugas.","rule out|descartar|We cannot rule it out.|","carry out|llevar a cabo|Carry out an audit.|","single out|señalar / destacar|She was singled out.|"],
  dial:{t:"Reviewing a draft report", l:[
   "A|The draft glosses over the environmental risks.|El borrador pasa de puntillas por los riesgos ambientales.",
@@ -365,7 +365,7 @@ window.DIAS_C1 = [
 },
 {
  d:11, tema:"Decir menos y significar lo mismo", objetivo:"Usar elipsis y sustitución para no repetirte.",
- chunks:["I will if you will.","She said she would, but she did not.","If not, let me know.","I hope so. I am afraid not.","He is coming, and so is she.","The former is cheaper, the latter safer."],
+ chunks:["I have read the report; the engineer has not.", "We could keep the frame, but the client would rather not.", "The first option is cheaper; the second, far more durable.", "Will the licence arrive in time? I hope so.", "Some of the windows face north, others east.", "If you can come on Thursday, do."],
  vocab:["so do I|yo también|So do I.|","neither do I|yo tampoco|Neither do I.|","if not|si no|If not, tell me.|","if so|si es así|If so, proceed.|","the former|el primero|The former is cheaper.|FORMER suena a FORMAR: lo que se formó antes.","the latter|el segundo|The latter is safer.|LATTER suena a LATE: lo que llega más tarde.","do so|hacerlo|Please do so today.|","as such|como tal|It is not a problem as such.|","either way|en cualquier caso|Either way, we lose.|","otherwise|si no / por lo demás|Otherwise, all is well.|"],
  dial:{t:"Two options on the table", l:[
   "A|We have two suppliers: Norse and Delta.|Tenemos dos proveedores: Norse y Delta.",
@@ -402,7 +402,7 @@ window.DIAS_C1 = [
 ,
 {
  d:12, tema:"Conectores de precisión", objetivo:"Encadenar ideas complejas sin ambigüedad.",
- chunks:["The deadline was missed, whereupon the client withdrew.","The costs rose, thereby reducing the margin.","Hence the delay.","Insofar as it applies, the rule stands.","This notwithstanding, we proceeded.","Accordingly, the plan was revised."],
+ chunks:["Notwithstanding the delay, the budget has held.", "Insofar as the structure is concerned, we are satisfied.", "The cost, albeit significant, is justified by the saving.", "Hence the decision to retain the original façade.", "Conversely, demolition would release the whole plot.", "Thereafter, the programme runs as scheduled."],
  vocab:["whereupon|tras lo cual|He resigned, whereupon we met.|","thereby|con lo cual|Thereby reducing costs.|","hence|de ahí|Hence the delay.|","accordingly|en consecuencia|Accordingly, we revised it.|","insofar as|en la medida en que|Insofar as it applies.|","conversely|a la inversa|Conversely, demand fell.|","in that|en el sentido de que|Unusual in that it is free.|","lest|no sea que|Check it lest we forget.|","inasmuch as|dado que|Inasmuch as we agreed.|","to that end|con ese fin|To that end, we hired two.|"],
  dial:{t:"Explaining a chain of decisions", l:[
   "A|Why was the contract revised?|¿Por qué se revisó el contrato?",
@@ -438,7 +438,7 @@ window.DIAS_C1 = [
 },
 {
  d:13, tema:"Inglés jurídico y administrativo", objetivo:"Leer contratos y escribir con precisión contractual.",
- chunks:["Subject to the terms set out below…","The party shall be liable for any damage.","This agreement is hereby terminated.","Without prejudice to clause 7…","The tenant is responsible for maintenance.","Failure to comply may result in penalties."],
+ chunks:["The parties hereby agree to the terms set out below.", "Payment shall be made within thirty days of invoice.", "The contractor shall be liable for any defects.", "Notwithstanding clause four, the deadline remains.", "This agreement is subject to planning permission.", "The aforementioned works exclude the external paving."],
  vocab:["liable for|responsable de|Liable for damage.|","hereby|por la presente|Hereby terminated.|","without prejudice to|sin perjuicio de|Without prejudice to clause 7.|","subject to|sujeto a|Subject to approval.|","comply with|cumplir con|Comply with the regulations.|","breach|incumplimiento|A breach of contract.|BREACH = BRECHA: se abre una grieta en el acuerdo.","indemnify|indemnizar|Indemnify the owner.|","waiver|renuncia|A waiver of rights.|","termination|resolución (de contrato)|Notice of termination.|","deed|escritura|The title deed.|"],
  dial:{t:"Going through a lease", l:[
   "A|Clause four says the tenant shall be liable for all repairs.|La cláusula cuatro dice que el arrendatario será responsable de todas las reparaciones.",
@@ -474,7 +474,7 @@ window.DIAS_C1 = [
 },
 {
  d:14, tema:"REPASO · Informe técnico", objetivo:"Redactar un informe profesional completo en inglés.",
- chunks:["This report sets out the findings of the survey.","The scope of this report is limited to…","Our principal recommendation is that…","The following issues require attention.","Costs are estimated at approximately…","We would be pleased to discuss this further."],
+ chunks:["The purpose of this report is to assess the existing structure.", "The methodology comprised a visual inspection and two openings.", "The findings fall into three categories.", "Option B offers the best balance of cost and risk.", "We would therefore recommend proceeding with Option B.", "The limitations of this assessment are set out in the appendix."],
  vocab:["set out|exponer|This report sets out the findings.|","scope|alcance|The scope is limited.|","findings|conclusiones|The findings are clear.|","recommendation|recomendación|Our recommendation is…|","assessment|evaluación|A structural assessment.|","remedial works|obras de reparación|Remedial works are required.|","defect|defecto|A structural defect.|","estimate|estimar|Costs are estimated at…|","in accordance with|conforme a|In accordance with the code.|","further to|en relación con|Further to our visit.|"],
  dial:{t:"Presenting a survey report", l:[
   "A|Further to our inspection, what did you find?|En relación con nuestra inspección, ¿qué encontrasteis?",
@@ -510,7 +510,7 @@ window.DIAS_C1 = [
 },
 {
  d:15, tema:"Ironía y understatement", objetivo:"Entender lo que un británico dice y lo que quiere decir.",
- chunks:["That is not ideal.","I am not entirely convinced.","With the greatest respect…","It could be worse, I suppose.","That is one way of looking at it.","Interesting."],
+ chunks:["That is not ideal, I would say.", "We have had better weeks on site.", "The budget is a little on the optimistic side.", "It could have gone worse, I suppose.", "I am not entirely convinced by the structural solution.", "That is one way of looking at it."],
  vocab:["not ideal|un desastre (eufemismo)|That is not ideal.|","with the greatest respect|estás muy equivocado|With the greatest respect, no.|Cuanto MÁS respeto se declara, MENOS hay.","quite good|correcto sin más|It was quite good.|","a bit of a problem|un problemón|We have a bit of a problem.|","I hear what you say|no estoy de acuerdo|I hear what you say, but…|","understatement|atenuación irónica|A classic understatement.|","tongue in cheek|en broma|He said it tongue in cheek.|","dry humour|humor seco|Very dry humour.|","sarcasm|sarcasmo|Heavy sarcasm.|","deadpan|con cara de póquer|Delivered deadpan.|"],
  dial:{t:"A very British piece of bad news", l:[
   "A|How did the presentation go?|¿Qué tal fue la presentación?",
@@ -547,7 +547,7 @@ window.DIAS_C1 = [
 ,
 {
  d:16, tema:"Quién hace qué", objetivo:"Manejar ergativos, causativos y voz media.",
- chunks:["The door opened by itself.","The book sells well.","I had the roof repaired.","She got her bag stolen.","The glass broke.","This fabric washes easily."],
+ chunks:["The window will not open.", "The paint is peeling where the damp got in.", "We had the roof replaced last autumn.", "The contract reads as though it were drafted in a hurry.", "The brickwork cleans up beautifully.", "The client got the whole thing redrawn."],
  vocab:["get something done|mandar hacer algo|I got the car fixed.|","have something done|mandar hacer algo|We had the roof repaired.|","sell well|venderse bien|The book sells well.|","wear out|desgastarse|These shoes wear out fast.|","shrink|encoger|Wool shrinks.|","peel off|despegarse|The paint is peeling off.|","crack|agrietarse|The wall cracked.|","settle|asentarse|The building has settled.|","warp|alabearse|The wood has warped.|WARP suena a WARPED: la madera se tuerce.","damp|humedad|Damp in the north wall.|"],
  dial:{t:"A building survey conversation", l:[
   "A|The rear wall has cracked again.|El muro trasero se ha vuelto a agrietar.",
@@ -583,7 +583,7 @@ window.DIAS_C1 = [
 },
 {
  d:17, tema:"Proporciones y matices comparativos", objetivo:"Expresar relaciones complejas entre magnitudes.",
- chunks:["The costs are three times what we budgeted.","It is nothing like as complex as it looks.","The more we delay, the worse it gets.","It is marginally better, if at all.","Demand outstripped supply.","There is no comparison."],
+ chunks:["The deeper the foundations, the higher the cost.", "The saving is proportional to the area insulated.", "It is twice as expensive for half the lifespan.", "Costs rose in line with the price of steel.", "The more we investigate, the worse it looks.", "The difference is marginal at best."],
  vocab:["nothing like as|ni de lejos tan|Nothing like as hard.|","if at all|si es que algo|Marginally, if at all.|","by a factor of|en un factor de|Increased by a factor of three.|","in proportion to|en proporción a|In proportion to income.|","disproportionate|desproporcionado|A disproportionate cost.|","on a par with|a la altura de|On a par with the best.|PAR de golf: mismo nivel.","second only to|solo por detrás de|Second only to Madrid.|","outstrip|superar|Demand outstripped supply.|","narrow the gap|acortar la distancia|We narrowed the gap.|","offset|compensar|Savings offset the cost.|"],
  dial:{t:"Analysing a cost overrun", l:[
   "A|How bad is the overrun?|¿Cómo de grave es la desviación?",
@@ -619,7 +619,7 @@ window.DIAS_C1 = [
 },
 {
  d:18, tema:"Modales de matiz", objetivo:"Captar el significado escondido de will, would, shall y may.",
- chunks:["He will spend hours on it, typically.","She would always arrive late.","That will be the courier.","Shall I open the window?","He may well have forgotten.","You might have told me!"],
+ chunks:["You may well be right about the drainage.", "We could conceivably finish by June.", "The client might just accept it.", "I dare say the council will object.", "That would hardly be a solution.", "We should scarcely be surprised at the delay."],
  vocab:["typically|típicamente|He will typically refuse.|","characteristic|característico|That is characteristic of him.|","reproach|reproche|A gentle reproach.|","insistence|insistencia|His insistence on detail.|","willingness|disposición|Her willingness to help.|","reluctance|reticencia|A certain reluctance.|","predictability|previsibilidad|Utter predictability.|","habitual|habitual|Habitual behaviour.|","presumably|presumiblemente|Presumably he forgot.|","inevitably|inevitablemente|Inevitably, it rained.|"],
  dial:{t:"Talking about a colleague", l:[
   "A|He will leave everything until the last day.|Siempre lo deja todo para el último día.",
@@ -655,7 +655,7 @@ window.DIAS_C1 = [
 },
 {
  d:19, tema:"El acento que cambia el sentido", objetivo:"Usar el ritmo y el acento contrastivo del inglés hablado.",
- chunks:["I did not SAY she stole the money.","I did not say SHE stole the money.","It is not what you said, it is how you said it.","Say it again, with the stress on the verb.","Native speakers swallow half the syllables.","Listen for the rhythm, not the words."],
+ chunks:["It was the client who asked for it, not us.", "I said we could look at it, not that we would do it.", "That is what the drawing shows.", "We did send the instruction on Monday.", "I am not saying it is impossible.", "That is exactly what I was afraid of."],
  vocab:["stress|acento / énfasis|Put the stress on the verb.|","intonation|entonación|Rising intonation.|","weak form|forma débil|The weak form of 'can'.|","linking|enlace|Linking between words.|","schwa|vocal neutra|The schwa is everywhere.|SCHWA suena a un suspiro: la vocal del cansancio.","contrastive stress|acento contrastivo|Contrastive stress changes meaning.|","syllable|sílaba|Three syllables.|","rhythm|ritmo|English has stress rhythm.|","swallow|comerse (sonidos)|Native speakers swallow syllables.|","elision|elisión|Elision of the final t.|"],
  dial:{t:"A pronunciation coaching session", l:[
   "A|Say this: I did not say she stole the money.|Di esto: I did not say she stole the money.",
@@ -691,7 +691,7 @@ window.DIAS_C1 = [
 },
 {
  d:20, tema:"Negociar cuando aprieta", objetivo:"Sostener una posición dura con lenguaje suave.",
- chunks:["I am afraid that is simply not something we can do.","We would need something in return.","That is our final position on price.","I think we are some way apart.","Let me be candid with you.","Where does that leave us?"],
+ chunks:["I am afraid that is as far as we can go.", "We would need something in return for that.", "Let me be straight with you about the figures.", "That is not a price I can defend to my client.", "I think we are closer than it sounds.", "Shall we park that and come back to it?"],
  vocab:["candid|franco|Let me be candid.|","in return|a cambio|Something in return.|","some way apart|lejos de un acuerdo|We are some way apart.|","walk away|levantarse de la mesa|We are prepared to walk away.|","sticking point|escollo|Price is the sticking point.|El punto donde todo se ATASCA.","concession|concesión|A significant concession.|","leverage|poder de negociación|We have little leverage.|","bottom line|límite|That is our bottom line.|","in good faith|de buena fe|Negotiated in good faith.|","revisit|volver sobre|Let us revisit clause 5.|"],
  dial:{t:"The hard part of a negotiation", l:[
   "A|Let me be candid: that price does not work for us.|Seré franca: ese precio no nos sirve.",
@@ -728,7 +728,7 @@ window.DIAS_C1 = [
 ,
 {
  d:21, tema:"REPASO · Presentación de nivel C1", objetivo:"Exponer una idea compleja ante público exigente.",
- chunks:["I want to challenge an assumption most of us share.","Bear with me for a moment.","Let me give you a sense of the scale.","This is where it gets interesting.","If you take one thing from today, take this.","I will leave you with a question."],
+ chunks:["I want to begin with a question rather than an answer.", "Three things changed between the brief and the building.", "Bear with me, because the figures matter here.", "Which brings me to the real decision.", "If you take one thing away, let it be this.", "I will leave you with the section through the courtyard."],
  vocab:["challenge an assumption|cuestionar una premisa|Let me challenge an assumption.|","bear with me|ten paciencia|Bear with me a moment.|","a sense of scale|idea de la magnitud|To give you a sense of scale.|","counterintuitive|contraintuitivo|A counterintuitive result.|","takeaway|idea que llevarse|The key takeaway.|","anecdote|anécdota|A brief anecdote.|","resonate|calar|The idea resonated.|","land|calar|The point did not land.|","signpost|señalizar el discurso|Signpost your structure.|","wrap up|cerrar|Let me wrap up.|"],
  dial:{t:"Rehearsing a talk", l:[
   "A|How should I open?|¿Cómo abro?",
@@ -764,7 +764,7 @@ window.DIAS_C1 = [
 },
 {
  d:22, tema:"Datos e incertidumbre", objetivo:"Comunicar cifras sin exagerar ni esconder.",
- chunks:["The figure is broadly stable.","Within the margin of error, unchanged.","There is considerable variation between regions.","The trend is upward, though not uniformly.","These figures should be treated with caution.","Roughly one in five, give or take."],
+ chunks:["The figures point to a saving of around a third.", "The margin of error is considerable.", "On the available evidence, the frame is sound.", "It is reasonable to assume a ten per cent contingency.", "The data are suggestive rather than conclusive.", "I would not want to put a figure on it yet."],
  vocab:["broadly stable|prácticamente estable|Broadly stable since March.|","variation|variación|Considerable variation.|","uniformly|de manera uniforme|Not uniformly distributed.|","give or take|más o menos|Ten years, give or take.|","understate|minimizar|That understates the risk.|","overstate|exagerar|Do not overstate it.|","approximate|aproximado|An approximate figure.|","discrepancy|discrepancia|A discrepancy of 3%.|","baseline|punto de partida|Compared with the baseline.|","skew|sesgar|Two cases skew the average.|"],
  dial:{t:"Presenting uncertain figures", l:[
   "A|Has the situation improved?|¿Ha mejorado la situación?",
@@ -800,7 +800,7 @@ window.DIAS_C1 = [
 },
 {
  d:23, tema:"Crítica de arquitectura y arte", objetivo:"Valorar espacios y obras con vocabulario especializado.",
- chunks:["The building sits awkwardly in its context.","The detailing is exquisite throughout.","It reads as a single gesture.","The plan is generous but the section is mean.","There is a legibility problem at the entrance.","It has aged remarkably well."],
+ chunks:["The building rewards a second visit.", "The plan is generous where it matters and tight where it does not.", "It is a confident piece of work, perhaps too confident.", "The materials have been allowed to age honestly.", "The section is where the intelligence of the project lies.", "Its weakness is the relationship with the street."],
  vocab:["sit in its context|encajar en el entorno|It sits well in its context.|","detailing|detalle constructivo|The detailing is exquisite.|","legibility|legibilidad|A legibility problem.|","massing|volumetría|The massing is heavy.|","threshold|umbral|A generous threshold.|","circulation|recorridos|The circulation is confused.|","restrained|contenido|A restrained palette.|","gesture|gesto|A single formal gesture.|","vernacular|vernáculo|The local vernacular.|","age well|envejecer bien|Concrete rarely ages well.|"],
  dial:{t:"Visiting a new building", l:[
   "A|What do you make of it?|¿Qué te parece?",
@@ -836,7 +836,7 @@ window.DIAS_C1 = [
 },
 {
  d:24, tema:"Política y economía", objetivo:"Descifrar el eufemismo institucional.",
- chunks:["The measures amount to austerity in all but name.","Growth has been revised downwards.","There will be an element of restructuring.","Efficiencies will be found.","The policy is under review.","We are managing expectations."],
+ chunks:["The adjustment will be phased over three years.", "Efficiencies have been identified across the department.", "The decision has been taken at a higher level.", "The measure is revenue-neutral, we are told.", "A degree of flexibility has been built in.", "The timetable is under review."],
  vocab:["in all but name|en todo menos en el nombre|Austerity in all but name.|","revise downwards|revisar a la baja|Growth revised downwards.|","efficiencies|recortes (eufemismo)|Efficiencies will be found.|","under review|en revisión|The policy is under review.|","headwinds|dificultades|Economic headwinds.|Viento EN CONTRA de la cara.","downturn|recesión|A sharp downturn.|","stimulus|estímulo|A fiscal stimulus.|","austerity|austeridad|Years of austerity.|","u-turn|giro de 180 grados|A policy u-turn.|","kick the can down the road|dar patada adelante|They kicked the can down the road.|"],
  dial:{t:"Reading between the lines of a statement", l:[
   "A|The minister says the policy is under review.|El ministro dice que la política está en revisión.",
@@ -872,7 +872,7 @@ window.DIAS_C1 = [
 },
 {
  d:25, tema:"Comportamiento y abstracción", objetivo:"Hablar de psicología y motivación con precisión.",
- chunks:["We are wired to overestimate short-term risk.","It is a question of incentives, not character.","There is a strong element of confirmation bias.","People routinely conflate confidence with competence.","The behaviour is entirely rational, given the constraints.","Habit does most of the work."],
+ chunks:["By and large, clients underestimate the cost of access.", "There is a broad tendency to favour new build.", "With few exceptions, old buildings are worth keeping.", "As a rule, the structure is the least of the problems.", "Architects are, if anything, too optimistic about programme.", "That holds true across the sector."],
  vocab:["be wired to|estar programado para|We are wired to react.|El cerebro viene CABLEADO así.","incentive|incentivo|A perverse incentive.|","confirmation bias|sesgo de confirmación|Classic confirmation bias.|","competence|competencia|Confidence is not competence.|","constraint|limitación|Given the constraints.|","habit|hábito|Habit does the work.|","willpower|fuerza de voluntad|Willpower is unreliable.|","nudge|empujoncito|A gentle nudge.|","trade-off|contrapartida|Every choice is a trade-off.|","reinforce|reforzar|Success reinforces the habit.|"],
  dial:{t:"Why good plans fail", l:[
   "A|Why do people abandon plans in week three?|¿Por qué la gente abandona los planes en la tercera semana?",
@@ -909,7 +909,7 @@ window.DIAS_C1 = [
 ,
 {
  d:26, tema:"Narrar con estilo", objetivo:"Controlar el tiempo y el aspecto en la narración literaria.",
- chunks:["She had been waiting for an hour when he finally appeared.","It was the kind of morning that promises nothing.","He would come back every summer, always alone.","Not a word had been said about the letter.","By the time she understood, it was far too late.","Years later, she would remember that silence."],
+ chunks:["We had been working on it for a year before the client changed his mind.", "By then the scaffolding had already gone up.", "It was only later that the significance became clear.", "Three weeks passed before anyone noticed.", "Looking back, the warning signs were all there.", "And then, quite suddenly, the licence came through."],
  vocab:["by the time|para cuando|By the time she knew.|","years later|años después|Years later, she would recall it.|","the kind of|de esos que|The kind of morning that…|","scarcely|apenas|Scarcely a word.|","linger|permanecer|The smell lingered.|","glimpse|vislumbrar|She glimpsed the truth.|","recall|recordar|He recalled the summer.|","unfold|desarrollarse|The story unfolded slowly.|","in hindsight|en retrospectiva|In hindsight, obvious.|","as though|como si|As though nothing had happened.|"],
  dial:{t:"Discussing a novel", l:[
   "A|What makes the opening work?|¿Qué hace que funcione el comienzo?",
@@ -945,7 +945,7 @@ window.DIAS_C1 = [
 },
 {
  d:27, tema:"El filo del significado", objetivo:"Elegir entre sinónimos con carga emocional distinta.",
- chunks:["He is not confident, he is complacent.","There is a difference between frugal and mean.","She is principled; he is merely rigid.","That is not simplicity, it is poverty of thought.","Call it ambition or call it greed.","The word you want is 'meticulous', not 'obsessive'."],
+ chunks:["I would call it restrained rather than plain.", "Thrifty, not mean.", "The scheme is ambitious; the last one was merely expensive.", "Compact is the word the agent used; cramped is the truth.", "He is thorough, which is not the same as slow.", "There is a difference between simple and simplistic."],
  vocab:["complacent|autocomplaciente|Dangerously complacent.|","frugal|frugal|Frugal, not mean.|","principled|íntegro|A principled refusal.|","rigid|rígido|Rigid rather than firm.|","meticulous|meticuloso|Meticulous work.|","obsessive|obsesivo|Obsessive about detail.|","shrewd|astuto (positivo)|A shrewd negotiator.|","cunning|astuto (negativo)|A cunning move.|","assertive|asertivo|Assertive, not aggressive.|","abrasive|áspero|An abrasive manner.|"],
  dial:{t:"Writing a reference letter", l:[
   "A|How would you describe him honestly?|¿Cómo lo describirías con sinceridad?",
@@ -981,7 +981,7 @@ window.DIAS_C1 = [
 },
 {
  d:28, tema:"REPASO · Examen oral C1", objetivo:"Sostener siete minutos sobre un tema abstracto sin caerte.",
- chunks:["That is a deceptively simple question.","Let me approach it from two angles.","I would distinguish between the principle and the practice.","The obvious answer is also, I think, the wrong one.","If pressed, I would say…","I am not sure I have answered your question."],
+ chunks:["Let me take those two points in turn.", "I will come to the second part of your question in a moment.", "Before I answer that, it is worth setting out the context.", "That is a fair challenge, and here is my response.", "To put it another way, the cost is deferred, not avoided.", "I think that answers your question, but do press me."],
  vocab:["deceptively simple|engañosamente simple|A deceptively simple question.|","approach from|abordar desde|Approach it from two angles.|","distinguish between|distinguir entre|Distinguish principle and practice.|","if pressed|si me apuras|If pressed, I would say yes.|","on reflection|pensándolo bien|On reflection, no.|","for the sake of argument|por seguir el razonamiento|For the sake of argument.|","beg the question|dar por supuesto lo que se discute|That begs the question.|","nuance|matiz|The nuance matters.|","in principle|en principio|In principle, yes.|","in practice|en la práctica|In practice, rarely.|"],
  dial:{t:"Speaking exam, long turn", l:[
   "A|Should culture be publicly funded?|¿Debe financiarse la cultura con dinero público?",
@@ -1017,7 +1017,7 @@ window.DIAS_C1 = [
 },
 {
  d:29, tema:"Errores fosilizados", objetivo:"Eliminar los fallos que arrastra un hispanohablante avanzado.",
- chunks:["I look forward to hearing from you.","It depends on the context.","I am used to working late.","People are, not people is.","Explain it to me, not explain me.","I have been living here since 2019."],
+ chunks:["I look forward to hearing from you.", "It depends on the orientation.", "We have been working here since 2019.", "I agree with you about the budget.", "I am used to working with old buildings.", "Let me explain the detail to you."],
  vocab:["fossilised|fosilizado|A fossilised error.|","interference|interferencia|Mother-tongue interference.|","false friend|falso amigo|'Actually' is a false friend.|","collocation|colocación|A collocation error.|","word order|orden de palabras|Wrong word order.|","omission|omisión|Omission of the subject.|","redundant|redundante|A redundant pronoun.|","self-correct|autocorregirse|Learn to self-correct.|","monitor|supervisar|Monitor your own output.|","unlearn|desaprender|Some habits must be unlearned.|"],
  dial:{t:"A correction session", l:[
   "A|I am agree with you.|(error frecuente)",
@@ -1053,7 +1053,7 @@ window.DIAS_C1 = [
 },
 {
  d:30, tema:"Consolidación C1", objetivo:"Cerrar los 120 días y diseñar tu mantenimiento.",
- chunks:["Four months ago this sentence would have taken me a minute to build.","What has changed is not knowledge but automaticity.","I no longer monitor my grammar while speaking.","The plan from here is exposure, not study.","I intend to read one book a month, indefinitely.","Maintenance is the whole game now."],
+ chunks:["I can hold the floor for five minutes without losing the thread.", "I can say no with a smooth surface and a firm answer.", "I can write a report that an engineer would respect.", "I can hear the irony and answer it in kind.", "I know which of my errors are fossilised, and I watch for them.", "From here on, the work is maintenance, not conquest."],
  vocab:["automaticity|automatismo|Automaticity, not knowledge.|","exposure|exposición|Daily exposure matters.|","attrition|pérdida de nivel|Language attrition is real.|A-TRICIÓN: se desgasta por fricción.","maintenance|mantenimiento|Maintenance is the game.|","plateau|meseta|A predictable plateau.|","diminishing returns|rendimientos decrecientes|Diminishing returns after B2.|","consolidate|consolidar|Consolidate before advancing.|","indefinitely|indefinidamente|Continue indefinitely.|","input|estímulo lingüístico|Comprehensible input.|","output|producción|Output forces processing.|"],
  dial:{t:"Four months on", l:[
   "A|What has actually changed?|¿Qué ha cambiado realmente?",

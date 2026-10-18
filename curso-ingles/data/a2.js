@@ -2,7 +2,7 @@
 window.DIAS_A2 = [
 {
  d:1, tema:"Quién eres", objetivo:"Presentarte y dar datos personales sin pensar en español.",
- chunks:["Hi, I am Daniel. Nice to meet you.","Where are you from?","I am from Zaragoza, in the north of Spain.","What do you do for a living?","I work as an architect.","How long have you been here?"],
+ chunks:["Good morning, I am Patricia, the architect on this project.", "Where are you based?", "I am from Zaragoza, in the north of Spain.", "This is my colleague. He is the site manager.", "Is this your first time in Madrid?", "I am here for the site meeting."],
  vocab:["nice to meet you|encantado de conocerte|Nice to meet you, I am Sara.","for a living|para ganarse la vida|What do you do for a living?","abroad|en el extranjero|My sister lives abroad.","neighbour|vecino|My neighbour is very friendly.","actually|en realidad|Actually, I am not English.","quite|bastante|The city is quite big.","by the way|por cierto|By the way, what is your name?","spare time|tiempo libre|In my spare time I play tennis.","originally|originalmente|I am originally from Madrid.","get on well|llevarse bien|I get on well with my colleagues."],
  dial:{t:"First day at a language school", l:[
   "A|Hi, is this seat free?|Hola, ¿está libre este asiento?",
@@ -38,7 +38,7 @@ window.DIAS_A2 = [
 },
 {
  d:2, tema:"Tu rutina diaria", objetivo:"Contar lo que haces cada día con present simple y adverbios de frecuencia.",
- chunks:["I usually get up at seven.","I have breakfast before I leave.","She never works at weekends.","What time do you finish work?","I hardly ever watch television.","We always have dinner together."],
+ chunks:["I usually visit the site twice a week.", "We always start the meeting at nine.", "She never works on Fridays.", "What time does the site open?", "I hardly ever drive to the site.", "We often fly to London for meetings."],
  vocab:["get up|levantarse|I get up at half past six.","have a shower|ducharse|I have a shower every morning.","commute|desplazarse al trabajo|I commute by train.","hardly ever|casi nunca|He hardly ever calls me.","once a week|una vez por semana|I go to the gym once a week.","go to bed|acostarse|I go to bed late.","get home|llegar a casa|I get home at eight.","be late for|llegar tarde a|I am often late for work.","in the meantime|mientras tanto|In the meantime, I check my email.","routine|rutina|My routine is always the same."],
  dial:{t:"Talking about a normal weekday", l:[
   "A|What time do you usually get up?|¿A qué hora te levantas normalmente?",
@@ -74,7 +74,7 @@ window.DIAS_A2 = [
 },
 {
  d:3, tema:"Familia y descripciones", objetivo:"Describir a las personas por dentro y por fuera.",
- chunks:["I have got two brothers and one sister.","She takes after her mother.","He is tall and quite thin.","What is your father like?","They look very similar.","We get on really well."],
+ chunks:["We have got a small team of four architects.", "I have got a meeting at eleven.", "It is a lovely old brick building.", "Have you got the drawings with you?", "What is the new client like?", "They have got a beautiful modern flat."],
  vocab:["take after|parecerse a (familiar)|She takes after her father.","look like|parecerse (físicamente)|You look like your sister.","get on with|llevarse bien con|I get on with my brother.","in his forties|cuarentón|My uncle is in his forties.","curly|rizado|She has curly hair.","kind|amable|My grandmother is very kind.","stubborn|testarudo|He is really stubborn.","only child|hijo único|I am an only child.","relatives|parientes|We have relatives in Argentina.","cheerful|alegre|My mother is always cheerful."],
  dial:{t:"Showing a family photo", l:[
   "A|Is this your family?|¿Es esta tu familia?",
@@ -110,7 +110,7 @@ window.DIAS_A2 = [
 },
 {
  d:4, tema:"Tu casa", objetivo:"Describir espacios y decir dónde están las cosas.",
- chunks:["There is a big window in the living room.","There are two bedrooms upstairs.","The kitchen is next to the dining room.","Is there a lift in the building?","There isn't any furniture yet.","It is on the third floor."],
+ chunks:["There is a big window in the living room.", "There are two bedrooms on the top floor.", "The meeting room is next to the entrance.", "Is there a lift in the building?", "There is no scaffolding on the north side.", "The studio is on the third floor."],
  vocab:["upstairs|arriba (piso de arriba)|The bedrooms are upstairs.","ground floor|planta baja|We live on the ground floor.","lift|ascensor|There is no lift in the building.","furniture|muebles|The furniture is very old.","cosy|acogedor|The flat is small but cosy.","view|vistas|The flat has a lovely view.","rent|alquiler / alquilar|The rent is quite high.","next to|al lado de|The bank is next to the school.","opposite|enfrente de|The park is opposite my house.","spacious|amplio|The living room is very spacious."],
  dial:{t:"Renting a flat", l:[
   "A|Good morning. I am calling about the flat.|Buenos días. Llamo por el piso.",
@@ -146,7 +146,7 @@ window.DIAS_A2 = [
 },
 {
  d:5, tema:"Comer fuera", objetivo:"Pedir en un restaurante y hablar de comida con soltura.",
- chunks:["Could I have the menu, please?","I will have the chicken, please.","Is there any salt on the table?","How would you like your steak?","Could we have the bill, please?","I am allergic to nuts."],
+ chunks:["Could we have the menu, please?", "I will have the fish, please.", "Is there any milk for the coffee?", "We would like a table for three, please.", "Could we have the bill, please?", "I am allergic to nuts."],
  vocab:["starter|primer plato|I will have the soup as a starter.","main course|plato principal|What is the main course?","bill|cuenta|Could we have the bill?","tip|propina|We left a small tip.","tasty|sabroso|The fish was very tasty.","spicy|picante|This sauce is too spicy.","order|pedir / pedido|Are you ready to order?","allergic to|alérgico a|I am allergic to nuts.","waiter|camarero|The waiter was very friendly.","dessert|postre|What is for dessert?"],
  dial:{t:"At a restaurant", l:[
   "A|Good evening. Are you ready to order?|Buenas noches. ¿Están listos para pedir?",
@@ -182,7 +182,7 @@ window.DIAS_A2 = [
 },
 {
  d:6, tema:"De compras", objetivo:"Comprar, preguntar precios y devolver algo.",
- chunks:["How much is this?","Have you got this in a larger size?","Can I try it on?","I would like to return this, please.","Do you take card?","It does not fit me."],
+ chunks:["How much is this tile?", "How many samples have you got?", "Have you got this in a lighter colour?", "Can I take these two with me?", "Do you take card?", "That one is too expensive for the budget."],
  vocab:["try on|probarse|Can I try on these jeans?","fit|quedar bien de talla|These shoes do not fit me.","suit|sentar bien|That colour suits you.","size|talla|What size are you?","receipt|recibo|Have you got the receipt?","refund|reembolso|Can I get a refund?","changing room|probador|The changing room is over there.","bargain|ganga|Those shoes were a real bargain.","afford|permitirse|I cannot afford it.","discount|descuento|Is there a discount?"],
  dial:{t:"In a clothes shop", l:[
   "A|Excuse me, how much is this jacket?|Perdone, ¿cuánto cuesta esta chaqueta?",
@@ -218,7 +218,7 @@ window.DIAS_A2 = [
 },
 {
  d:7, tema:"REPASO · La ciudad y las direcciones", objetivo:"Consolidar la semana 1 y dar indicaciones en la calle.",
- chunks:["Excuse me, how do I get to the station?","Go straight on and turn left.","It is just around the corner.","You cannot miss it.","Is it far from here?","Take the second turning on the right."],
+ chunks:["Excuse me, how do I get to the station?", "Go straight on and turn left at the lights.", "It is just around the corner.", "Take the lift to the fourth floor.", "Is the site far from the hotel?", "Get off at the next stop."],
  vocab:["straight on|todo recto|Go straight on for two hundred metres.","turning|bocacalle|Take the second turning on the right.","crossroads|cruce|Turn right at the crossroads.","traffic lights|semáforo|Turn left at the traffic lights.","around the corner|a la vuelta de la esquina|The bakery is around the corner.","get to|llegar a|How do I get to the museum?","on foot|a pie|It is ten minutes on foot.","miss|perderse algo|You cannot miss it.","opposite|enfrente|It is opposite the church.","nearby|cerca|Is there a pharmacy nearby?"],
  dial:{t:"Lost in the city centre", l:[
   "A|Excuse me, how do I get to the train station?|Perdone, ¿cómo llego a la estación de tren?",
@@ -254,7 +254,7 @@ window.DIAS_A2 = [
 },
 {
  d:8, tema:"Tiempo libre y habilidades", objetivo:"Hablar de gustos y de lo que sabes hacer.",
- chunks:["I love going to the cinema.","I cannot stand getting up early.","Can you play any instrument?","I am quite good at cooking.","I would rather stay at home.","She is really into photography."],
+ chunks:["I enjoy working on old buildings.", "I cannot stand being late for a meeting.", "Can you read a section drawing?", "I am quite good at sketching by hand.", "I would rather walk than take a taxi.", "She is really into timber construction."],
  vocab:["be into|ser aficionado a|I am really into photography.","cannot stand|no soportar|I cannot stand queuing.","be good at|dársele bien|She is good at maths.","hang out|pasar el rato|We hang out at weekends.","give up|dejar (un hábito)|I gave up smoking.","take up|empezar (una afición)|I took up yoga last year.","join|apuntarse a|I joined a running club.","enjoy|disfrutar|I enjoy cooking for friends.","would rather|preferir|I would rather stay in.","hobby|afición|Photography is my main hobby."],
  dial:{t:"Talking about free time", l:[
   "A|What do you do at weekends?|¿Qué haces los fines de semana?",
@@ -290,7 +290,7 @@ window.DIAS_A2 = [
 },
 {
  d:9, tema:"El tiempo y la ropa", objetivo:"Hablar del clima y de lo que está pasando ahora.",
- chunks:["It is pouring with rain.","What is the weather like today?","I am wearing a thick coat.","It is getting colder.","Look, it is snowing!","You had better take an umbrella."],
+ chunks:["It is pouring with rain, so the works have stopped.", "What is the weather like in London?", "I am wearing a hard hat and a hi-vis.", "The scaffolding is going up this week.", "Look, they are pouring the concrete.", "You had better take an umbrella."],
  vocab:["pour with rain|llover a cántaros|It is pouring with rain.","chilly|fresquito|It is a bit chilly today.","boiling|abrasador|It was boiling in August.","forecast|previsión|The forecast says rain.","umbrella|paraguas|Take an umbrella.","wear|llevar puesto|She is wearing a red coat.","raincoat|impermeable|I need a raincoat.","cloudy|nublado|It is cloudy but dry.","freezing|helado|I am freezing!","warm up|templarse|It is warming up."],
  dial:{t:"A rainy morning", l:[
   "A|Look outside! It is pouring with rain.|¡Mira fuera! Está lloviendo a cántaros.",
@@ -326,7 +326,7 @@ window.DIAS_A2 = [
 },
 {
  d:10, tema:"Ahora frente a siempre", objetivo:"Distinguir present simple y present continuous sin dudar.",
- chunks:["I usually work from home, but this week I am in the office.","She is staying with her parents at the moment.","We normally have lunch at two.","Why are you laughing?","He always complains about everything.","I am not doing anything special these days."],
+ chunks:["I usually work from the studio, but this week I am on site.", "She is staying at the hotel near the station.", "We normally meet the client on Mondays.", "Why are you taking photos of the ceiling?", "He always arrives ten minutes late.", "I am not travelling much this month."],
  vocab:["at the moment|en este momento|I am busy at the moment.","these days|últimamente|I am reading a lot these days.","complain|quejarse|He complains all the time.","stay with|alojarse con|She is staying with friends.","temporarily|temporalmente|I am working here temporarily.","from home|desde casa|I work from home on Fridays.","as usual|como siempre|He is late, as usual.","get used to|acostumbrarse a|I am getting used to the noise.","deal with|ocuparse de|I am dealing with it now.","meanwhile|mientras tanto|Meanwhile, I am learning English."],
  dial:{t:"Catching up with a friend", l:[
   "A|How is everything? Still at the same company?|¿Qué tal todo? ¿Sigues en la misma empresa?",
@@ -363,7 +363,7 @@ window.DIAS_A2 = [
 ,
 {
  d:11, tema:"Ayer", objetivo:"Hablar del pasado con was/were y expresiones de tiempo.",
- chunks:["I was at home all evening.","Where were you last night?","It was a great day.","They weren't very happy about it.","There was a lot of traffic.","I was born in nineteen eighty-five."],
+ chunks:["I was at the site at eight this morning.", "There was a leak in the basement.", "There were three people at the meeting.", "The flight was two hours late.", "Was the hotel far from the airport?", "They were not happy with the price."],
  vocab:["last night|anoche|I was tired last night.","the day before yesterday|anteayer|We met the day before yesterday.","ago|hace (tiempo)|Two years ago I lived in Rome.","be born|nacer|I was born in Zaragoza.","at that time|en esa época|At that time I was a student.","childhood|infancia|My childhood was very happy.","used to be|solía ser|This used to be a cinema.","fortnight|quincena|I was there for a fortnight.","abroad|en el extranjero|I was abroad last summer.","back then|por aquel entonces|Back then, life was simpler."],
  dial:{t:"Talking about the weekend", l:[
   "A|Where were you on Saturday? I called you twice.|¿Dónde estabas el sábado? Te llamé dos veces.",
@@ -399,7 +399,7 @@ window.DIAS_A2 = [
 },
 {
  d:12, tema:"Contar qué pasó (regulares)", objetivo:"Narrar hechos pasados con verbos regulares y su pronunciación.",
- chunks:["I finished work at six and walked home.","We talked for hours.","She didn't answer the phone.","Did you enjoy the film?","It happened last Tuesday.","They arrived late as usual."],
+ chunks:["We finished the drawings last Friday.", "I arrived at the airport very early.", "The client asked for a bigger kitchen.", "We visited the site yesterday morning.", "They cancelled the meeting at the last minute.", "I booked the hotel online."],
  vocab:["happen|ocurrir|What happened yesterday?","arrive|llegar|We arrived at nine.","decide|decidir|I decided to stay.","realise|darse cuenta|I realised my mistake.","manage to|conseguir|I managed to finish it.","last|durar|The meeting lasted two hours.","invite|invitar|They invited us for dinner.","cancel|cancelar|They cancelled the trip.","reply|contestar|She replied immediately.","order|pedir|We ordered a pizza."],
  dial:{t:"What happened yesterday", l:[
   "A|You look tired. What happened yesterday?|Pareces cansado. ¿Qué pasó ayer?",
@@ -435,7 +435,7 @@ window.DIAS_A2 = [
 },
 {
  d:13, tema:"Verbos irregulares", objetivo:"Dominar los 25 irregulares que aparecen en el 80 % de las frases.",
- chunks:["I went to bed early last night.","She took the train at seven.","We had a great time.","He said nothing.","I made a mistake.","They got home very late."],
+ chunks:["We took a taxi straight to the site.", "I left my passport at the hotel.", "The builder made a mistake with the opening.", "We flew to Lisbon on Tuesday.", "She sent me the report last night.", "I lost my boarding pass."],
  vocab:["go - went|ir - fue|I went to London.","take - took|coger - cogió|She took a taxi.","have - had|tener - tuvo|We had lunch at two.","say - said|decir - dijo|He said no.","make - made|hacer - hizo|I made dinner.","get - got|conseguir - consiguió|We got the tickets.","see - saw|ver - vio|I saw her yesterday.","come - came|venir - vino|They came late.","leave - left|marcharse - se fue|She left early.","buy - bought|comprar - compró|I bought a coat."],
  dial:{t:"A weekend in London", l:[
   "A|How was London?|¿Qué tal Londres?",
@@ -471,7 +471,7 @@ window.DIAS_A2 = [
 },
 {
  d:14, tema:"REPASO · Contar una anécdota", objetivo:"Encadenar hechos pasados con conectores narrativos.",
- chunks:["At first I didn't understand what was going on.","Then suddenly the lights went out.","After that, everything got worse.","In the end, we laughed about it.","It was one of those days.","You will never believe what happened."],
+ chunks:["First we met the client, then we walked round the site.", "At first I thought it was a small job.", "It turned out to be much bigger.", "That is why we changed the material.", "In the end we agreed on the date.", "Luckily, nobody was hurt."],
  vocab:["at first|al principio|At first I was scared.","suddenly|de repente|Suddenly the phone rang.","after that|después de eso|After that we went home.","in the end|al final|In the end it was fine.","luckily|por suerte|Luckily nobody was hurt.","on my way|de camino|On my way home I met Ana.","end up|acabar (haciendo)|We ended up walking home.","get lost|perderse|We got lost in the old town.","break down|averiarse|The car broke down.","turn out|resultar|It turned out to be a mistake."],
  dial:{t:"A terrible journey", l:[
   "A|You will never believe what happened on Friday.|No te vas a creer lo que pasó el viernes.",
@@ -507,7 +507,7 @@ window.DIAS_A2 = [
 },
 {
  d:15, tema:"Viajes y transporte", objetivo:"Moverte por un aeropuerto o una estación y hablar de planes.",
- chunks:["I am going to catch the eight o'clock train.","Which platform does it leave from?","Is this seat taken?","We are going to spend a week in Italy.","The flight has been delayed.","I would like a return ticket, please."],
+ chunks:["I am going to catch the eight o'clock train.", "Which platform does it leave from?", "We are going to start on site in June.", "Are you going to come to the meeting?", "I am not going to check in a bag.", "They are going to send the quote tomorrow."],
  vocab:["platform|andén|The train leaves from platform four.","return ticket|billete de ida y vuelta|A return ticket to Madrid, please.","single ticket|billete de ida|A single ticket, please.","delay|retraso|There is a two-hour delay.","board|embarcar|We board at ten.","luggage|equipaje|My luggage is very heavy.","gate|puerta de embarque|The gate is number twelve.","on time|puntual|The train was on time.","miss the train|perder el tren|I missed the train.","catch|coger (a tiempo)|I have to catch the bus."],
  dial:{t:"At the ticket office", l:[
   "A|Good morning. A return ticket to Barcelona, please.|Buenos días. Un billete de ida y vuelta a Barcelona, por favor.",
@@ -543,7 +543,7 @@ window.DIAS_A2 = [
 },
 {
  d:16, tema:"Planes y decisiones", objetivo:"Distinguir will y going to y quedar con alguien.",
- chunks:["I will help you with that.","We are meeting at seven on Friday.","I think it will be fine.","Shall we go for a coffee?","I will call you when I arrive.","I have already arranged to see her."],
+ chunks:["I will send you the drawings this afternoon.", "We are meeting the client at ten.", "I think it will rain, so take a coat.", "I am flying to London on Thursday.", "I will have the fish, please.", "We are going to need more time."],
  vocab:["arrange|organizar / quedar|I have arranged to meet her.","be free|estar libre|Are you free on Friday?","put off|posponer|We put off the meeting.","look forward to|tener ganas de|I am looking forward to it.","make it|poder llegar/asistir|Sorry, I cannot make it.","fancy|apetecer|Do you fancy a coffee?","suit you|venirte bien|Does Tuesday suit you?","turn down|rechazar|She turned down the invitation.","get together|reunirse|Let us get together soon.","reschedule|reprogramar|Can we reschedule?"],
  dial:{t:"Making plans", l:[
   "A|Do you fancy a coffee on Friday?|¿Te apetece un café el viernes?",
@@ -579,7 +579,7 @@ window.DIAS_A2 = [
 },
 {
  d:17, tema:"Salud", objetivo:"Describir síntomas y dar consejos.",
- chunks:["I have got a terrible headache.","You should see a doctor.","I have to take these pills twice a day.","What is the matter?","You had better rest.","I do not feel very well."],
+ chunks:["You have to wear a hard hat on site.", "You should see a doctor if it gets worse.", "We must send the report before Friday.", "You do not have to stay for the whole meeting.", "You should bring your own boots.", "Visitors must sign in at the gate."],
  vocab:["headache|dolor de cabeza|I have a terrible headache.","sore throat|dolor de garganta|I have a sore throat.","painkiller|analgésico|Take a painkiller.","appointment|cita médica|I have an appointment at five.","chemist|farmacia|Go to the chemist.","get better|mejorar|I hope you get better.","hurt|doler|My back hurts.","sick note|justificante médico|I need a sick note.","symptom|síntoma|The symptoms are mild.","rest|descansar|You should rest."],
  dial:{t:"At the doctor's", l:[
   "A|Good morning. What is the matter?|Buenos días. ¿Qué le pasa?",
@@ -615,7 +615,7 @@ window.DIAS_A2 = [
 },
 {
  d:18, tema:"El trabajo", objetivo:"Hablar de tu empleo y hacer preguntas completas.",
- chunks:["What exactly does your job involve?","I am in charge of the design team.","I deal with clients every day.","How long have you worked there?","I applied for a new position.","It is a nine-to-five job."],
+ chunks:["What exactly does the client want?", "Who is in charge of the structure?", "How long will the works take?", "Why did they change the layout?", "Where do I sign?", "When can you start?"],
  vocab:["be in charge of|estar a cargo de|I am in charge of the team.","deal with|tratar con|I deal with clients.","apply for|solicitar|I applied for the job.","colleague|compañero de trabajo|My colleagues are great.","salary|sueldo|The salary is not bad.","shift|turno|I work the night shift.","overtime|horas extra|I do a lot of overtime.","promotion|ascenso|She got a promotion.","interview|entrevista|I have an interview on Friday.","involve|implicar|What does it involve?"],
  dial:{t:"A job interview", l:[
   "A|So, what does your current job involve?|Bien, ¿en qué consiste su trabajo actual?",
@@ -651,7 +651,7 @@ window.DIAS_A2 = [
 },
 {
  d:19, tema:"Comparar", objetivo:"Comparar personas, lugares y cosas con precisión.",
- chunks:["This one is cheaper than that one.","It is not as expensive as I thought.","My flat is smaller than yours.","She speaks better than me.","The more I practise, the easier it gets.","It is far more difficult."],
+ chunks:["This option is cheaper than the other one.", "The train is faster than the car.", "The new kitchen is bigger than the old one.", "Oak is more expensive than pine.", "It is not as difficult as it looks.", "The hotel was better than I expected."],
  vocab:["cheaper|más barato|This one is cheaper.","expensive|caro|That hotel is expensive.","crowded|abarrotado|The beach was crowded.","quiet|tranquilo|My street is quiet.","noisy|ruidoso|The centre is noisy.","convenient|práctico|It is more convenient.","worth it|merecer la pena|It is worth it.","similar to|parecido a|It is similar to mine.","the same as|igual que|It is the same as before.","far better|mucho mejor|This is far better."],
  dial:{t:"Comparing two flats", l:[
   "A|Which flat did you prefer?|¿Qué piso te gustó más?",
@@ -687,7 +687,7 @@ window.DIAS_A2 = [
 },
 {
  d:20, tema:"Lo mejor y lo peor", objetivo:"Usar superlativos y hablar de récords y extremos.",
- chunks:["It is the best restaurant in town.","That was the worst film I have ever seen.","It is one of the most beautiful cities in Europe.","He is by far the tallest.","The least expensive option is the train.","It is the second largest city."],
+ chunks:["This is the best option for the budget.", "It is the oldest building on the street.", "That was the worst flight of my life.", "The south façade gets the most light.", "It is the quickest way to the station.", "He is the most experienced builder we have."],
  vocab:["by far|con diferencia|He is by far the best.","one of the|uno de los|It is one of the biggest.","ever|alguna vez|The best I have ever had.","at least|al menos|At least three hours.","the least|el menos|The least expensive option.","record|récord|She broke the record.","amazing|increíble|The view was amazing.","awful|horrible|The food was awful.","huge|enorme|It is a huge building.","tiny|diminuto|The room was tiny."],
  dial:{t:"Recommending places", l:[
   "A|What is the best restaurant in town?|¿Cuál es el mejor restaurante de la ciudad?",
@@ -724,7 +724,7 @@ window.DIAS_A2 = [
 ,
 {
  d:21, tema:"REPASO · Describe tu ciudad", objetivo:"Integrar comparativos, superlativos, hay y rutinas.",
- chunks:["It is a medium-sized city in the north of Spain.","It is famous for its food.","There is plenty to do at weekends.","It is not as busy as Madrid.","The best time to visit is spring.","I would definitely recommend it."],
+ chunks:["Zaragoza is a city of seven hundred thousand people.", "It is famous for its basilica and its brick towers.", "The old town is full of narrow streets.", "There is a lot of new building on the edge of the city.", "If you only have one day, walk along the river.", "The best time to come is spring."],
  vocab:["medium-sized|de tamaño medio|It is a medium-sized town.","be famous for|ser famoso por|It is famous for its cathedral.","plenty of|mucho / de sobra|There is plenty of space.","get around|moverse|It is easy to get around.","local|local / del lugar|Try the local wine.","lively|animado|The old town is lively.","cost of living|coste de vida|The cost of living is low.","outskirts|afueras|I live on the outskirts.","landmark|monumento emblemático|The bridge is the main landmark.","recommend|recomendar|I would recommend it."],
  dial:{t:"Describing your home town", l:[
   "A|Tell me about your home town.|Háblame de tu ciudad.",
@@ -760,7 +760,7 @@ window.DIAS_A2 = [
 },
 {
  d:22, tema:"Cantidades", objetivo:"Medir y cuantificar todo con exactitud.",
- chunks:["There is too much noise in here.","We haven't got enough time.","There are a few things I want to say.","I have got very little money left.","How many people are coming?","There are far too many tourists."],
+ chunks:["There is not much time before the deadline.", "How many bedrooms does the client want?", "We have plenty of samples in the studio.", "There were a few problems with the drains.", "I have very little luggage.", "Most of the windows face north."],
  vocab:["too much|demasiado (incontable)|There is too much noise.","too many|demasiados|Too many tourists.","enough|suficiente|We have enough time.","a few|unos pocos|A few friends came.","a little|un poco|A little sugar, please.","several|varios|Several people called.","hardly any|casi nada de|There is hardly any milk.","a couple of|un par de|A couple of days.","most of|la mayoría de|Most of my friends live here.","none of|ninguno de|None of them came."],
  dial:{t:"Planning a dinner party", l:[
   "A|How many people are coming on Saturday?|¿Cuánta gente viene el sábado?",
@@ -796,7 +796,7 @@ window.DIAS_A2 = [
 },
 {
  d:23, tema:"Por teléfono", objetivo:"Manejar una llamada completa con fórmulas fijas.",
- chunks:["Could I speak to Mr Smith, please?","I am afraid he is not available.","Would you like to leave a message?","Could you speak up, please?","Hold on a second, I will put you through.","Sorry, you have got the wrong number."],
+ chunks:["Hello, this is Patricia from the architects' office.", "Could I speak to the site manager, please?", "I am calling about the meeting on Thursday.", "Sorry, could you repeat that?", "I am flying out on Monday morning.", "I will put you through."],
  vocab:["put through|pasar la llamada|I will put you through.","hold on|esperar|Hold on a second.","be available|estar disponible|She is not available.","leave a message|dejar un mensaje|Can I leave a message?","call back|devolver la llamada|I will call back later.","speak up|hablar más alto|Could you speak up?","hang up|colgar|Do not hang up.","get through|conseguir contactar|I could not get through.","engaged|comunicando|The line is engaged.","wrong number|número equivocado|Sorry, wrong number."],
  dial:{t:"A phone call to an office", l:[
   "A|Good morning, Rivas Design. How can I help you?|Buenos días, Rivas Design. ¿En qué puedo ayudarle?",
@@ -832,7 +832,7 @@ window.DIAS_A2 = [
 },
 {
  d:24, tema:"En el hotel", objetivo:"Reservar, registrarse y resolver un problema con educación.",
- chunks:["I would like to book a double room.","I have a reservation under the name García.","Is breakfast included?","There seems to be a problem with the heating.","Could you possibly change my room?","What time is check-out?"],
+ chunks:["Could I have a quiet room, please?", "Would it be possible to check in early?", "May I leave my luggage here until six?", "Could you call me a taxi, please?", "Would you mind sending the invoice by email?", "Could we move the meeting to Friday?"],
  vocab:["book|reservar|I booked a room online.","double room|habitación doble|A double room for two nights.","en suite|con baño propio|The room is en suite.","check in|registrarse|We checked in at three.","check-out|salida|Check-out is at eleven.","included|incluido|Is breakfast included?","complain|quejarse|I had to complain.","key card|tarjeta llave|My key card does not work.","towel|toalla|Could I have more towels?","spare|de repuesto|A spare pillow, please."],
  dial:{t:"Checking in with a problem", l:[
   "A|Good evening. I have a reservation under García.|Buenas noches. Tengo una reserva a nombre de García.",
@@ -868,7 +868,7 @@ window.DIAS_A2 = [
 },
 {
  d:25, tema:"Instrucciones y procesos", objetivo:"Explicar cómo se hace algo paso a paso.",
- chunks:["First of all, you need to switch it on.","Make sure the cable is connected.","Once it is ready, press the green button.","Be careful not to touch the top.","If it does not work, try again.","Finally, turn it off at the wall."],
+ chunks:["First, take the levels. Then, mark the opening.", "Check the drawing before you cut anything.", "After that, send me a photo.", "Do not pour the concrete until I confirm.", "Finally, clear the site and lock the gate.", "Make sure everyone signs in."],
  vocab:["switch on|encender|Switch on the machine.","turn off|apagar|Turn off the light.","plug in|enchufar|Plug in the charger.","press|pulsar|Press the green button.","make sure|asegurarse|Make sure it is closed.","be careful|tener cuidado|Be careful with that.","step|paso|The first step is easy.","instructions|instrucciones|Read the instructions.","warning|advertencia|There is a warning on the box.","by mistake|por error|I deleted it by mistake."],
  dial:{t:"Explaining how to use a machine", l:[
   "A|Could you show me how this coffee machine works?|¿Me enseñas cómo funciona esta cafetera?",
@@ -904,7 +904,7 @@ window.DIAS_A2 = [
 },
 {
  d:26, tema:"Experiencias", objetivo:"Hablar de lo que has hecho alguna vez en la vida.",
- chunks:["Have you ever been to Japan?","I have never tried sushi.","I have already finished.","She has just left.","We haven't seen him yet.","It is the best film I have ever seen."],
+ chunks:["I have worked on this type of building before.", "Have you ever been to the Alhambra?", "We have just finished the ground floor.", "She has already sent the quote.", "I have never flown business class.", "They have not replied yet."],
  vocab:["ever|alguna vez|Have you ever been there?","never|nunca|I have never tried it.","already|ya|I have already finished.","yet|todavía / ya|Have you finished yet?","just|acabar de|She has just left.","abroad|al extranjero|I have never been abroad.","try|probar|Have you tried sushi?","experience|experiencia|It was a great experience.","so far|hasta ahora|So far, so good.","several times|varias veces|I have been there several times."],
  dial:{t:"Talking about travel experiences", l:[
   "A|Have you ever been to Japan?|¿Has estado alguna vez en Japón?",
@@ -940,7 +940,7 @@ window.DIAS_A2 = [
 },
 {
  d:27, tema:"Experiencia frente a hecho concreto", objetivo:"Elegir entre present perfect y past simple sin dudar.",
- chunks:["I have been to Rome twice.","I went there in 2019.","She has worked here for ten years.","She worked in Berlin from 2010 to 2015.","Have you seen the new film?","I saw it last night."],
+ chunks:["I have been to London three times. I went last March.", "We have finished the drawings. We sent them on Friday.", "Have you seen the report? I read it yesterday.", "She has worked here for five years.", "He worked here back in 2019.", "I have not had lunch yet."],
  vocab:["for|durante (periodo)|I have lived here for five years.","since|desde (punto)|I have lived here since 2019.","last year|el año pasado|I went there last year.","recently|recientemente|I have recently changed jobs.","in my life|en mi vida|I have never seen that in my life.","at the time|en su momento|At the time I was a student.","up to now|hasta ahora|Up to now, everything is fine.","when|cuándo|When did you go?","how long|cuánto tiempo|How long have you been here?","already|ya|I have already seen it."],
  dial:{t:"Two friends and a film", l:[
   "A|Have you seen the new Spanish film?|¿Has visto la nueva película española?",
@@ -976,7 +976,7 @@ window.DIAS_A2 = [
 },
 {
  d:28, tema:"REPASO · Entrevista personal", objetivo:"Responder con soltura a las preguntas típicas de un examen oral A2.",
- chunks:["Let me think for a second.","That is a good question.","I would say it depends.","For example, last year I…","What I mean is that…","To be honest, I am not sure."],
+ chunks:["I am an architect with eight years of experience.", "I have mostly worked on refurbishments.", "I speak Spanish, English and a little French.", "My strongest skill is running a site.", "I am looking for a job with more responsibility.", "Could you tell me more about the team?"],
  vocab:["it depends|depende|It depends on the day.","to be honest|sinceramente|To be honest, I prefer this.","for example|por ejemplo|For example, my brother.","what I mean is|lo que quiero decir es|What I mean is it is hard.","I would say|yo diría|I would say about twenty.","more or less|más o menos|More or less an hour.","in general|en general|In general, I like it.","especially|especialmente|Especially in summer.","such as|como por ejemplo|Sports such as tennis.","the thing is|la cosa es que|The thing is, I have no time."],
  dial:{t:"Oral exam practice", l:[
   "A|Tell me a little about yourself.|Cuéntame un poco sobre ti.",
@@ -1012,7 +1012,7 @@ window.DIAS_A2 = [
 },
 {
  d:29, tema:"Unir ideas", objetivo:"Encadenar frases con conectores en vez de hablar a golpes.",
- chunks:["I stayed at home because it was raining.","It was raining, so I stayed at home.","Although it was raining, we went out.","I like it, but it is too expensive.","In addition, the price includes breakfast.","However, there is a problem."],
+ chunks:["The flat is small but very bright.", "We stopped the works because it was raining.", "It was late, so we went back to the hotel.", "Although it costs more, it lasts longer.", "We design new builds as well as refurbishments.", "First we visit the site, and then we talk to the client."],
  vocab:["because|porque|I left because I was tired.","so|así que|It was late, so I left.","although|aunque|Although it was cold, we went.","however|sin embargo|However, it was worth it.","in addition|además|In addition, it is cheap.","for instance|por ejemplo|For instance, this one.","that is why|por eso|That is why I called you.","even though|a pesar de que|Even though it rained.","as well as|además de|As well as English, he speaks French.","on the other hand|por otro lado|On the other hand, it is far."],
  dial:{t:"Deciding on a holiday", l:[
   "A|Shall we go to the coast or to the mountains?|¿Vamos a la costa o a la montaña?",
@@ -1048,7 +1048,7 @@ window.DIAS_A2 = [
 },
 {
  d:30, tema:"Consolidación A2 → puerta del B1", objetivo:"Repasar los 29 días y prepararte para el examen de nivel.",
- chunks:["I have been studying English for a month now.","Last month I could hardly say anything.","I am going to take the level test tomorrow.","There are still a few things I find difficult.","On the whole, I have improved a lot.","I am ready for the next level."],
+ chunks:["I can describe a building and say where everything is.", "I can tell the story of a project in the past.", "I can make plans and talk about the future.", "I can ask for what I need in a hotel or a restaurant.", "I can compare two options and give my opinion.", "I am ready to move on to B1."],
  vocab:["on the whole|en general|On the whole, it went well.","improve|mejorar|My English has improved.","struggle with|costar trabajo|I struggle with prepositions.","confident|seguro de uno mismo|I feel more confident now.","fluent|fluido|She is fluent in French.","mistake|error|I still make mistakes.","progress|progreso|I have made good progress.","get the hang of|cogerle el truco|I am getting the hang of it.","review|repasar|I review every morning.","level|nivel|I am ready for the next level."],
  dial:{t:"One month later", l:[
   "A|How is your English going?|¿Cómo va tu inglés?",

@@ -194,6 +194,20 @@ El modo profesor de la pestaña nombra los tres fallos típicos y cómo se corri
 verbo donde iba el sustantivo, haber acertado la categoría pero no el sufijo, y haber confundido la cosa con
 la persona.
 
+## La prueba oral sin micrófono
+
+Abriendo el curso con doble clic desde el disco, la dirección es `file://` y **Chrome no concede micrófono**: el
+permiso se guarda por sitio web y un archivo local no tiene sitio al que asociarlo, así que el aviso de permiso
+no aparece nunca y la prueba oral no se podía hacer. El comprobador daba luz verde porque
+`window.isSecureContext` devuelve `true` en `file://`; ahora detecta el protocolo y lo dice, con las tres
+soluciones ordenadas.
+
+Y para que la prueba se pueda hacer igual, hay una **versión sin micrófono** que funciona en cualquier sitio:
+cronómetro de dos minutos hablando en voz alta y, al terminar, se escribe de memoria lo que se dijo. Mide lo
+mismo —cantidad producida, léxico distinto, estructuras del día utilizadas— y se guarda en el día, en el
+historial y en la destreza de producción exactamente igual que la del micrófono. Lo único que no lleva son las
+palabras por minuto, que sin oír la voz no se pueden medir, y eso se dice en pantalla.
+
 ## Los 44 fonemas · dentro de «Habla»
 
 El inglés tiene **44 sonidos**; el español, **24**. Veinte sonidos que la boca no ha hecho nunca y que el oído,
@@ -209,6 +223,19 @@ Dos ejercicios: **¿Cuál lleva este sonido?** (tres palabras, hay que decir cu�
 se pregunta por la vocal porque es el único sonido que una palabra de una sílaba tiene una sola vez) y
 **Pares mínimos**, con 39 pares de todo el inventario y el nombre de los dos fonemas en juego.
 
+## Las frases del curso: viaje y reunión de obra
+
+Las **720 frases hechas** de A2, B1, B2 y C1 —seis por día— están reescritas para que todas salgan de dos
+situaciones reales: **viajar** (aeropuerto, tren, hotel, restaurante, direcciones) y la **reunión de trabajo de
+arquitectura** (visita de obra, cliente, honorarios, plazos, informe). Cada frase sigue ilustrando el punto de
+gramática de su día, que es lo que no podía romperse: el día del *third conditional* dice *«If we had found the
+water table earlier, we would have redesigned the basement»*, y el del *understatement* británico, *«The budget
+is a little on the optimistic side»*.
+
+La complejidad ahora crece con el nivel, que antes no pasaba: 7,5 palabras por frase en A2, 8,1 en B1 y 8,8 en
+B2. El vocabulario y los diálogos de cada día no se han tocado, así que el sistema de repaso espaciado —que va
+por vocabulario— mantiene intactas todas las tarjetas.
+
 ## Corrección de la escritura con la rejilla de Cambridge
 
 El texto del bloque de escritura ya no se puntúa con una heurística: se corrige con los **cuatro criterios
@@ -217,6 +244,16 @@ y el **Contenido es eliminatorio**, como en el examen: una tarea sin hacer no se
 
 - **Comprueba lo que pedía el enunciado.** Si la tarea dice «un diálogo de 6 líneas» o «unas 80 palabras», lo
   cuenta y lo dice. Antes no se miraba, así que un diálogo de dos líneas podía sacar buena nota.
+- **Revisa la ortografía** contra las 5.060 palabras inglesas que aparecen en el curso, generadas en
+  `data/lexico.js` a partir de los campos en inglés de todos los demás ficheros. Solo avisa cuando la palabra
+  no existe **y** hay una correcta a un solo cambio de distancia —sustitución, inserción, borrado o dos letras
+  intercambiadas—, así que *architech → architect*, *desing → design* y *proyect → project* se cazan, mientras
+  que una palabra correcta que el curso no usa (*gorgeous*, *quarried*, *weathers*) no provoca ningún aviso
+  falso. Antes un texto con seis faltas sacaba 85 y decía «ningún error detectado».
+- **Revisa que cada frase tenga verbo y sujeto**, con el inventario de verbos del curso ampliado y la regla de
+  que una palabra en `-ed` o `-ing` cuenta como verbo: *My name Patricia* y *Architect from Zaragoza* se
+  señalan, y *Last week we received the report* no.
+- **Revisa la posición del adjetivo**: *a house white* y *a table new* se marcan con la forma correcta al lado.
 - **Corrige de verdad.** Cincuenta reglas con el error típico del hispanohablante, cada una con el **fragmento
   real del texto** y, cuando la corrección es inequívoca, el reemplazo aplicado: al final se muestran el texto
   original y el corregido enfrentados. Lo que no tiene una única solución posible se explica y se deja para

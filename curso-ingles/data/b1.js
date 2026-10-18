@@ -2,7 +2,7 @@
 window.DIAS_B1 = [
 {
  d:1, tema:"Cuánto llevas haciendo algo", objetivo:"Expresar duración con present perfect continuous.",
- chunks:["I have been working here for six years.","How long have you been learning English?","She has been waiting since eight o'clock.","I have been meaning to call you.","We have been living here since 2019.","He has been trying to fix it all morning."],
+ chunks:["I have been working on this project since March.", "How long have you been waiting at the gate?", "We have been trying to reach the supplier all week.", "They have been building the extension for six months.", "I have not been sleeping well since the trip.", "She has been dealing with the council for weeks."],
  vocab:["mean to|tener intención de|I have been meaning to call you.","all along|desde el principio|I knew it all along.","non-stop|sin parar|It has been raining non-stop.","catch up on|ponerse al día con|I need to catch up on work.","keep on|seguir haciendo|He keeps on complaining.","for ages|desde hace siglos|I haven't seen her for ages.","lately|últimamente|I have been tired lately.","put up with|aguantar|I cannot put up with it.","work out|resolverse / entrenar|It has worked out well.","get round to|encontrar el momento de|I never get round to it."],
  dial:{t:"Bumping into an old colleague", l:[
   "A|I haven't seen you for ages! What have you been doing?|¡Hace siglos que no te veo! ¿Qué has estado haciendo?",
@@ -38,7 +38,7 @@ window.DIAS_B1 = [
 },
 {
  d:2, tema:"Escenas del pasado", objetivo:"Describir el fondo de una escena e interrumpirla.",
- chunks:["I was cooking when the phone rang.","While we were talking, the lights went out.","It was getting dark and it was raining.","What were you doing at ten last night?","They were arguing when I came in.","I was just about to leave."],
+ chunks:["We were taking the levels when the rain started.", "While I was checking in, they announced the delay.", "The builders were working on the roof when I arrived.", "What were you doing when the client called?", "I was waiting for my luggage when I saw him.", "They were still pouring concrete at six."],
  vocab:["while|mientras|While I was cooking, he called.","just about to|a punto de|I was just about to leave.","notice|darse cuenta / fijarse|I did not notice him.","suddenly|de repente|Suddenly the lights went out.","stare at|mirar fijamente|He was staring at me.","argue|discutir|They were arguing loudly.","interrupt|interrumpir|Sorry to interrupt you.","in the middle of|en mitad de|In the middle of dinner.","overhear|oír por casualidad|I overheard their conversation.","freeze|quedarse helado|I froze for a second."],
  dial:{t:"A strange evening", l:[
   "A|What were you doing when the storm started?|¿Qué estabas haciendo cuando empezó la tormenta?",
@@ -74,7 +74,7 @@ window.DIAS_B1 = [
 },
 {
  d:3, tema:"Cómo era antes", objetivo:"Hablar de hábitos y estados pasados que ya no existen.",
- chunks:["I used to play football every weekend.","There didn't use to be a supermarket here.","We would spend every summer at my grandmother's.","I am used to getting up early now.","Did you use to live in Madrid?","It is not what it used to be."],
+ chunks:["We used to work with a different contractor.", "I would always take the early flight.", "I am used to working on site in winter.", "There used to be a warehouse here.", "She did not use to travel so much.", "You soon get used to the noise."],
  vocab:["used to|solía|I used to smoke.","be used to|estar acostumbrado a|I am used to it.","get used to|acostumbrarse a|I am getting used to it.","would|solía (repetido)|We would go there every summer.","back in the day|en aquellos tiempos|Back in the day, life was slower.","no longer|ya no|I no longer live there.","childhood|infancia|In my childhood we had no phones.","grow up|criarse|I grew up in a village.","nowadays|hoy en día|Nowadays everything is online.","miss|echar de menos|I miss those days."],
  dial:{t:"Talking about childhood", l:[
   "A|Did you use to live in the countryside?|¿Vivías antes en el campo?",
@@ -110,7 +110,7 @@ window.DIAS_B1 = [
 },
 {
  d:4, tema:"Si pasa esto…", objetivo:"Hablar de consecuencias reales en el futuro.",
- chunks:["If it rains, we will stay at home.","I will call you as soon as I arrive.","Unless you hurry, you will miss the train.","What will you do if they say no?","I won't go unless you come with me.","In case it rains, take an umbrella."],
+ chunks:["If the licence arrives on Monday, we will start that week.", "If it rains, we will stop the works.", "I will call you as soon as I land.", "If you send the quote today, we can decide tomorrow.", "Unless the steel arrives, we cannot continue.", "What will you do if the flight is cancelled?"],
  vocab:["unless|a menos que|Unless you hurry, we will be late.","as soon as|en cuanto|I will call as soon as I arrive.","in case|por si acaso|Take a coat in case it is cold.","otherwise|si no|Hurry, otherwise we will be late.","be likely to|ser probable|It is likely to rain.","turn out|salir (resultar)|It will turn out fine.","let down|defraudar|Do not let me down.","give up|rendirse|Do not give up.","end up|acabar|You will end up tired.","provided that|siempre que|Provided that you study."],
  dial:{t:"Planning a hike", l:[
   "A|What will we do if it rains on Saturday?|¿Qué haremos si llueve el sábado?",
@@ -146,7 +146,7 @@ window.DIAS_B1 = [
 },
 {
  d:5, tema:"Si yo fuera…", objetivo:"Hablar de situaciones hipotéticas y dar consejos.",
- chunks:["If I had more time, I would travel more.","If I were you, I would accept the offer.","What would you do if you won the lottery?","I would rather not talk about it.","If I could, I would move abroad.","It would be much easier if we shared the cost."],
+ chunks:["If I had more time, I would redraw the whole plan.", "If I were you, I would ask for a written instruction.", "We would finish sooner if the budget were bigger.", "What would you do if the client refused?", "If the plot were cheaper, we would buy it.", "I would rather fly than drive eight hours."],
  vocab:["afford|permitirse|I could not afford it.","take up|aceptar (oferta) / empezar|I would take up the offer.","turn down|rechazar|I would turn it down.","worth|que vale la pena|It would be worth it.","hesitate|dudar|I would not hesitate.","risk|riesgo / arriesgar|It is a big risk.","opportunity|oportunidad|It is a great opportunity.","abroad|en el extranjero|I would move abroad.","salary|sueldo|The salary is better.","settle down|asentarse|I would settle down there."],
  dial:{t:"A difficult decision", l:[
   "A|They have offered me a job in Berlin.|Me han ofrecido un trabajo en Berlín.",
@@ -182,7 +182,7 @@ window.DIAS_B1 = [
 },
 {
  d:6, tema:"Definir y precisar", objetivo:"Unir frases con oraciones de relativo.",
- chunks:["That is the man who helped me.","This is the book which changed my life.","The place where we met has closed.","She is the person whose car was stolen.","The film that we saw was terrible.","It is a device for cutting metal."],
+ chunks:["The flat that we visited yesterday is the cheapest.", "This is the contractor who built the school.", "The hotel where we stayed is next to the station.", "The drawing which shows the detail is A-12.", "That is the reason why we changed the material.", "The engineer whose report we are waiting for is away."],
  vocab:["device|aparato|It is a small device.","tool|herramienta|A tool for cutting.","in charge|al cargo|The person in charge.","belong to|pertenecer a|It belongs to my father.","whose|cuyo|The man whose car broke down.","stuff|cosas|What is that stuff?","thing|cosa|The thing that bothers me.","gadget|cacharro|A useful gadget.","refer to|referirse a|What are you referring to?","that is to say|es decir|That is to say, tomorrow."],
  dial:{t:"Explaining a word you do not know", l:[
   "A|What is the word for the person who fixes pipes?|¿Cómo se dice la persona que arregla tuberías?",
@@ -218,7 +218,7 @@ window.DIAS_B1 = [
 },
 {
  d:7, tema:"REPASO · Trabajo y experiencia", objetivo:"Integrar la semana en una entrevista de trabajo real.",
- chunks:["I have been working in this sector for eight years.","If I got the job, I would relocate.","I used to work for a bigger company.","I was working abroad when the crisis started.","The project which I am proudest of is this one.","I would say my main strength is organisation."],
+ chunks:["I have been an architect for eight years.", "Most of my work has been refurbishment.", "I am used to dealing with councils and clients.", "If I had to choose one project, it would be the courtyard house.", "While I was working there, I learned to run a site.", "That is the job I enjoyed the most."],
  vocab:["strength|punto fuerte|My main strength is patience.","weakness|punto débil|My weakness is impatience.","relocate|mudarse por trabajo|I would relocate if necessary.","achievement|logro|My biggest achievement.","take on|asumir|I took on more responsibility.","handle|manejar|I can handle pressure.","deadline|fecha límite|We met the deadline.","budget|presupuesto|We were over budget.","team player|buen compañero de equipo|I am a team player.","stand out|destacar|What makes you stand out?"],
  dial:{t:"A B1-level job interview", l:[
   "A|How long have you been working in this sector?|¿Cuánto tiempo lleva trabajando en este sector?",
@@ -254,7 +254,7 @@ window.DIAS_B1 = [
 },
 {
  d:8, tema:"Cuando importa el qué, no el quién", objetivo:"Usar la voz pasiva en presente.",
- chunks:["English is spoken all over the world.","The forms are checked by the manager.","It is made of recycled plastic.","Nothing is done about it.","The results are published every Friday.","These are produced in Spain."],
+ chunks:["The drawings are checked before they are issued.", "The site is inspected every Thursday.", "Hard hats are required at all times.", "Is breakfast included in the price?", "The invoices are sent at the end of the month.", "These tiles are made in Portugal."],
  vocab:["be made of|estar hecho de|It is made of wood.","be based on|estar basado en|It is based on a true story.","be known as|ser conocido como|It is known as the old town.","carry out|llevar a cabo|The work is carried out weekly.","deliver|entregar|Orders are delivered daily.","supply|suministrar|Energy is supplied locally.","charge|cobrar|You are charged monthly.","allow|permitir|Smoking is not allowed.","require|requerir|A permit is required.","process|tramitar|Requests are processed quickly."],
  dial:{t:"Explaining how a company works", l:[
   "A|How are the orders processed?|¿Cómo se tramitan los pedidos?",
@@ -290,7 +290,7 @@ window.DIAS_B1 = [
 },
 {
  d:9, tema:"Lo que se hizo", objetivo:"Voz pasiva en pasado y con modales.",
- chunks:["The bridge was built in 1902.","The meeting was cancelled at the last minute.","Nothing could be done.","It should be finished by Friday.","We were told to wait outside.","The results will be published tomorrow."],
+ chunks:["The house was built in 1920.", "The roof will be finished next week.", "The quote has been sent to the client.", "The meeting had to be cancelled.", "This detail can be solved with a thicker lintel.", "My luggage was lost in Frankfurt."],
  vocab:["be built|ser construido|It was built in 1902.","cancel|cancelar|The meeting was cancelled.","postpone|aplazar|It was postponed.","announce|anunciar|The winner was announced.","damage|dañar|The roof was damaged.","repair|reparar|It will be repaired.","found|fundar|The company was founded in 1990.","destroy|destruir|The building was destroyed.","injure|herir|Two people were injured.","approve|aprobar|The plan was approved."],
  dial:{t:"A news report", l:[
   "A|Did you hear about the old factory?|¿Te has enterado de lo de la fábrica vieja?",
@@ -326,7 +326,7 @@ window.DIAS_B1 = [
 },
 {
  d:10, tema:"Contar lo que dijeron", objetivo:"Pasar del estilo directo al indirecto.",
- chunks:["He said he was tired.","She told me she would call later.","They said they had already finished.","He said he could not come.","She told us to wait outside.","He asked me where I lived."],
+ chunks:["He said he would send the report on Friday.", "She told me the licence had arrived.", "They said they were waiting for the steel.", "The client said he liked the first option.", "He explained that the delay was not our fault.", "She mentioned that the budget had gone up."],
  vocab:["mention|mencionar|He mentioned the price.","claim|afirmar|She claimed it was free.","admit|admitir|He admitted his mistake.","deny|negar|She denied it.","promise|prometer|He promised to help.","warn|advertir|They warned us about the road.","suggest|sugerir|She suggested leaving early.","refuse|negarse|He refused to sign.","insist|insistir|She insisted on paying.","apologise|disculparse|He apologised for the delay."],
  dial:{t:"Passing on a message", l:[
   "A|Did you speak to Marta?|¿Hablaste con Marta?",
@@ -363,7 +363,7 @@ window.DIAS_B1 = [
 ,
 {
  d:11, tema:"Preguntas y peticiones referidas", objetivo:"Contar preguntas, órdenes y peticiones sin estilo directo.",
- chunks:["He asked me where I lived.","She wanted to know if I was free.","They asked me to wait outside.","He told me not to worry.","She asked whether it was possible.","I was wondering if you could help me."],
+ chunks:["He asked me whether the drawings were ready.", "She asked how long the works would take.", "They asked me to send a written instruction.", "The client asked us not to change the layout.", "He wanted to know where the meeting was.", "She told the team to stop work until Monday."],
  vocab:["wonder|preguntarse|I wonder why he left.","whether|si (alternativa)|I asked whether it was open.","enquire|preguntar formalmente|I enquired about the price.","remind|recordar (a alguien)|Remind me to call her.","order|ordenar|He ordered us to stop.","beg|rogar|She begged me to stay.","encourage|animar a|They encouraged me to apply.","persuade|convencer|He persuaded me to go.","advise|aconsejar|She advised me to wait.","offer|ofrecerse|He offered to drive."],
  dial:{t:"Reporting an interview", l:[
   "A|How did the interview go?|¿Qué tal la entrevista?",
@@ -399,7 +399,7 @@ window.DIAS_B1 = [
 },
 {
  d:12, tema:"Deducciones", objetivo:"Expresar certeza y probabilidad sobre lo que ocurre.",
- chunks:["He must be at home, his car is outside.","That can't be right.","She might be stuck in traffic.","They may have forgotten.","It could be a mistake.","He must have missed the train."],
+ chunks:["It must be the structural engineer at the door.", "They cannot have finished already.", "The delay might be due to the weather.", "That could be the cause of the damp.", "He must have missed his connection.", "It cannot be a load-bearing wall."],
  vocab:["be stuck|estar atascado|I am stuck in traffic.","make sense|tener sentido|That does not make sense.","assume|suponer|I assume he is coming.","evidence|prueba|There is no evidence.","obvious|obvio|It is obvious.","unlikely|poco probable|It is unlikely.","guess|adivinar / suponer|I guess so.","reckon|creer, opinar|I reckon he is right.","figure out|averiguar|I cannot figure it out.","turn up|aparecer|He never turned up."],
  dial:{t:"Where is he?", l:[
   "A|Julio is late. Where can he be?|Julio llega tarde. ¿Dónde puede estar?",
@@ -435,7 +435,7 @@ window.DIAS_B1 = [
 },
 {
  d:13, tema:"El futuro con matices", objetivo:"Elegir entre cinco formas de futuro según la intención.",
- chunks:["This time next week I will be lying on a beach.","By July we will have finished the project.","The train leaves at six thirty.","I am about to send it.","We are meeting them on Thursday.","It is bound to rain."],
+ chunks:["We are meeting the client at ten tomorrow.", "The flight leaves at six fifteen.", "I am going to review the budget this weekend.", "By June we will have finished the ground floor.", "I will let you know as soon as I hear.", "The works are due to start in September."],
  vocab:["be about to|estar a punto de|I am about to leave.","be due to|estar previsto|The flight is due to land at six.","be bound to|ser seguro que|It is bound to rain.","by then|para entonces|By then it will be ready.","in advance|con antelación|Book in advance.","take place|tener lugar|The event takes place in May.","postpone|aplazar|It has been postponed.","deadline|plazo|The deadline is Friday.","schedule|programar / horario|It is scheduled for nine.","ahead of|por delante de|We are ahead of schedule."],
  dial:{t:"Before a big trip", l:[
   "A|This time next week I will be lying on a beach.|La semana que viene a estas horas estaré tumbado en una playa.",
@@ -471,7 +471,7 @@ window.DIAS_B1 = [
 },
 {
  d:14, tema:"REPASO · Narrar en pasado", objetivo:"Contar una historia larga combinando todos los pasados.",
- chunks:["By the time I arrived, everyone had left.","I had never seen anything like it.","It had been raining for hours.","As soon as I got there, I realised what had happened.","I could not believe what I was seeing.","Looking back, it was the best thing that could have happened."],
+ chunks:["By the time I arrived, the meeting had finished.", "They had already poured the slab when we noticed.", "I realised I had left the drawings at the hotel.", "Once we had agreed the fee, we started.", "The flight had been delayed before we even left home.", "She had never worked on a listed building before."],
  vocab:["by the time|para cuando|By the time I arrived, it was over.","realise|darse cuenta|I realised my mistake.","looking back|en retrospectiva|Looking back, it was funny.","turn out|resultar|It turned out to be a mistake.","end up|acabar|We ended up staying.","it occurred to me|se me ocurrió|It occurred to me later.","at that point|en ese momento|At that point I left.","meanwhile|mientras tanto|Meanwhile, she waited.","eventually|finalmente|Eventually he arrived.","apparently|por lo visto|Apparently nobody knew."],
  dial:{t:"The night of the concert", l:[
   "A|Tell me what happened at the concert.|Cuéntame qué pasó en el concierto.",
@@ -507,7 +507,7 @@ window.DIAS_B1 = [
 },
 {
  d:15, tema:"Infinitivo o -ing", objetivo:"Acertar siempre con la forma que sigue a cada verbo.",
- chunks:["I decided to leave early.","I enjoy working with people.","She stopped smoking last year.","He stopped to buy a coffee.","I look forward to hearing from you.","It is worth trying."],
+ chunks:["We decided to change the material.", "I am thinking of flying instead of driving.", "They agreed to send a written instruction.", "I look forward to seeing the site.", "We managed to finish before the deadline.", "It is worth asking for a second quote."],
  vocab:["manage to|lograr|I managed to finish.","avoid|evitar|I avoid driving at night.","consider|considerar|I am considering moving.","refuse to|negarse a|He refused to help.","can't help|no poder evitar|I can't help laughing.","be worth|merecer la pena|It is worth trying.","mind|importar|I do not mind waiting.","expect to|esperar (contar con)|I expect to arrive at six.","pretend to|fingir|He pretended to be asleep.","give up|dejar de|I gave up smoking."],
  dial:{t:"New year resolutions", l:[
   "A|Have you decided to change anything this year?|¿Has decidido cambiar algo este año?",
@@ -543,7 +543,7 @@ window.DIAS_B1 = [
 },
 {
  d:16, tema:"Phrasal verbs esenciales", objetivo:"Entender y usar los 25 phrasal verbs más frecuentes.",
- chunks:["I need to look it up.","We had to call the meeting off.","Can you pick me up at eight?","I came across an old photo.","Things did not work out.","Let me sort it out."],
+ chunks:["We need to look into the damp problem.", "Let us go over the budget again.", "They put off the meeting until Thursday.", "I will pick you up at the airport.", "We had to take down the wall and do it again.", "Can you fill in this form, please?"],
  vocab:["look up|buscar (dato)|Look it up online.","call off|cancelar|They called the trip off.","pick up|recoger|I will pick you up.","come across|encontrarse por casualidad|I came across an old photo.","work out|salir bien / entrenar|It worked out fine.","sort out|resolver|I will sort it out.","find out|averiguar|I found out later.","get on with|llevarse bien / seguir con|Get on with your work.","put off|posponer|They put it off.","run out of|quedarse sin|We ran out of milk."],
  dial:{t:"Sorting out a problem", l:[
   "A|Have you found out what happened with the order?|¿Has averiguado qué pasó con el pedido?",
@@ -579,7 +579,7 @@ window.DIAS_B1 = [
 },
 {
  d:17, tema:"Artículos y precisión", objetivo:"Usar a / an / the / cero artículo como un nativo.",
- chunks:["I am looking for a flat with a garden.","The flat we saw yesterday was better.","Life is short.","She plays the piano and speaks Italian.","I go to work by car.","He is in hospital."],
+ chunks:["I am an architect, not an engineer.", "The client wants a house with a courtyard.", "We work mostly in the north of Spain.", "The hotel is in the old town, near the cathedral.", "Could you pass me the drawing on the table?", "Architects spend half their time on the phone."],
  vocab:["in general|en general|In general, people are kind.","in particular|en particular|This one in particular.","on the whole|en conjunto|On the whole, it is fine.","specific|concreto|A specific example.","the same|el mismo|The same as before.","another|otro|Another example.","the other|el otro|The other one is better.","each|cada|Each student has a book.","both|ambos|Both options are good.","either|cualquiera de los dos|Either one is fine."],
  dial:{t:"Looking for a flat", l:[
   "A|We are looking for a flat with a garden.|Buscamos un piso con jardín.",
@@ -615,7 +615,7 @@ window.DIAS_B1 = [
 },
 {
  d:18, tema:"Desde cuándo y hasta ahora", objetivo:"Afinar el present perfect con for, since, just, already y yet.",
- chunks:["I have known her since university.","We have been friends for twenty years.","I have just got back.","Have you finished yet?","She has already left.","This is the third time I have called."],
+ chunks:["I have lived in Zaragoza since 2015.", "We have worked together for three years.", "Have you already sent the invoice?", "I have just come back from the site.", "They have not finished the snagging list yet.", "This is the first time I have flown to Helsinki."],
  vocab:["so far|hasta ahora|So far so good.","up to now|hasta ahora|Up to now, no problems.","lately|últimamente|I have been busy lately.","recently|recientemente|He has recently moved.","ever since|desde entonces|Ever since, we talk daily.","the first time|la primera vez|It is the first time I have tried it.","in years|en años|I have not seen him in years.","by now|a estas alturas|He should be here by now.","still|todavía|I still have not finished.","no longer|ya no|I no longer work there."],
  dial:{t:"Old friends", l:[
   "A|How long have you known Ana?|¿Desde cuándo conoces a Ana?",
@@ -651,7 +651,7 @@ window.DIAS_B1 = [
 },
 {
  d:19, tema:"Demasiado y suficiente", objetivo:"Graduar la intensidad y expresar consecuencia.",
- chunks:["It is too expensive for me.","It is not big enough.","It was so cold that we went home.","It was such a good film.","There were too many people.","I am not tall enough to reach it."],
+ chunks:["The opening is too narrow for the window.", "The budget is not big enough for stone.", "It was such a long flight that I slept through it.", "The ceiling is so low that we cannot run the ducts.", "There is not enough space for a lift.", "It is too late to change the order."],
  vocab:["too|demasiado|It is too late.","enough|suficiente|It is not good enough.","so|tan|It was so cold.","such|tan (con sustantivo)|Such a nice day.","hardly|apenas|I could hardly hear.","barely|apenas|He barely spoke.","extremely|extremadamente|It is extremely rare.","fairly|bastante|It is fairly easy.","rather|bastante (más formal)|It is rather cold.","absolutely|absolutamente|It is absolutely perfect."],
  dial:{t:"After a disappointing viewing", l:[
   "A|What did you think of the flat?|¿Qué te pareció el piso?",
@@ -687,7 +687,7 @@ window.DIAS_B1 = [
 },
 {
  d:20, tema:"Sugerir y negociar", objetivo:"Proponer, aceptar, rechazar y llegar a un acuerdo.",
- chunks:["Why don't we meet halfway?","How about Thursday instead?","I see your point, but…","Would it be possible to…?","That works for me.","Let us leave it at that."],
+ chunks:["Why do not we meet halfway, at three weeks?", "How about moving the meeting to Friday?", "Shall we go over the drawings first?", "That works for me.", "I see your point, but the structure will not allow it.", "Let us agree a date we can actually hit."],
  vocab:["suggest|sugerir|I suggest leaving early.","meet halfway|llegar a un punto medio|Let us meet halfway.","see your point|entender tu postura|I see your point.","compromise|acuerdo mutuo|We reached a compromise.","agree on|acordar|We agreed on a price.","object to|oponerse a|I object to that.","work for|venir bien|Does Friday work for you?","come to an agreement|llegar a un acuerdo|We came to an agreement.","reasonable|razonable|That seems reasonable.","deal|trato|It is a deal."],
  dial:{t:"Negotiating a deadline", l:[
   "A|We need the design by Friday.|Necesitamos el diseño para el viernes.",
@@ -724,7 +724,7 @@ window.DIAS_B1 = [
 ,
 {
  d:21, tema:"REPASO · Opinar y debatir", objetivo:"Dar tu opinión, coincidir y discrepar con naturalidad.",
- chunks:["As far as I am concerned, it is a mistake.","I could not agree more.","I am afraid I disagree.","It depends on how you look at it.","There is something in what you say.","To be fair, both sides have a point."],
+ chunks:["In my opinion, the courtyard is the best part.", "As far as I am concerned, the budget is the real problem.", "I see what you mean, but there is another way.", "I could not agree more.", "To be honest, I would keep the original stair.", "It depends on what the client wants."],
  vocab:["as far as I am concerned|en lo que a mí respecta|As far as I am concerned, it is fine.","point of view|punto de vista|From my point of view.","in my opinion|en mi opinión|In my opinion, it is wrong.","strongly believe|creer firmemente|I strongly believe that.","to be fair|para ser justos|To be fair, he tried.","have a point|tener razón en algo|You have a point.","on the contrary|al contrario|On the contrary, it helps.","partly|en parte|I partly agree.","the way I see it|tal y como yo lo veo|The way I see it, we must act.","let us face it|seamos realistas|Let us face it, it is late."],
  dial:{t:"Discussing remote work", l:[
   "A|In my opinion, working from home is more productive.|En mi opinión, teletrabajar es más productivo.",
@@ -760,7 +760,7 @@ window.DIAS_B1 = [
 },
 {
  d:22, tema:"Problemas y quejas", objetivo:"Reclamar con firmeza y educación.",
- chunks:["I would like to make a complaint.","The item arrived damaged.","This is not what I ordered.","I would appreciate a full refund.","I have been waiting for two weeks.","Could you look into it, please?"],
+ chunks:["I am writing to complain about the delay.", "Unfortunately, the room was not as described.", "I would be grateful if you could look into this.", "This is the second time it has happened.", "I would like a full refund, please.", "I look forward to hearing from you."],
  vocab:["complaint|queja|I would like to make a complaint.","faulty|defectuoso|The item is faulty.","refund|reembolso|I want a full refund.","replacement|sustitución|Send a replacement.","look into|investigar|Could you look into it?","apologise for|disculparse por|We apologise for the delay.","inconvenience|molestia|Sorry for the inconvenience.","damaged|dañado|It arrived damaged.","overcharge|cobrar de más|I was overcharged.","take action|actuar|We will take action."],
  dial:{t:"A complaint call", l:[
   "A|Customer service, how can I help?|Atención al cliente, ¿en qué puedo ayudarle?",
@@ -796,7 +796,7 @@ window.DIAS_B1 = [
 },
 {
  d:23, tema:"Tecnología", objetivo:"Explicar problemas técnicos y soluciones.",
- chunks:["My laptop keeps crashing.","Have you tried turning it off and on again?","The file will not open.","It is not compatible with this version.","I need to back up my files.","The connection keeps dropping."],
+ chunks:["The lift keeps breaking down.", "We had the boiler repaired last week.", "I need to get the drawings printed before the meeting.", "Make sure you back up the files.", "The wifi in the hotel is very slow.", "Could you have the model sent to the office?"],
  vocab:["crash|colgarse|My laptop keeps crashing.","back up|hacer copia de seguridad|Back up your files.","update|actualizar|I updated the software.","download|descargar|The download failed.","upload|subir|Upload the file here.","password|contraseña|I forgot my password.","device|dispositivo|Which device are you using?","plug|enchufe / enchufar|Plug it in.","charge|cargar|My phone will not charge.","settings|ajustes|Check the settings."],
  dial:{t:"IT support", l:[
   "A|IT support, what seems to be the problem?|Soporte informático, ¿cuál es el problema?",
@@ -832,7 +832,7 @@ window.DIAS_B1 = [
 },
 {
  d:24, tema:"Dinero", objetivo:"Hablar de gastos, ahorro y trámites bancarios.",
- chunks:["I am trying to save up for a car.","I cannot afford it right now.","The rent takes half my salary.","I paid it in instalments.","They charged me twice.","It is not worth the money."],
+ chunks:["Could I borrow your tape measure?", "The bank lent us the money for the plot.", "We cannot afford stone for the whole façade.", "The works came to eighty thousand euros.", "They charge twenty euros a night for parking.", "It is good value for money."],
  vocab:["save up|ahorrar para|I am saving up for a trip.","afford|permitirse|I cannot afford it.","instalment|plazo|In twelve instalments.","interest rate|tipo de interés|The interest rate is high.","account|cuenta|A current account.","transfer|transferencia|Make a transfer.","withdraw|sacar dinero|I withdrew fifty euros.","owe|deber|I owe him money.","borrow|pedir prestado|Can I borrow ten euros?","lend|prestar|He lent me the money."],
  dial:{t:"At the bank", l:[
   "A|Good morning. I would like to open an account.|Buenos días. Querría abrir una cuenta.",
@@ -868,7 +868,7 @@ window.DIAS_B1 = [
 },
 {
  d:25, tema:"Confirmar y matizar", objetivo:"Usar question tags y respuestas cortas como un nativo.",
- chunks:["You are coming, aren't you?","It is not too late, is it?","She works here, doesn't she?","You have not seen it, have you?","Neither do I.","So do I."],
+ chunks:["The meeting is at ten, is not it?", "You have been to Lisbon before, have not you?", "It is not a load-bearing wall, is it?", "So do I.", "Neither have I.", "You did not send the invoice, did you?"],
  vocab:["surely|seguramente|Surely you knew.","actually|en realidad|Actually, I did not.","I suppose so|supongo que sí|I suppose so.","I am afraid not|me temo que no|I am afraid not.","neither|tampoco|Neither do I.","so do I|yo también|So do I.","either|tampoco (final)|I do not either.","of course|por supuesto|Of course not.","I guess|supongo|I guess you are right.","apparently|por lo visto|Apparently so."],
  dial:{t:"Checking the details", l:[
   "A|You are coming to the meeting, aren't you?|Vienes a la reunión, ¿no?",
@@ -904,7 +904,7 @@ window.DIAS_B1 = [
 },
 {
  d:26, tema:"Grados y proporciones", objetivo:"Comparar con precisión y expresar evolución.",
- chunks:["It is twice as expensive as before.","Prices are getting higher and higher.","The sooner, the better.","It is nowhere near as good.","There are three times more applicants.","It is not quite as simple as that."],
+ chunks:["The second option is far cheaper than the first.", "It is nowhere near as complicated as it looks.", "The more light we get, the better.", "This is by far the best solution.", "The flight is slightly quicker than the train.", "It costs twice as much as we expected."],
  vocab:["twice as|el doble de|Twice as expensive.","nowhere near|ni de lejos|Nowhere near as good.","gradually|gradualmente|It is gradually improving.","slightly|ligeramente|Slightly better.","significantly|notablemente|Significantly cheaper.","the majority of|la mayoría de|The majority of people.","a third of|un tercio de|A third of the budget.","increase|aumentar|Prices have increased.","decrease|disminuir|Sales decreased.","steadily|de forma constante|It has risen steadily."],
  dial:{t:"Comparing two offers", l:[
   "A|The second offer is twice as good as the first.|La segunda oferta es el doble de buena que la primera.",
@@ -940,7 +940,7 @@ window.DIAS_B1 = [
 },
 {
  d:27, tema:"Conectar como un adulto", objetivo:"Escribir y hablar con conectores de nivel B1 alto.",
- chunks:["Despite the rain, we went ahead.","In spite of the cost, it was worth it.","Whereas the first option is cheap, the second is safer.","Therefore, we decided to wait.","Moreover, the deadline has changed.","As a result, sales fell."],
+ chunks:["However, the plot is a long way from the centre.", "Therefore, we need deeper foundations.", "In addition, the licence will take three months.", "On the other hand, the location is excellent.", "As a result, we changed the material.", "Despite the delay, we finished on budget."],
  vocab:["despite|a pesar de|Despite the rain.","in spite of|a pesar de|In spite of the cost.","whereas|mientras que|Whereas this one is cheap.","therefore|por lo tanto|Therefore, we waited.","moreover|además|Moreover, it is faster.","as a result|como resultado|As a result, sales fell.","nevertheless|no obstante|Nevertheless, we tried.","besides|además|Besides, it is late.","due to|debido a|Due to the strike.","meanwhile|mientras tanto|Meanwhile, prices rose."],
  dial:{t:"Reporting on a project", l:[
   "A|How did the launch go?|¿Cómo fue el lanzamiento?",
@@ -976,7 +976,7 @@ window.DIAS_B1 = [
 },
 {
  d:28, tema:"REPASO · Correos formales e informales", objetivo:"Escribir un correo correcto en los dos registros.",
- chunks:["I am writing with regard to your email of 3 March.","Please find attached the documents.","I look forward to hearing from you.","Let me know if that works for you.","Sorry for the late reply.","Thanks a lot for your help."],
+ chunks:["Dear Mr García, I am writing regarding the works at number twelve.", "Hi Javier, just a quick note about Thursday.", "Please find attached the revised budget.", "Let me know if anything is unclear.", "I look forward to your reply.", "Thanks in advance, and see you on site."],
  vocab:["with regard to|en relación con|With regard to your email.","find attached|adjunto|Please find attached.","further to|en relación con|Further to our conversation.","let me know|avísame|Let me know if you can.","get back to|responder a|I will get back to you.","apologies for|disculpas por|Apologies for the delay.","kind regards|un saludo cordial|Kind regards, Ana.","yours faithfully|atentamente|Yours faithfully.","attach|adjuntar|I have attached the file.","confirm|confirmar|Please confirm receipt."],
  dial:{t:"Two versions of the same message", l:[
   "A|Dear Mr Ruiz, I am writing with regard to your invoice.|Estimado Sr. Ruiz, le escribo en relación con su factura.",
@@ -1012,7 +1012,7 @@ window.DIAS_B1 = [
 },
 {
  d:29, tema:"Formar palabras", objetivo:"Multiplicar tu vocabulario con sufijos y prefijos.",
- chunks:["It was a complete failure.","That is highly unlikely.","He is very reliable.","It is unacceptable.","The improvement was noticeable.","She is quite an independent person."],
+ chunks:["The refurbishment was surprisingly cheap.", "We need the owner's written approval.", "It was a disappointing result for everyone.", "The installation took three days.", "The engineer's calculation was wrong.", "That is an unacceptable delay."],
  vocab:["reliable|fiable|He is very reliable.","unacceptable|inaceptable|That is unacceptable.","improvement|mejora|A big improvement.","failure|fracaso|It was a failure.","success|éxito|It was a success.","careless|descuidado|A careless mistake.","useful|útil|A useful tool.","misunderstand|malinterpretar|I misunderstood you.","disagreement|desacuerdo|There was a disagreement.","responsibility|responsabilidad|It is my responsibility."],
  dial:{t:"Feedback at work", l:[
   "A|How would you describe your new colleague?|¿Cómo describirías a tu compañero nuevo?",
@@ -1048,7 +1048,7 @@ window.DIAS_B1 = [
 },
 {
  d:30, tema:"Consolidación B1 → puerta del B2", objetivo:"Repasar el mes y preparar el examen de nivel.",
- chunks:["I have been studying for two months now.","If I keep going, I will reach B2 by summer.","What I find hardest is listening at natural speed.","I used to translate everything in my head.","I no longer need subtitles for everything.","It is not as difficult as it seemed."],
+ chunks:["I can tell a story in the past with all its layers.", "I can explain what would happen if something changed.", "I can report what other people said in a meeting.", "I can complain in writing without being rude.", "I can negotiate a date and defend my position.", "I am ready to move on to B2."],
  vocab:["keep going|seguir adelante|Keep going, you are close.","natural speed|velocidad natural|At natural speed.","subtitles|subtítulos|I watch with subtitles.","reach|alcanzar|I want to reach B2.","gap|laguna|I still have gaps.","accuracy|corrección|Accuracy is improving.","fluency|fluidez|Fluency comes with practice.","confidence|confianza|My confidence has grown.","stick to|ceñirse a|Stick to the plan.","pay off|dar sus frutos|The effort paid off."],
  dial:{t:"Two months in", l:[
   "A|How is the course going?|¿Cómo va el curso?",

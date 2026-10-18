@@ -704,6 +704,237 @@ function buildExam(L) {
   return p1.concat(p2, p3, p4, p5, p6);
 }
 
+// ---------- revisión por palabras y por frases ----------
+// Las reglas de patrón solo ven lo que se les ha enseñado a ver. Un texto
+// lleno de faltas de ortografía, con adjetivos detrás del sustantivo o con
+// frases sin verbo pasaba por bueno. Esto lo revisa de otra manera: palabra
+// por palabra contra el léxico del curso, y frase por frase buscando que
+// haya verbo y sujeto.
+var LEX = null;
+function lexico() {
+  if (LEX) return LEX;
+  LEX = {};
+  (window.LEXICO || []).forEach(function (w) { LEX[w] = 1; });
+  return LEX;
+}
+// Nombres propios, cifras y abreviaturas no se corrigen.
+function esPropio(w, pos) { return pos > 0 && /^[A-Z]/.test(w); }
+
+// Distancia de edición de uno: ¿se llega de a a b con un solo cambio?
+function unCambio(a, b) {
+  if (a === b) return false;
+  var d = a.length - b.length;
+  // dos letras intercambiadas: desing → design, recieve → receive
+  if (d === 0) {
+    for (var x = 0; x < a.length - 1; x++) {
+      if (a[x] !== b[x]) {
+        if (a[x] === b[x + 1] && a[x + 1] === b[x] && a.slice(x + 2) === b.slice(x + 2)) return true;
+        break;                 // no era transposición: se sigue probando abajo
+      }
+    }
+  }
+  if (d < -1 || d > 1) return false;
+  var i = 0, j = 0, fallos = 0;
+  while (i < a.length && j < b.length) {
+    if (a[i] === b[j]) { i++; j++; continue; }
+    if (++fallos > 1) return false;
+    if (d === 1) i++; else if (d === -1) j++; else { i++; j++; }
+  }
+  return true;
+}
+// «weathers», «cladded», «quarrying»: si quitando o añadiendo una terminación
+// regular sale una palabra del léxico, la palabra es buena y no se toca.
+var TERM = ['s', 'es', 'ed', 'd', 'ing', 'ly', 'er', 'est', "'s", 'y'];
+function esPluralES(raiz) { return /(s|x|z|ch|sh|o)$/.test(raiz); }
+function conocidaFlexionada(w) {
+  var L = lexico();
+  if (L[w]) return true;
+  for (var i = 0; i < TERM.length; i++) {
+    var t = TERM[i];
+    if (w.length > t.length + 2 && w.slice(-t.length) === t) {
+      var raiz = w.slice(0, -t.length);
+      if (t === 'es' && !esPluralES(raiz)) continue;
+      if (L[raiz] || L[raiz + 'e'] || L[raiz + 'y']) return true;
+      // doble consonante: planned → plan
+      if (raiz.length > 2 && raiz.slice(-1) === raiz.slice(-2, -1) && L[raiz.slice(0, -1)]) return true;
+    }
+    if (L[w + t]) return true;
+  }
+  return false;
+}
+function sugerencia(w) {
+  var L = lexico(), mejor = null;
+  var ws = w.toLowerCase();
+  for (var k in L) {
+    if (Math.abs(k.length - ws.length) > 1) continue;
+    if (k[0] !== ws[0] && k.slice(-1) !== ws.slice(-1)) continue;   // poda rápida
+    if (unCambio(ws, k)) {
+      // entre varias, la más frecuente en inglés suele ser la más corta
+      if (!mejor || k.length < mejor.length) mejor = k;
+    }
+  }
+  return mejor;
+}
+
+// Verbos: las tres formas de la tabla, más los auxiliares y modales.
+var VERBOS_SET = null;
+function verbosSet() {
+  if (VERBOS_SET) return VERBOS_SET;
+  VERBOS_SET = {};
+  ['am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had',
+   'do', 'does', 'did', 'will', 'would', 'can', 'could', 'shall', 'should', 'may',
+   'might', 'must', 'get', 'got', 'go', 'goes', 'went', 'gone', 'need', 'needs',
+   'want', 'wants', 'like', 'likes', 'live', 'lives', 'work', 'works', 'think',
+   'thinks', 'know', 'knows',
+   'receive', 'send', 'sends', 'sent', 'use', 'uses', 'used', 'design', 'designs',
+   'build', 'builds', 'built', 'make', 'makes', 'made', 'see', 'sees', 'saw', 'seen',
+   'say', 'says', 'said', 'tell', 'tells', 'told', 'ask', 'asks', 'asked', 'call',
+   'calls', 'called', 'come', 'comes', 'came', 'take', 'takes', 'took', 'taken',
+   'give', 'gives', 'gave', 'given', 'put', 'puts', 'keep', 'keeps', 'kept',
+   'let', 'lets', 'leave', 'leaves', 'left', 'find', 'finds', 'found', 'feel',
+   'feels', 'felt', 'look', 'looks', 'looked', 'seem', 'seems', 'start', 'starts',
+   'finish', 'finishes', 'open', 'opens', 'close', 'closes', 'pay', 'pays', 'paid',
+   'cost', 'costs', 'meet', 'meets', 'met', 'read', 'reads', 'write', 'writes',
+   'wrote', 'written', 'speak', 'speaks', 'spoke', 'understand', 'understands',
+   'agree', 'agrees', 'decide', 'decides', 'explain', 'explains', 'prefer', 'prefers',
+   'arrive', 'arrives', 'stay', 'stays', 'travel', 'travels', 'visit', 'visits',
+   'wait', 'waits', 'help', 'helps', 'try', 'tries', 'tried', 'allow', 'allows',
+   'require', 'requires', 'include', 'includes', 'add', 'adds', 'change', 'changes',
+   'move', 'moves', 'show', 'shows', 'mean', 'means', 'meant', 'bring', 'brings',
+   'brought', 'buy', 'buys', 'bought', 'sell', 'sells', 'sold', 'spend', 'spends',
+   'spent', 'run', 'runs', 'ran', 'begin', 'begins', 'began', 'become', 'becomes',
+   'became', 'happen', 'happens', 'remember', 'remembers', 'forget', 'forgets'
+  ].forEach(function (w) { VERBOS_SET[w] = 1; });
+  ((window.VERBOS && window.VERBOS.grupos) || []).forEach(function (G) {
+    G.v.forEach(function (l) {
+      var pr = l.split('|');
+      [pr[0], pr[2], pr[3]].forEach(function (w) {
+        if (!w) return;
+        w = w.toLowerCase();
+        VERBOS_SET[w] = 1; VERBOS_SET[w + 's'] = 1; VERBOS_SET[w + 'ing'] = 1; VERBOS_SET[w + 'ed'] = 1;
+      });
+    });
+  });
+  ((window.FAMILIAS && window.FAMILIAS.grupos) || []).forEach(function (G) {
+    G.v.forEach(function (x) {
+      x.f.forEach(function (l) {
+        var pr = l.split('|');
+        if (/verbo/i.test(pr[1] || '')) {
+          var w = (pr[0] || '').toLowerCase();
+          VERBOS_SET[w] = 1; VERBOS_SET[w + 's'] = 1; VERBOS_SET[w + 'ing'] = 1; VERBOS_SET[w + 'ed'] = 1;
+        }
+      });
+    });
+  });
+  return VERBOS_SET;
+}
+function esVerbo(w) {
+  w = String(w).toLowerCase().replace(/[^a-z']/g, '');
+  if (!w) return false;
+  var V = verbosSet();
+  if (V[w]) return true;
+  // Una palabra en -ed o -ing es, en inglés, casi siempre un verbo. Se admite
+  // si su raíz existe: así «received» o «refurbishing» cuentan como verbo
+  // aunque no estén en la tabla de verbos irregulares. El análisis de «frase
+  // sin verbo» tiene que pecar de prudente: es peor un aviso falso que uno
+  // que se escapa.
+  var L = lexico();
+  var m = w.match(/^([a-z]+?)(ed|ing|s|es|d)$/);
+  if (m) {
+    var raiz = m[1];
+    if (V[raiz] || V[raiz + 'e']) return true;
+    if (m[2] === 'ed' || m[2] === 'ing' || m[2] === 'd') {
+      if (L[raiz] || L[raiz + 'e'] || L[raiz.slice(0, -1)]) return true;
+    }
+  }
+  return false;
+}
+
+// Adjetivos del curso, para detectar el adjetivo colocado detrás.
+var ADJ_SET = null;
+function adjSet() {
+  if (ADJ_SET) return ADJ_SET;
+  ADJ_SET = {};
+  ((window.GIMNASIO && window.GIMNASIO.adjetivos && window.GIMNASIO.adjetivos.opuestos) || [])
+    .forEach(function (l) { l.split('|').forEach(function (w) { ADJ_SET[w.toLowerCase()] = 1; }); });
+  ((window.FAMILIAS && window.FAMILIAS.grupos) || []).forEach(function (G) {
+    G.v.forEach(function (x) {
+      x.f.forEach(function (l) {
+        var pr = l.split('|');
+        if (/adjetivo/i.test(pr[1] || '')) ADJ_SET[(pr[0] || '').toLowerCase()] = 1;
+      });
+    });
+  });
+  ((window.DERIVADAS && window.DERIVADAS.familias) || []).forEach(function (G) {
+    G.v.forEach(function (l) {
+      var pr = l.split('|');
+      if (/adjetivo/i.test(pr[2] || '')) ADJ_SET[(pr[1] || '').toLowerCase()] = 1;
+    });
+  });
+  // Colores, tamaños y materiales: los adjetivos que más se posponen por
+  // calco del español y que las otras listas no traían.
+  ('white black red blue green grey gray yellow brown orange pink purple ' +
+   'wooden metal glass concrete brick stone wide narrow deep shallow thick thin ' +
+   'round square flat steep bright dark warm cool dry damp smooth rough heavy light ' +
+   'modern ancient original existing nearby local main central lateral upper lower').split(' ')
+    .forEach(function (w) { ADJ_SET[w] = 1; });
+  return ADJ_SET;
+}
+
+var DETER = { a: 1, an: 1, the: 1, my: 1, your: 1, his: 1, her: 1, our: 1, their: 1, this: 1, that: 1 };
+var SUJETOS = { i: 1, you: 1, he: 1, she: 1, it: 1, we: 1, they: 1, there: 1, who: 1, what: 1, this: 1, that: 1, these: 1, those: 1 };
+
+// Revisión palabra por palabra: faltas de ortografía con sugerencia.
+function revisaPalabras(t) {
+  var L = lexico(), out = [], vistas = {};
+  var tokens = String(t).split(/([^A-Za-z'’-]+)/);
+  var pos = 0;
+  tokens.forEach(function (tk) {
+    if (!/[A-Za-z]/.test(tk)) { pos += tk.length; return; }
+    var limpio = tk.replace(/^[-']+|[-']+$/g, '');
+    var baja = limpio.toLowerCase().replace(/[’]/g, "'");
+    if (baja.length >= 3 && !conocidaFlexionada(baja) && !vistas[baja] && !esPropio(limpio, pos)) {
+      var sug = sugerencia(baja);
+      if (sug) { out.push({ mal: limpio, bien: sug }); vistas[baja] = 1; }
+    }
+    pos += tk.length;
+  });
+  return out;
+}
+
+// Revisión frase por frase: ¿hay verbo? ¿hay sujeto? ¿adjetivo detrás?
+function revisaFrases(t) {
+  var out = [];
+  var frases = String(t).split(/(?<=[.!?])\s+|\n+/).map(function (f) { return f.trim(); })
+    .filter(function (f) { return f.replace(/[^A-Za-z]/g, '').length > 2; });
+  var A = adjSet();
+  frases.forEach(function (f) {
+    var pal = f.replace(/[.!?,;:]/g, '').split(/\s+/).filter(Boolean);
+    if (pal.length < 3) return;
+    var hayVerbo = pal.some(esVerbo);
+    if (!hayVerbo) {
+      out.push({ f: f, exp: 'Esta frase <b>no tiene verbo</b>. En español se puede decir «Arquitecta de Zaragoza»; en inglés toda frase necesita su verbo: <i>I am an architect from Zaragoza</i>.' });
+      return;
+    }
+    var primera = pal[0].toLowerCase().replace(/[^a-z']/g, '');
+    if (esVerbo(primera) && !SUJETOS[primera] && !/^(do|does|did|is|are|was|were|can|could|will|would|have|has|please|let|take|look|mind|check|send|tell|give)$/.test(primera)) {
+      out.push({ f: f, exp: 'Esta frase <b>empieza por el verbo y le falta el sujeto</b>. El inglés no lo omite nunca: <i>It is expensive</i>, no <i>Is expensive</i>.' });
+    }
+    for (var i = 1; i < pal.length - 1; i++) {
+      var ant = pal[i - 1].toLowerCase().replace(/[^a-z']/g, '');
+      var aqui = pal[i].toLowerCase().replace(/[^a-z']/g, '');
+      var sig = pal[i + 1].toLowerCase().replace(/[^a-z']/g, '');
+      // determinante + sustantivo + adjetivo  →  el adjetivo iba delante
+      if (DETER[ant] && !A[aqui] && A[sig] && !esVerbo(sig)) {
+        out.push({ f: f, exp: 'El adjetivo <b class="en">' + esc(sig) + '</b> va <b>delante</b> del sustantivo: <i>' +
+          esc(ant + ' ' + sig + ' ' + aqui) + '</i>, no <i>' + esc(ant + ' ' + aqui + ' ' + sig) + '</i>. En inglés el adjetivo nunca se pospone.' });
+        break;
+      }
+    }
+  });
+  return out;
+}
+
 // ---------- evaluador de expresión escrita ----------
 // Cada regla trae, además de la explicación, el reemplazo que la corrige
 // cuando la corrección es segura. Así el texto no solo se puntúa: se devuelve
@@ -798,8 +1029,9 @@ function nivelPorComplejidad(r) {
   if (r.avg >= 17 && usadas >= 6 && r.ttr >= 55 && r.words >= 120) n = 4;
   if (r.words < 30) n = Math.min(n, 1);        // sin texto no hay pruebas
   else if (r.words < 60) n = Math.min(n, 2);
-  if (r.errs.length >= 5) n = Math.min(n, 1);  // la corrección también manda
-  else if (r.errs.length >= 3) n = Math.min(n, 2);
+  var fallos = r.errs.length + r.faltas.length + r.fallosFrase.length;
+  if (fallos >= 5) n = Math.min(n, 1);        // la corrección también manda
+  else if (fallos >= 3) n = Math.min(n, 2);
   return { n: n, usadas: usadas };
 }
 
@@ -826,6 +1058,17 @@ function evalEscrito(text, D, enunciado) {
       if (r[2]) { r[0].lastIndex = 0; corregido = corregido.replace(r[0], r[2]); }
     } catch (e) {}
   });
+
+  // Primero la ortografía: con las palabras bien escritas, el análisis de las
+  // frases deja de confundir una falta con un verbo que falta.
+  var faltas = revisaPalabras(t);
+  var limpio = t;
+  faltas.forEach(function (f) {
+    var re = new RegExp('\\b' + f.mal.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'g');
+    limpio = limpio.replace(re, f.bien);
+    corregido = corregido.replace(re, f.bien);
+  });
+  var fallosFrase = revisaFrases(limpio);
 
   // higiene: mayúsculas y punto final
   var forma = [];
@@ -865,10 +1108,11 @@ function evalEscrito(text, D, enunciado) {
   if (sents.length < 3) org -= 2;
   if (avg > 28) org -= 2; else if (avg < 6 && sents.length > 2) org -= 1;
   if (forma.length) org -= Math.min(2, forma.length);
+  if (fallosFrase.length) org -= Math.min(3, fallosFrase.length);
   org = Math.max(0, Math.min(5, org));
 
   var leng = 5;
-  leng -= Math.min(4, errs.length);
+  leng -= Math.min(4, errs.length + Math.min(3, faltas.length));
   if (ttr < 45 && tk.length > 25) leng -= 1;
   if (vocabUsed.length >= 3) leng = Math.min(5, leng + 1);
   // Con menos de veinticinco palabras no hay pruebas suficientes para darle
@@ -889,7 +1133,8 @@ function evalEscrito(text, D, enunciado) {
   else if (cont === 2) score = Math.min(score, 55);
 
   var base = { words: words, sents: sents.length, lineas: lineas, avg: avg, ttr: ttr,
-               errs: errs, forma: forma, pide: cumplePide, corregido: corregido,
+               errs: errs, faltas: faltas, fallosFrase: fallosFrase,
+               forma: forma, pide: cumplePide, corregido: corregido,
                original: t, chunks: chunksUsed, vocab: vocabUsed,
                crit: crit, score: score };
   // La nota dice lo bien que has hecho ESTA tarea; la banda estima tu nivel,
@@ -943,8 +1188,30 @@ function escritoHtml(r) {
         '<p class="small dim leyenda">Solo se corrigen automáticamente los errores que tienen una única solución posible. ' +
         'Los demás aparecen arriba explicados, para que los arregles tú: hacerlo tú es lo que fija la corrección.</p></div>';
     }
-  } else if (r.words > 20) {
-    h += '<p class="ok-t small" style="margin-top:10px">✔ Ningún error típico de hispanohablante detectado.</p>';
+  }
+
+  if (r.faltas.length) {
+    h += '<h3>Ortografía (' + r.faltas.length + ')</h3><ul class="errs">' +
+      r.faltas.map(function (f) {
+        return '<li><s class="sobra en">' + esc(f.mal) + '</s> → <b class="en">' + esc(f.bien) + '</b></li>';
+      }).join('') + '</ul>' +
+      '<p class="small dim">Solo se avisa cuando la palabra no existe en el curso <b>y</b> hay una correcta a un solo cambio de distancia. ' +
+      'Si escribes una palabra correcta que el curso no usa, no dirá nada: prefiere callarse a darte un aviso falso.</p>';
+  }
+
+  if (r.fallosFrase.length) {
+    h += '<h3>Frases mal construidas (' + r.fallosFrase.length + ')</h3><ul class="errs">' +
+      r.fallosFrase.map(function (x) {
+        return '<li><span class="en">' + esc(x.f) + '</span><br>' + x.exp + '</li>';
+      }).join('') + '</ul>';
+  }
+
+  if (!r.errs.length && !r.faltas.length && !r.fallosFrase.length && r.words > 20) {
+    h += '<p class="ok-t small" style="margin-top:10px">✔ Sin faltas de ortografía, sin frases incompletas y sin ninguno de los ' +
+      'cincuenta errores típicos del hispanohablante.</p>' +
+      '<p class="small dim">Ojo: esto no significa que el texto sea perfecto. El corrector revisa ortografía contra el léxico del curso, ' +
+      'que haya verbo y sujeto en cada frase, la posición del adjetivo y una lista de errores concretos. No juzga si lo que dices ' +
+      'tiene sentido ni si el registro es el adecuado.</p>';
   }
 
   if (r.forma.length) {
@@ -953,8 +1220,10 @@ function escritoHtml(r) {
   }
 
   if (r.vocab.length) h += '<p class="small dim">Vocabulario del día usado: ' + r.vocab.map(function (v) { return esc(v.w); }).join(', ') + '</p>';
-  h += '<p class="small dim">El corrector cubre los cincuenta errores fosilizados más frecuentes del hispanohablante y la rejilla de Cambridge; ' +
-    'no sustituye a una corrección humana, pero sí detecta lo que de verdad te está costando puntos.</p>';
+  h += '<p class="small dim">El corrector revisa cuatro cosas: <b>ortografía</b> contra las ' + (window.LEXICO || []).length +
+    ' palabras inglesas del curso, <b>que cada frase tenga verbo y sujeto</b>, la <b>posición del adjetivo</b> y los ' +
+    '<b>cincuenta errores fosilizados</b> más frecuentes del hispanohablante, sobre la rejilla de Cambridge. ' +
+    'No sustituye a una corrección humana, pero ya no deja pasar un texto lleno de faltas.</p>';
   return h;
 }
 
@@ -2420,9 +2689,10 @@ function vOral(arg) {
     '<p class="dim">Dos minutos hablando sin parar. Se mide tu <b>fluidez</b> (palabras por minuto), tu <b>densidad léxica</b> (cuántas palabras distintas usas) y cuántas <b>estructuras objetivo del ' + etiquetaDia(n).toLowerCase() + '</b> te salen sin pensarlas.</p>';
   h += selectorDia(n);
   if (!SR) {
-    app.innerHTML = h + '<div class="card"><p class="bad-t"><b>Tu navegador no permite reconocimiento de voz.</b></p><p>Necesitas Chrome o Edge de escritorio. Mientras tanto puedes hacer la prueba igual: habla dos minutos con el cronómetro y luego escribe de memoria lo que dijiste en el bloque de escritura.</p></div><div id="micPanel"></div>';
+    app.innerHTML = h + '<div class="card"><p class="bad-t"><b>Tu navegador no permite reconocimiento de voz.</b></p><p>Para la transcripción automática necesitas Chrome o Edge de escritorio. La prueba, en cambio, la puedes hacer igual: abajo está la versión sin micrófono.</p></div><div id="micPanel"></div><div id="sinmic"></div>';
     cablearSelector();
     panelMicro(document.getElementById('micPanel'));
+    pruebaSinMicro(document.getElementById('sinmic'), D, n);
     return;
   }
   h += '<div id="micPanel"></div>';
@@ -2431,9 +2701,11 @@ function vOral(arg) {
     D.chunks.slice(0, 4).map(function (c) { return '<li class="en">' + esc(c) + '</li>'; }).join('') + '</ul>' +
     '<div class="row" style="margin-top:14px"><button class="btn" id="rec">● Empezar a grabar</button><span class="timer" id="ot">2:00</span><span class="dim small" id="ost"></span></div>' +
     '<div id="live" class="live en hidden"></div><div id="ores"></div></div>';
+  h += '<div id="sinmic"></div>';
   app.innerHTML = h;
   cablearSelector();
   panelMicro(document.getElementById('micPanel'));
+  pruebaSinMicro(document.getElementById('sinmic'), D, n);
   var yaHecho = (S.dias[n] || {}).oral;
   if (yaHecho) document.getElementById('ores').innerHTML =
     '<div class="note small">Ya hiciste la prueba oral de este día el <b>' + esc(yaHecho.f.split('-').reverse().join('/')) +
@@ -2521,6 +2793,13 @@ function panelMicro(host) {
   var SR = MIC.hay();
   var seguro = !!window.isSecureContext;
   var proto = location.protocol;
+  // Abriendo el archivo con doble clic, la dirección es file:// y Chrome NO
+  // concede micrófono: el permiso se guarda por sitio web y un archivo local
+  // no tiene sitio al que asociarlo, así que el aviso no sale nunca y el
+  // micrófono falla aunque window.isSecureContext diga que todo está bien.
+  // Era justo lo que hacía que el comprobador diera luz verde y después no
+  // funcionara nada.
+  var esFile = proto === 'file:';
   var chrome = /Chrome|Chromium|Edg/.test(navigator.userAgent) && !/OPR|Firefox/.test(navigator.userAgent);
   var movil = /Android|iPhone|iPad/i.test(navigator.userAgent);
   function fila(ok, t, d) {
@@ -2533,8 +2812,14 @@ function panelMicro(host) {
     '<ul class="chks">' +
     fila(SR, SR ? 'Tu navegador reconoce la voz.' : 'Tu navegador no reconoce la voz.',
       SR ? '' : 'Necesitas <b>Chrome</b> o <b>Edge</b> de escritorio. En Firefox y en Safari esta función no existe, y el resto del curso sigue funcionando igual.') +
-    fila(seguro, seguro ? 'La página se sirve de forma segura (' + proto + ').' : 'La página no es un contexto seguro (' + proto + ').',
-      seguro ? '' : 'El navegador solo da micrófono en <b>https://</b> o abriendo el archivo directamente desde tu disco. Si estás en http:// no lo dará nunca.') +
+    (esFile
+      ? fila(false, 'Has abierto el archivo desde tu disco (<b>file://</b>), y así el micrófono no funciona.',
+          'No es un fallo del curso: <b>Chrome y Edge no dan permiso de micrófono a los archivos locales</b>, porque el permiso se guarda por sitio web y un archivo del disco no tiene sitio al que asociarlo. El aviso de permiso no aparece nunca. ' +
+          'Tres formas de arreglarlo, de más fácil a menos: <b>1)</b> abrir el curso desde su dirección en internet, donde el micrófono sí funciona; ' +
+          '<b>2)</b> subir este archivo a tu web y abrirlo desde allí; <b>3)</b> servirlo en tu ordenador con un servidor local. ' +
+          'Mientras tanto, <b>la prueba oral tiene abajo una versión sin micrófono</b> que sí funciona aquí.')
+      : fila(seguro, seguro ? 'La página se sirve de forma segura (' + proto + ').' : 'La página no es un contexto seguro (' + proto + ').',
+          seguro ? '' : 'El navegador solo da micrófono en <b>https://</b>. En http:// no lo dará nunca.')) +
     fila(chrome ? true : null, chrome ? 'Estás en Chrome o Edge, que es lo recomendado.' : 'No se detecta Chrome ni Edge.',
       chrome ? '' : 'Puede funcionar, pero si falla prueba primero a abrirlo en Chrome antes de tocar nada más.') +
     fila(navigator.onLine, navigator.onLine ? 'Hay conexión a internet.' : 'No se detecta conexión a internet.',
@@ -3188,6 +3473,103 @@ function vHabla(arg) {
   }
 }
 
+// ---------- prueba oral sin micrófono ----------
+// Abriendo el curso como archivo local no hay micrófono posible, y la prueba
+// de dos minutos se quedaba sin hacer. Esta versión sí funciona en cualquier
+// sitio: cronómetro de dos minutos hablando en voz alta y, al acabar, se
+// escribe de memoria lo que se ha dicho. Se mide lo mismo salvo las palabras
+// por minuto, que no se pueden saber sin oír la voz.
+function pruebaSinMicro(host, D, n) {
+  if (!host) return;
+  var esFile = location.protocol === 'file:';
+  host.innerHTML = '<div class="card"><div class="row between"><h3 style="margin:0">⏱ Prueba oral sin micrófono</h3>' +
+    (esFile ? '<span class="pill dif-alta">la que funciona aquí</span>' : '<span class="pill dif-baja">alternativa</span>') + '</div>' +
+    (esFile ? '<div class="note small"><b>Estás abriendo el curso como archivo del disco</b>, y ahí Chrome no concede micrófono: ' +
+      'el aviso de permiso no llega a aparecer. No es un fallo del curso. Esta versión de la prueba <b>sí funciona</b> tal como lo tienes ahora.</div>' : '') +
+    '<p class="small dim">Hablas dos minutos en voz alta con el cronómetro, sin parar y sin leer. Al terminar escribes de memoria lo que dijiste. ' +
+    'Es la técnica de autoevaluación que se usa en clase y mide casi lo mismo: cuánto produces, con cuánta variedad y cuántas estructuras del día te salieron. ' +
+    'Lo único que no se puede medir sin oírte son las palabras por minuto.</p>' +
+    '<div class="row"><button class="btn" id="smGo">Empezar los 2 minutos</button><span class="timer" id="smT">2:00</span>' +
+    '<span class="dim small" id="smS"></span></div><div id="smZona"></div></div>';
+
+  var iv = null, secs = 120, hablando = false;
+  var btn = host.querySelector('#smGo'), tm = host.querySelector('#smT'), st = host.querySelector('#smS');
+  btn.onclick = function () {
+    if (hablando) { fin(); return; }
+    hablando = true; secs = 120;
+    btn.textContent = 'Ya he terminado →';
+    st.textContent = 'Habla ahora, en voz alta y sin parar.';
+    document.getElementById('smZona').innerHTML =
+      '<div class="note small">No leas el guion mientras hablas: míralo antes, tápalo y habla. ' +
+      'Si te quedas en blanco, repite la última frase con otras palabras en vez de callarte: eso es exactamente lo que se entrena.</div>';
+    iv = setInterval(function () {
+      secs--;
+      tm.textContent = Math.floor(secs / 60) + ':' + String(Math.max(0, secs) % 60).padStart(2, '0');
+      if (secs <= 0) fin();
+    }, 1000);
+  };
+
+  function fin() {
+    clearInterval(iv); hablando = false;
+    btn.textContent = 'Empezar los 2 minutos'; st.textContent = '';
+    var usados = Math.max(1, 120 - Math.max(0, secs));
+    var z = document.getElementById('smZona');
+    z.innerHTML = '<div class="card flat"><p class="small"><b>Has hablado ' + usados + ' segundos.</b> Ahora escribe de memoria lo que dijiste, ' +
+      'lo más parecido posible a como te salió —con sus errores, no lo arregles al escribirlo—. Lo que no recuerdes, no lo inventes: ' +
+      'lo que no se recuerda es lo que no se dijo con soltura.</p>' +
+      '<textarea id="smTxt" placeholder="I am an architect and today I want to talk about…"></textarea>' +
+      '<div class="row" style="margin-top:10px"><button class="btn small" id="smOk">Evaluar lo que he dicho</button></div>' +
+      '<div id="smRes"></div></div>';
+    z.querySelector('#smOk').onclick = function () { evalua(z.querySelector('#smTxt').value, usados); };
+    z.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function evalua(txt, dur) {
+    var out = document.getElementById('smRes');
+    var tk = toks(norm(txt));
+    if (tk.length < 15) { out.innerHTML = '<div class="note small">Escribe al menos quince palabras. Si de dos minutos hablando no recuerdas quince palabras, el problema no es la memoria: es que hubo más silencio que habla. Repite la prueba.</div>'; return; }
+    var uniq = {}; tk.forEach(function (w) { uniq[w] = 1; });
+    var distinct = Math.round(Object.keys(uniq).length / tk.length * 100);
+    var lt = ' ' + norm(txt) + ' ';
+    var hit = (D.chunks || []).filter(function (c) {
+      var core = norm(c).split(' ').slice(0, 4).join(' ');
+      return core.length > 6 && lt.indexOf(core) >= 0;
+    });
+    var voc = (D.vocab || []).map(vparts).filter(function (v) { return lt.indexOf(norm(v.w)) >= 0; });
+    var cov = Math.round(hit.length / Math.max(1, (D.chunks || []).length) * 100);
+    // Sin voz no hay palabras por minuto, así que la puntuación se reparte
+    // entre lo que sí se puede medir: cantidad, variedad y estructuras.
+    var score = 0;
+    score += Math.min(40, Math.round(tk.length / 160 * 40));
+    score += Math.min(25, Math.round(distinct / 55 * 25));
+    score += Math.min(25, hit.length * 8);
+    score += Math.min(10, voc.length * 2);
+    score = Math.max(0, Math.min(100, score));
+    var band = tk.length >= 180 && distinct >= 50 && score >= 80 ? 'C1'
+      : tk.length >= 130 && score >= 62 ? 'B2'
+      : tk.length >= 80 && score >= 45 ? 'B1' : 'A2';
+    var stD = S.dias[n] = S.dias[n] || { fin: false, pct: 0, blk: {} };
+    if (!stD.blk) stD.blk = {};
+    if (!stD.oral || score > stD.oral.score) stD.oral = { f: hoy(), score: score, band: band, wpm: 0, sinMic: true };
+    S.oral.push({ f: hoy(), dia: n, wpm: 0, words: tk.length, distinct: distinct, cov: cov, score: score, band: band, sinMic: true });
+    rec('prod', score >= 60, 'prueba oral sin micrófono ' + etiquetaDia(n).toLowerCase());
+    S.ses++; save();
+    out.innerHTML = '<div class="metrics">' + metric(score, 'puntuación') + metric(tk.length, 'palabras recordadas') +
+      metric(distinct + '%', 'léxico distinto') + metric(hit.length + '/' + (D.chunks || []).length, 'estructuras usadas') +
+      metric(band, 'banda estimada') + metric(dur + ' s', 'tiempo hablado') + '</div>' +
+      '<div class="bar"><i style="width:' + score + '%"></i></div>' +
+      '<p class="small ' + (tk.length >= 130 ? 'ok-t' : tk.length >= 80 ? 'dim' : 'bad-t') + '">' +
+      (tk.length >= 180 ? 'Esa es la cantidad de un hablante suelto: en dos minutos se dicen entre 180 y 300 palabras. Ahora el margen está en la precisión, no en el volumen.'
+       : tk.length >= 130 ? 'Buena cantidad. El objetivo son 180 palabras en dos minutos; vas camino.'
+       : tk.length >= 80 ? 'Te has quedado corta: en dos minutos un hablante suelto dice más del doble. Casi siempre son silencios buscando la palabra exacta. Rebaja lo que quieres decir y no pares.'
+       : 'Ha habido más silencio que habla. El remedio no es estudiar más vocabulario: es permitirte decir frases simples y acabadas en vez de frases ambiciosas a medias.') + '</p>' +
+      (hit.length ? '<p class="small ok-t">Estructuras del día que te salieron: ' + hit.map(esc).join(' · ') + '</p>'
+        : '<p class="small bad-t">No te salió ninguna de las estructuras objetivo del día. Vuelve al bloque de frases hechas, haz shadowing y repite la prueba: el objetivo de los dos minutos no es hablar, es <b>colocar lo del día</b>.</p>') +
+      '<p class="small dim">Esta prueba cuenta igual que la del micrófono y se guarda en el día, en tu historial y en la destreza de producción. ' +
+      'Lo único que no lleva son las palabras por minuto, que sin oír la voz no se pueden medir.</p>';
+  }
+}
+
 // ---------- vista: exámenes ----------
 function vExamenes() {
   var h = '<h1>Exámenes y simulacros</h1>' +
@@ -3694,8 +4076,10 @@ function vDia(nStr) {
       var r = evalEscrito(ta.value, D, pideEnunciado(P.escribe));
       if (r.words < 12) { res.innerHTML = '<div class="note">Escribe al menos doce palabras antes de evaluar.</div>'; return; }
       res.innerHTML = '<div class="card flat">' + escritoHtml(r) + '</div>';
-      S.escr.push({ f: hoy(), dia: n, words: r.words, ttr: r.ttr, avg: r.avg, errs: r.errs.length, score: r.score,
-                    banda: r.banda, lista: r.errs.map(function (e) { return e.exp; }) });
+      S.escr.push({ f: hoy(), dia: n, words: r.words, ttr: r.ttr, avg: r.avg,
+                    errs: r.errs.length + r.faltas.length + r.fallosFrase.length, score: r.score,
+                    banda: r.banda, lista: r.errs.map(function (e) { return e.exp; })
+                      .concat(r.faltas.map(function (f) { return 'ortografía: ' + f.mal + ' → ' + f.bien; })) });
       rec('prod', r.score >= 60, 'texto escrito día ' + n); save();
     };
     var mb = el('<button class="btn sec small">Ver respuesta modelo</button>');

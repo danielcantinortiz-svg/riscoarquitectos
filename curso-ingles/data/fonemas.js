@@ -1,0 +1,151 @@
+/* FONEMAS · los 44 sonidos del inglés, uno por uno.
+   El inglés tiene 44 fonemas y el español 24. Esa diferencia —y no el
+   vocabulario— es la razón de que cueste tanto entender y que no entiendan.
+   Cada ficha lleva: el símbolo, tres palabras de ejemplo, qué hace la boca,
+   la dificultad real para un hispanohablante y el error típico.
+   dif: 'alta' (no existe en español), 'media' (existe pero se confunde),
+        'baja' (prácticamente igual que en español). */
+window.FONEMAS = {
+
+intro: "El inglés tiene <b>44 sonidos</b>; el español, <b>24</b>. Veinte sonidos que tu boca no ha hecho nunca y que tu oído, de entrada, no distingue. Por eso puedes saber mucho vocabulario y aun así no entender una conversación: no es que hablen rápido, es que <b>la mitad de los sonidos que dicen no están en tu inventario</b>.",
+
+teoria: [
+ "<b>El oído va antes que la boca.</b> Un adulto deja de distinguir los sonidos que su lengua no usa hacia el primer año de vida. La buena noticia es que se recupera: no con teoría, sino oyendo el mismo contraste muchas veces seguidas.",
+ "<b>No son 44 problemas.</b> De los 44, unos 20 son casi iguales que en español y no necesitan trabajo. Los que hay que entrenar están marcados aquí como <b>dificultad alta</b>: son nueve o diez.",
+ "<b>Las vocales son el problema, no las consonantes.</b> El español tiene cinco vocales; el inglés, doce más ocho diptongos. La mayoría de los malentendidos reales vienen de ahí, no de la <i>th</i>.",
+ "<b>Un símbolo, un sonido.</b> La ortografía inglesa miente: <i>through, though, tough, thought</i> se escriben casi igual y suenan distinto. El alfabeto fonético no miente, y por eso merece la pena aprender los símbolos: son 44 y se leen en una tarde.",
+ "<b>La fluidez sale de aquí.</b> Se habla con soltura cuando no hay que pensar cómo se hace cada sonido. Mientras un fonema te cueste, esa palabra te frenará siempre que aparezca."
+],
+
+grupos: [
+
+{ t: "Vocales cortas", nota: "Siete sonidos donde el español solo tiene cinco. Aquí está la mayor parte de los malentendidos.", v: [
+ { s: "/ɪ/", n: "i corta y relajada", dif: "alta", ej: ["ship", "bit", "this", "big"],
+   boca: "Ni «i» ni «e» españolas: a medio camino y, sobre todo, <b>relajada y corta</b>. La lengua no se tensa.",
+   error: "Decirla como la «i» española, que es tensa. Entonces <i>ship</i> suena a <i>sheep</i> y <i>live</i> a <i>leave</i>." },
+ { s: "/e/", n: "e como en español", dif: "baja", ej: ["bed", "ten", "said", "bread"],
+   boca: "Prácticamente la «e» española, quizá un poco más abierta.",
+   error: "Ninguno grave. Ojo solo con la ortografía: <i>said</i> y <i>bread</i> llevan este sonido." },
+ { s: "/æ/", n: "a aplastada", dif: "alta", ej: ["cat", "bad", "man", "flat"],
+   boca: "Abre la boca como para «a» pero coloca la lengua como para «e». Sale un sonido ancho, casi de queja.",
+   error: "Sustituirla por «a» o por «e». Así <i>bad</i> y <i>bed</i>, o <i>man</i> y <i>men</i>, se vuelven la misma palabra." },
+ { s: "/ʌ/", n: "a corta de garganta", dif: "alta", ej: ["cup", "but", "love", "money"],
+   boca: "Boca poco abierta, lengua atrás y en el centro, sonido seco y breve. Más cerrada que la «a» española.",
+   error: "Decir «a» abierta. <i>Cup</i> no es «cap»; y la <i>o</i> de <i>love</i> o <i>money</i> lleva este sonido, no «o»." },
+ { s: "/ɒ/", n: "o corta y abierta", dif: "media", ej: ["hot", "job", "want", "what"],
+   boca: "Como la «o» española pero <b>más abierta y más corta</b>, con los labios menos redondeados.",
+   error: "Alargarla. Es un sonido de un golpe: <i>hot</i>, no «hoot»." },
+ { s: "/ʊ/", n: "u corta y floja", dif: "alta", ej: ["book", "good", "put", "could"],
+   boca: "Labios poco redondeados y sonido muy breve, casi entre «u» y «o». La lengua no se tensa.",
+   error: "Decir la «u» española, que es tensa y larga. Así <i>full</i> suena a <i>fool</i> y <i>pull</i> a <i>pool</i>." },
+ { s: "/ə/", n: "schwa · la vocal neutra", dif: "alta", ej: ["about", "teacher", "architect", "computer"],
+   boca: "Boca entreabierta, lengua en reposo, sin ningún esfuerzo. Es el sonido de quien no tiene ganas: «uh».",
+   error: "Pronunciar bien las sílabas átonas. En inglés se dicen mal a propósito: <b>AR</b>-kə-tekt, no «ar-qui-tect». Es el sonido más frecuente del idioma." }] },
+
+{ t: "Vocales largas", nota: "La duración distingue palabras. Alargar mal cambia lo que dices.", v: [
+ { s: "/iː/", n: "i larga y tensa", dif: "media", ej: ["sheep", "see", "meet", "key"],
+   boca: "Labios estirados como en una sonrisa forzada, lengua tensa y <b>sonido alargado</b>.",
+   error: "No alargarla, con lo que se confunde con /ɪ/. <i>Seat</i> y <i>sit</i> son palabras distintas." },
+ { s: "/ɑː/", n: "a larga de atrás", dif: "media", ej: ["car", "father", "start", "half"],
+   boca: "Boca muy abierta, lengua atrás y abajo, sonido largo. En inglés británico la <i>r</i> de <i>car</i> no suena.",
+   error: "Pronunciar la <i>r</i> final a la española. En <i>car</i> o <i>start</i> la <i>r</i> solo alarga la vocal." },
+ { s: "/ɔː/", n: "o larga", dif: "media", ej: ["door", "four", "law", "bought"],
+   boca: "Labios bien redondeados y sonido largo, más cerrado que /ɒ/.",
+   error: "Confundirla con la «o» corta. <i>Port</i> y <i>pot</i> no son lo mismo." },
+ { s: "/uː/", n: "u larga", dif: "baja", ej: ["food", "blue", "school", "two"],
+   boca: "Labios muy redondeados hacia delante y sonido largo. Parecida a la «u» española pero más larga.",
+   error: "Poco problemática. El riesgo está en confundirla con /ʊ/: <i>fool</i> frente a <i>full</i>." },
+ { s: "/ɜː/", n: "e larga de garganta", dif: "alta", ej: ["bird", "work", "learn", "her"],
+   boca: "Una schwa <b>larga y con fuerza</b>: boca entreabierta, lengua en el centro, sin redondear los labios.",
+   error: "Decir «er» a la española o pronunciar la <i>r</i>. <i>Work</i> no es «uork»: es una vocal larga y neutra." }] },
+
+{ t: "Diptongos", nota: "Ocho. Son dos vocales pegadas: la primera manda y la segunda se insinúa.", v: [
+ { s: "/eɪ/", n: "ei", dif: "baja", ej: ["day", "make", "wait", "eight"],
+   boca: "Empieza en «e» y se desliza hacia «i». Como el «ei» de «peine».", error: "Cortarlo en la primera vocal: <i>make</i> no es «mek»." },
+ { s: "/aɪ/", n: "ai", dif: "baja", ej: ["five", "my", "buy", "height"],
+   boca: "De «a» a «i», como en «aire».", error: "Casi ninguno. Ojo con la ortografía: <i>buy</i> y <i>height</i> llevan este sonido." },
+ { s: "/ɔɪ/", n: "oi", dif: "baja", ej: ["boy", "noise", "point", "join"],
+   boca: "De «o» a «i», como en «hoy».", error: "Ninguno relevante." },
+ { s: "/əʊ/", n: "ou británico", dif: "alta", ej: ["go", "home", "phone", "slow"],
+   boca: "<b>No empieza en «o»</b>: empieza en la schwa y se desliza hacia «u». Suena «əu», casi «eu».",
+   error: "Decir «ou» a la española. Es el diptongo que más delata: <i>home</i> no es «jom»." },
+ { s: "/aʊ/", n: "au", dif: "baja", ej: ["now", "house", "down", "about"],
+   boca: "De «a» a «u», como en «causa».", error: "Ninguno relevante." },
+ { s: "/ɪə/", n: "ia", dif: "media", ej: ["here", "near", "year", "idea"],
+   boca: "De «i» corta a schwa. La <i>r</i> no suena en inglés británico.", error: "Pronunciar la <i>r</i> de <i>here</i> o <i>near</i>." },
+ { s: "/eə/", n: "ea", dif: "media", ej: ["hair", "where", "care", "chair"],
+   boca: "De «e» abierta a schwa, sin <i>r</i>.", error: "Confundirlo con /ɪə/: <i>hair</i> y <i>here</i> son distintas." },
+ { s: "/ʊə/", n: "ua", dif: "media", ej: ["tour", "sure", "pure", "cure"],
+   boca: "De «u» corta a schwa. Cada vez más gente lo sustituye por /ɔː/.", error: "Poco frecuente; no es prioritario." }] },
+
+{ t: "Consonantes que el español no tiene", nota: "Aquí están las cinco que hay que entrenar de verdad.", v: [
+ { s: "/v/", n: "v labiodental", dif: "alta", ej: ["very", "value", "invoice", "survey"],
+   boca: "Dientes de arriba sobre el labio de abajo y aire con voz. <b>Los labios no se juntan.</b>",
+   error: "Decir «b». En español <i>b</i> y <i>v</i> suenan igual; en inglés <i>vote</i> y <i>boat</i> son palabras distintas." },
+ { s: "/z/", n: "s con voz", dif: "alta", ej: ["zoo", "is", "because", "houses"],
+   boca: "Igual que la «s» pero <b>con la garganta vibrando</b>. Pon la mano en el cuello: tiene que temblar.",
+   error: "Decir «s» sorda siempre. Casi todos los plurales y el verbo <i>is</i> llevan /z/, no /s/." },
+ { s: "/ʃ/", n: "sh", dif: "media", ej: ["she", "finish", "station", "sure"],
+   boca: "Labios algo adelantados y lengua cerca del paladar. Es el sonido de pedir silencio: «shhh».",
+   error: "Decir «ch» o «s». <i>She</i> no es «chi» ni «si»." },
+ { s: "/ʒ/", n: "sh con voz", dif: "alta", ej: ["vision", "measure", "usual", "decision"],
+   boca: "Como /ʃ/ pero con voz. Es la «j» del francés <i>jour</i>.",
+   error: "Decir «y» o «ch». Aparece sobre todo en <i>-sion</i> y <i>-sure</i>." },
+ { s: "/dʒ/", n: "y fuerte", dif: "media", ej: ["jump", "job", "bridge", "manage"],
+   boca: "Empieza como una «d» y termina en /ʒ/. Parecido a la «y» muy marcada del argentino.",
+   error: "Decir «ll» o «ch». <i>Job</i> no es «chob»." },
+ { s: "/tʃ/", n: "ch", dif: "baja", ej: ["chair", "much", "kitchen", "watch"],
+   boca: "La «ch» española.", error: "Ninguno, salvo confundirla con /ʃ/." },
+ { s: "/θ/", n: "th sorda", dif: "media", ej: ["think", "three", "north", "thick"],
+   boca: "Punta de la lengua entre los dientes y aire, sin voz. <b>Es la «z» de «zapato»</b> del castellano de España.",
+   error: "Decir «t» o «s»: <i>think</i> → «tink» / «sink»." },
+ { s: "/ð/", n: "th con voz", dif: "media", ej: ["this", "they", "mother", "breathe"],
+   boca: "La misma posición que /θ/ pero con la garganta vibrando. Se parece a la «d» de «cada».",
+   error: "Decir «d» dura: <i>this</i> → «dis»." },
+ { s: "/h/", n: "h aspirada", dif: "alta", ej: ["house", "hotel", "behind", "who"],
+   boca: "Solo aire, como al empañar un cristal. La lengua no toca nada.",
+   error: "Comérsela («ouse») o convertirla en la «j» española, que es demasiado áspera." },
+ { s: "/ŋ/", n: "n nasal final", dif: "media", ej: ["building", "song", "thinking", "long"],
+   boca: "Aire por la nariz con la parte de atrás de la lengua en el paladar. <b>No hay «g» final.</b>",
+   error: "Rematar con una «g» de «gato»: «buildin-g»." },
+ { s: "/r/", n: "r inglesa", dif: "alta", ej: ["red", "road", "correct", "very"],
+   boca: "La lengua se <b>curva hacia atrás sin tocar</b> el paladar. No vibra nunca.",
+   error: "Hacer la «r» o la «rr» españolas, que vibran. Y pronunciar la <i>r</i> final, que en británico no suena." },
+ { s: "/w/", n: "u consonante", dif: "baja", ej: ["wet", "water", "one", "quick"],
+   boca: "Labios muy redondeados que se abren: como «hueso».", error: "Añadir una «g» delante: «gua-ter»." },
+ { s: "/j/", n: "y suave", dif: "media", ej: ["yes", "year", "use", "beautiful"],
+   boca: "Como la «i» de «hielo», suave.", error: "Decir «ll» fuerte: <i>yes</i> no es «lles». Y <i>use</i> empieza por este sonido: «yuːz»." },
+ { s: "/l/", n: "l, clara y oscura", dif: "media", ej: ["leg", "full", "old", "people"],
+   boca: "Al principio de palabra es como la «l» española. <b>Al final es «oscura»</b>: la lengua se retrae y suena casi a «u».",
+   error: "Hacerla siempre clara. <i>Full</i> o <i>old</i> suenan casi «fuu», «ould»." }] },
+
+{ t: "Consonantes fáciles", nota: "Prácticamente iguales que en español. Se repasan y se dejan.", v: [
+ { s: "/p/", n: "p aspirada", dif: "baja", ej: ["pen", "happy", "stop"], boca: "Como la «p» española, pero al principio de palabra sale con un golpe de aire.", error: "Ninguno; la aspiración es un detalle de acento, no de comprensión." },
+ { s: "/b/", n: "b", dif: "baja", ej: ["bad", "job", "table"], boca: "Los dos labios juntos.", error: "Confundirla con /v/, que es el problema de verdad." },
+ { s: "/t/", n: "t aspirada", dif: "baja", ej: ["tea", "water", "start"], boca: "Lengua en los alvéolos, algo más atrás que en español.", error: "En inglés americano la <i>t</i> entre vocales suena a «d»: <i>water</i> → «wader»." },
+ { s: "/d/", n: "d", dif: "baja", ej: ["did", "door", "middle"], boca: "Como la «d» española pero algo más atrás.", error: "Ninguno." },
+ { s: "/k/", n: "k", dif: "baja", ej: ["cat", "school", "quick"], boca: "Como la «c» de «casa».", error: "Ninguno." },
+ { s: "/g/", n: "g de gato", dif: "baja", ej: ["got", "bigger", "ago"], boca: "Como la «g» de «gato», nunca la de «gente».", error: "Suavizarla entre vocales." },
+ { s: "/f/", n: "f", dif: "baja", ej: ["fall", "phone", "enough"], boca: "Dientes sobre el labio, sin voz.", error: "Ninguno; ojo con la ortografía <i>ph</i> y <i>gh</i>." },
+ { s: "/s/", n: "s", dif: "baja", ej: ["see", "city", "books"], boca: "Como la «s» española.", error: "Añadir una «e» delante cuando empieza la palabra: «espain»." },
+ { s: "/m/", n: "m", dif: "baja", ej: ["man", "come", "summer"], boca: "Labios juntos, aire por la nariz.", error: "Ninguno." },
+ { s: "/n/", n: "n", dif: "baja", ej: ["now", "run", "dinner"], boca: "Lengua en los alvéolos, aire por la nariz.", error: "Ninguno." }] }
+],
+
+/* Pares mínimos para la prueba de oído: "palabra|palabra|fonema1|fonema2" */
+pares: [
+ "ship|sheep|/ɪ/|/iː/", "bit|beat|/ɪ/|/iː/", "live|leave|/ɪ/|/iː/", "fill|feel|/ɪ/|/iː/",
+ "bad|bed|/æ/|/e/", "man|men|/æ/|/e/", "sat|set|/æ/|/e/", "had|head|/æ/|/e/",
+ "cup|cap|/ʌ/|/æ/", "but|bat|/ʌ/|/æ/", "hut|hat|/ʌ/|/æ/",
+ "full|fool|/ʊ/|/uː/", "pull|pool|/ʊ/|/uː/", "look|Luke|/ʊ/|/uː/",
+ "hot|hurt|/ɒ/|/ɜː/", "work|walk|/ɜː/|/ɔː/", "bird|beard|/ɜː/|/ɪə/",
+ "very|berry|/v/|/b/", "vote|boat|/v/|/b/", "vest|best|/v/|/b/",
+ "think|sink|/θ/|/s/", "three|tree|/θ/|/t/", "they|day|/ð/|/d/",
+ "she|sea|/ʃ/|/s/", "chair|share|/tʃ/|/ʃ/", "jump|chump|/dʒ/|/tʃ/",
+ "house|out|/h/|—", "hair|air|/h/|—", "heat|eat|/h/|—",
+ "sing|sin|/ŋ/|/n/", "thing|thin|/ŋ/|/n/",
+ "right|light|/r/|/l/", "road|load|/r/|/l/", "correct|collect|/r/|/l/",
+ "yes|jess|/j/|/dʒ/", "year|jeer|/j/|/dʒ/",
+ "go|got|/əʊ/|/ɒ/", "home|hum|/əʊ/|/ʌ/", "coat|cot|/əʊ/|/ɒ/"
+]
+};
